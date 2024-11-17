@@ -6,11 +6,10 @@ from django.db import models
 class Users(AbstractUser):
     # 전체적으로 blank=False 추가(username 제외)
     username = models.CharField(primary_key=True, max_length=150, blank=False)
-    password = models.CharField(max_length=150,  blank=False)
+    #password = models.CharField(max_length=150,  blank=False)
     fullname = models.CharField(max_length=150, blank=False)
     address = models.CharField(max_length=150 , blank=False)
-    #birth = models.DateField(null=True, blank=False) # 유저가 계속 쓴다고 생각하면, 넣고 연령대 계산을 하는 것이 더 나아보임.
-    age = models.CharField(max_length=10,  blank=False)
+    birth = models.DateField(null=True, blank=False) # 유저가 계속 쓴다고 생각하면, 넣고 연령대 계산을 하는 것이 더 나아보임.
     # default='기타' 추가(MySQL에서 못불러옴)
     gender = models.CharField(max_length=10,default='기타',blank=False)
     # blank=False로 주기 위함 / MySQL에는 EmailField 타입이 없어 django에서 추가
@@ -19,7 +18,7 @@ class Users(AbstractUser):
 
     my_genre = models.CharField(max_length=300, blank=False)
     my_keyword = models.CharField(max_length=300, blank=False)
-    my_act = models.CharField(max_length=150, default="없음",  blank=False)
+    my_act = models.CharField(max_length=150, default="없음", blank=False)
 
     class Meta:
         # managed = False #포함X, 커스텀 필드들이 db에 반영되지 않는 문제 방지
