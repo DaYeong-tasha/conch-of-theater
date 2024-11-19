@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-#AUTH_USER_MODEL = 'common.Users' #오류나서 만들고
+AUTH_USER_MODEL = 'common.Users' #오류나서 만들고
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/

@@ -18,11 +18,5 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls')),  # 메인 페이지의 URL
-    path('accounts/', include('accounts.urls')),
-    path('map/', include('map.urls')),
-    path('reviews/', include('reviews.urls')),
-    path('plays/', include('plays.urls')),
-    path('dashboard/', include('dashboard.urls')),
+
 ]
