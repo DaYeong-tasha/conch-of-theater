@@ -17,10 +17,10 @@ class Users(AbstractUser):
     email = models.EmailField(blank=False)
 
     # 선호 정보 json으로 받아야 추후 처리가 유용
-    my_genre = models.JSONField(blank=False)
-    my_play_mood = models.JSONField(blank=False) # 추가
-    my_play_keyword = models.JSONField(blank=False)
-    my_actor = models.CharField(max_length=20, default="없음", blank=False)
+    my_genre = models.JSONField(default=list, blank=False)  # 빈 리스트로 기본값 설정
+    my_play_mood = models.JSONField(default=list, blank=False)  # 빈 리스트로 기본값 설정
+    my_play_keyword = models.JSONField(default=list, blank=False)  # 빈 리스트로 기본값 설정
+    my_actor = models.CharField(max_length=20, default="없음", blank=False)  # 기본값 "없음"
 
     class Meta:
         # managed = False #포함X, 커스텀 필드들이 db에 반영되지 않는 문제 방지
