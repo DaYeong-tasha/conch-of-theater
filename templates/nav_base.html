@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-    {% block title %}Mind Track{% endblock %}
+    {% block title %}극장의 소라고동{% endblock %}
     </title>
         <!--  파비콘 -->
      {% load static %}
@@ -32,7 +32,7 @@
         <div class="container">
             <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'before_login' %}{% endif %}">
                 {% load static %}
-                <img src="{% static 'img/logo_side_lower.png' %}" alt="MIND TRACK" style="height: 30px; width: 150px;">
+                <img src="{% static 'img/logo_side_lower.png' %}" alt="극장의 소라고동" style="height: 30px; width: 150px;">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -41,11 +41,15 @@
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">{{ user.username }}님</a>
+                        <a class="nav-link" href="{% url 'review' %}">후기 게시판</a>
+                        <a class="nav-link" href="{% url 'dashboard' %}">연극 돋보기</a>
                         <a class="nav-link" href="{% url 'logout' %}">로그아웃</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">로그인</a>
+                        <a class="nav-link" href="{% url 'register' %}">회원가입</a>
                     </li>
                     {% endif %}
                 </ul>
