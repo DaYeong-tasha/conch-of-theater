@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-#AUTH_USER_MODEL = 'common.Users' #오류나서 만들고
+AUTH_USER_MODEL = 'common.Users' #오류나서 만들고
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -145,3 +145,11 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 기본값 (DB 기반 세션)
+SESSION_COOKIE_NAME = 'session_id'
+SESSION_COOKIE_AGE = 3600  # 세션 유지 시간 (초 단위)
+# 세션 데이터가 저장될 위치
+SESSION_FILE_PATH = None  # None이면 DB에 저장
+SESSION_SAVE_EVERY_REQUEST = True  # 모든 요청에 대해 세션 갱신

@@ -1,0 +1,36 @@
+{% extends 'nav_base.html' %}
+
+{% block title %}로그인{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card shadow-sm" style="width: 100%; max-width: 400px;">
+        <div class="card-body">
+            <h3 class="card-title text-center">로그인</h3>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">사용자 ID</label>
+                    <input type="text" class="form-control" name="username" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">로그인</button>
+                <a href="{% url 'register' %}" class="btn btn-secondary btn-block mt-2">회원가입</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% include 'modal_base.html' %}
+{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
