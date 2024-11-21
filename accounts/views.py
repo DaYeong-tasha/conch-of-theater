@@ -4,9 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
-
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 from common.models import Users
 from .forms import LoginForm
 from django.db import transaction
@@ -26,10 +27,7 @@ from django.db import transaction
 # date_joined	계정이 생성된 날짜
 
 
-from django.db import transaction
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from common.models import Users
+
 
 def register(request):
     if request.method == 'POST':
@@ -83,6 +81,16 @@ def register(request):
         except Exception as e:
             messages.error(request, '회원가입 중 예상치 못한 오류가 발생했습니다.')
     return render(request, 'accounts/register.html')
+
+
+
+def check_id(request):
+    user_id = request.GET.get('id')
+    if user_id:
+        # 중복된 아이디가 있는지 확인
+        exists = Users.objects.filter(username=user_id).exists()  # 수정된 부분
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'exists': False})
 
 def user_login(request):
     if request.method == 'GET':

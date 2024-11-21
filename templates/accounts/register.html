@@ -23,8 +23,14 @@
                         {% csrf_token %}
                         <!-- 기본 회원가입 정보 -->
                         <div class="form-group">
-                            <label for="id">아이디</label>
-                            <input type="text" class="form-control" id="id" name="username" placeholder="아이디를 입력하세요" required minlength="5">
+                            <label for="user-id">아이디</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="user-id" name="username" placeholder="아이디를 입력하세요" required minlength="5">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" id="check-id-btn">아이디 중복 확인</button>
+                                </div>
+                            </div>
+                            <span id="id-check-result"></span> <!-- 중복 확인 결과 표시 -->
                         </div>
                         <div class="form-group">
                             <label for="name">이름</label>
@@ -102,7 +108,7 @@
                         <hr>
                         <div class="form-group">
                             <label for="my_genre">선호하는 연극 장르</label>
-                            <div id="my_genre" class="btn-group-vertical" role="group" required>
+                            <div id="my_genre" class="btn-group-vertical" role="group">
                                 <div class="btn-group" style="margin-bottom: 10px;">
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">로맨스</button>
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">코미디</button>
@@ -116,12 +122,12 @@
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">판타지</button>
                                 </div>
                             </div>
-                            <input type="hidden" name="my_genre[]" id="my_genre_input" value="">
+                            <input type="hidden" name="my_genre[]" id="my_genre_input" value="" required>
                         </div>
 
                         <div class="form-group">
                             <label for="my_play_mood">연극 분위기</label>
-                            <div id="my_play_mood" class="btn-group-vertical" role="group" required>
+                            <div id="my_play_mood" class="btn-group-vertical" role="group">
                                 <div class="btn-group" style="margin-bottom: 10px;">
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">즐거운</button>
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">우울한</button>
@@ -135,12 +141,12 @@
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">무서운</button>
                                 </div>
                             </div>
-                            <input type="hidden" name="my_play_mood[]" id="my_play_mood_input" value="">
+                            <input type="hidden" name="my_play_mood[]" id="my_play_mood_input" value="" required>
                         </div>
 
                         <div class="form-group">
                             <label for="my_play_keyword">해시태그</label>
-                            <div id="my_play_keyword" class="btn-group-vertical" role="group" required>
+                            <div id="my_play_keyword" class="btn-group-vertical" role="group">
                                 <div class="btn-group" style="margin-bottom: 10px;">
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">믿고 보는 배우</button>
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">아이들과 함께</button>
@@ -152,7 +158,7 @@
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">반전있는</button>
                                 </div>
                             </div>
-                            <input type="hidden" name="my_play_keyword[]" id="my_play_keyword_input" value="">
+                            <input type="hidden" name="my_play_keyword[]" id="my_play_keyword_input" value="" required>
                         </div>
                         <div class="form-group">
                             <label for="my_actor">좋아하는 배우</label>
@@ -168,27 +174,41 @@
 </div>
 
 <script>
+    document.getElementById('check-id-btn').addEventListener('click', function () {
+    const userId = document.getElementById('user-id').value;
+
+    if (!userId) {
+        alert("아이디를 입력해주세요.");
+        return;
+    }
+
+    // 서버에 중복 확인 요청
+    fetch(`/accounts/check-id/?id=${encodeURIComponent(userId)}`)  // 경로 수정
+        .then(response => response.json())
+        .then(data => {
+            const resultSpan = document.getElementById('id-check-result');
+            if (data.exists) {
+                resultSpan.textContent = "이미 사용 중인 ID입니다.";
+                resultSpan.style.color = "red";
+            } else {
+                resultSpan.textContent = "사용 가능한 ID입니다.";
+                resultSpan.style.color = "green";
+            }
+        })
+        .catch(error => {
+            console.error("ID 중복 확인 중 오류 발생:", error);
+            alert("ID 중복 확인에 실패했습니다. 다시 시도해주세요.");
+        });
+    });
+
+
+<!--이메일-->
     function toggleEmailDomainInput() {
         var emailSelect = document.getElementById('email_select');
         var emailInput = document.getElementById('email_input');
-        if (emailSelect.value === 'custom') {
-            emailInput.classList.remove('d-none');
-        } else {
-            emailInput.classList.add('d-none');
-        }
+        emailInput.classList.toggle('d-none', emailSelect.value !== 'custom');
     }
 
-    function validateForm() {
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-        if (password !== confirmPassword) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return false;
-        }
-        return true;
-    }
-
-    // 버튼 클릭 시 value를 숨겨진 input에 설정하는 코드
     function updateSelectedValues(groupId, inputId) {
         var selectedValues = [];
         var buttons = document.querySelectorAll(`#${groupId} .btn`);
@@ -200,7 +220,6 @@
         document.getElementById(inputId).value = selectedValues.join(',');
     }
 
-    // 버튼 클릭 시 updateSelectedValues 호출
     document.querySelectorAll('.btn').forEach(function(button) {
         button.addEventListener('click', function() {
             button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
@@ -209,5 +228,46 @@
             updateSelectedValues('my_play_keyword', 'my_play_keyword_input');
         });
     });
+
+    function validateForm() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (password !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return false;
+    }
+
+    // 최소 1개 선택 확인
+    const genreInput = document.getElementById('my_genre_input').value;
+    const moodInput = document.getElementById('my_play_mood_input').value;
+    const keywordInput = document.getElementById('my_play_keyword_input').value;
+
+    if (!genreInput) {
+        alert("선호하는 연극 장르를 최소 1개 선택해주세요.");
+        return false;
+    }
+    if (!moodInput) {
+        alert("연극 분위기를 최소 1개 선택해주세요.");
+        return false;
+    }
+    if (!keywordInput) {
+        alert("해시태그를 최소 1개 선택해주세요.");
+        return false;
+    }
+
+    // 동일한 id 확인
+    const selectedValues = new Set();
+    [genreInput, moodInput, keywordInput].forEach(value => {
+        if (selectedValues.has(value)) {
+            alert("이미 동일한 아이디(ID)가 있습니다.");
+            return false;
+        }
+        selectedValues.add(value);
+    });
+
+    return true;
+}
+
 </script>
 {% endblock %}
