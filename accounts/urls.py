@@ -9,6 +9,7 @@ urlpatterns = [
     path('check-id/', views.check_id, name='check_id'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('profile/', views.mypage_home, name='profile'),
     #path('mypage/', mypage.as_view(), name='mypage')
 
 ]

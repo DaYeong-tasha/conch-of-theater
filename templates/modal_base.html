@@ -2,9 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>modal</title>
+    <style>
+        /* 모달 유지 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center; /* 가로 방향 중앙 정렬 */
+            align-items: center; /* 세로 방향 중앙 정렬 */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 30%;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .close-btn {
+            background-color: #304E70;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+<!-- modal_base.html -->
+<div id="logoutModal" class="modal" style="display: {% if messages %}block{% else %}none{% endif %}; ">
+    <div class="modal-content">
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <button id="closeModal" class="close-btn">확인</button>
+    </div>
+</div>
+<script>
+    var closeModal = document.getElementById('closeModal');
+    var logoutModal = document.getElementById('logoutModal');
+
+    // 모달의 배경을 클릭하면 모달 닫기
+    logoutModal.onclick = function(event) {
+        if (event.target === logoutModal) {
+            logoutModal.style.display = 'none';
+        }
+    };
+
+    closeModal.onclick = function() {
+        logoutModal.style.display = 'none';
+    }
+</script>
 
 </body>
 </html>

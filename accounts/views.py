@@ -125,3 +125,7 @@ def user_logout(request):
     messages.success(request, '로그아웃 되셨습니다.')
     messages.success(request, '좋은 하루 보내세요 :)')
     return redirect('before_login')
+
+
+def mypage_home():
+    pass
