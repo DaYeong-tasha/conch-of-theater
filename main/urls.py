@@ -1,5 +1,5 @@
 from django.urls import path, include
-from . import views
+from . import views_all, views
 
 urlpatterns = [
     path('', views.home, name='before_login'),
