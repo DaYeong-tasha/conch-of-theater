@@ -1,0 +1,273 @@
+{% extends 'nav_base.html' %}
+{% block title %}회원가입 및 취향 설정{% endblock %}
+{% block content %}
+<style>
+    .form-group label {
+        display: block;
+        margin-bottom: 10px; /* 버튼 그룹과의 간격 조정 */
+    }
+    .btn-group-vertical {
+        display: inline-block;
+    }
+</style>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card" style="max-height: 80vh; overflow-y: auto;">
+                <div class="card-header">
+                    <h2 class="text-center">회원가입</h2>
+                </div>
+                <div class="card-body">
+                    <!-- 회원가입 Form -->
+                    <form method="POST" action="{% url 'register' %}" onsubmit="return validateForm()">
+                        {% csrf_token %}
+                        <!-- 기본 회원가입 정보 -->
+                        <div class="form-group">
+                            <label for="user-id">아이디</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="user-id" name="username" placeholder="아이디를 입력하세요" required minlength="5">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" id="check-id-btn">아이디 중복 확인</button>
+                                </div>
+                            </div>
+                            <span id="id-check-result"></span> <!-- 중복 확인 결과 표시 -->
+                        </div>
+                        <div class="form-group">
+                            <label for="name">이름</label>
+                            <input type="text" class="form-control" id="name" name="fullname" placeholder="이름을 입력하세요" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">이메일</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="email_local" name="email_local" placeholder="이메일을 입력하세요" required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">@</span>
+                                    <select class="form-control" id="email_select" name="email_select" onchange="toggleEmailDomainInput()" required>
+                                        <option value="gmail.com">gmail.com</option>
+                                        <option value="yahoo.com">yahoo.com</option>
+                                        <option value="naver.com">naver.com</option>
+                                        <option value="daum.net">daum.net</option>
+                                        <option value="custom">직접 입력</option>
+                                    </select>
+                                    <input type="text" class="form-control d-none" id="email_input" name="email_input" placeholder="도메인을 입력하세요">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">비밀번호</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required minlength="8" maxlength="16">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">비밀번호 확인</label>
+                            <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="비밀번호를 다시 입력하세요" required>
+                        </div>
+                        <div class="form-group">
+                            <label>성별</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+                                <label class="form-check-label" for="male">남성</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                                <label class="form-check-label" for="female">여성</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="others" value="others">
+                                <label class="form-check-label" for="others">기타</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">주소</label>
+                            <select class="form-control" id="address" name="address" required>
+                                <option value="">주소를 선택하세요</option>
+                                <option value="서울특별시">서울특별시</option>
+                                <option value="부산광역시">부산광역시</option>
+                                <option value="대구광역시">대구광역시</option>
+                                <option value="인천광역시">인천광역시</option>
+                                <option value="광주광역시">광주광역시</option>
+                                <option value="대전광역시">대전광역시</option>
+                                <option value="울산광역시">울산광역시</option>
+                                <option value="세종특별자치시">세종특별자치시</option>
+                                <option value="경기도">경기도</option>
+                                <option value="강원도">강원도</option>
+                                <option value="충청북도">충청북도</option>
+                                <option value="충청남도">충청남도</option>
+                                <option value="전라북도">전라북도</option>
+                                <option value="전라남도">전라남도</option>
+                                <option value="경상북도">경상북도</option>
+                                <option value="경상남도">경상남도</option>
+                                <option value="제주특별자치도">제주특별자치도</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="birth">생년월일</label>
+                            <input type="date" class="form-control" id="birth" name="birth" required>
+                        </div>
+
+                        <!-- 취향 설정 -->
+                        <hr>
+                        <div class="form-group">
+                            <label for="my_genre">선호하는 연극 장르</label>
+                            <div id="my_genre" class="btn-group-vertical" role="group">
+                                <div class="btn-group" style="margin-bottom: 10px;">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">로맨스</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">코미디</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">드라마</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">시대극</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">스릴러</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">공포</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">아동/가족</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">판타지</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="my_genre[]" id="my_genre_input" value="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="my_play_mood">연극 분위기</label>
+                            <div id="my_play_mood" class="btn-group-vertical" role="group">
+                                <div class="btn-group" style="margin-bottom: 10px;">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">즐거운</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">우울한</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">설레는</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">철학적인</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">슬픈</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">감동적인</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">오싹한</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">무서운</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="my_play_mood[]" id="my_play_mood_input" value="" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="my_play_keyword">해시태그</label>
+                            <div id="my_play_keyword" class="btn-group-vertical" role="group">
+                                <div class="btn-group" style="margin-bottom: 10px;">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">믿고 보는 배우</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">아이들과 함께</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">별점 4.0 이상</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">탄탄한 원작</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">가벼운 마음으로</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">반전있는</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="my_play_keyword[]" id="my_play_keyword_input" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="my_actor">좋아하는 배우</label>
+                            <input type="text" class="form-control" id="my_actor" name="my_actor" placeholder="배우를 1명 입력하거나 없음을 입력하세요" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block mt-3">회원가입</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('check-id-btn').addEventListener('click', function () {
+    const userId = document.getElementById('user-id').value;
+
+    if (!userId) {
+        alert("아이디를 입력해주세요.");
+        return;
+    }
+
+    // 서버에 중복 확인 요청
+    fetch(`/accounts/check-id/?id=${encodeURIComponent(userId)}`)  // 경로 수정
+        .then(response => response.json())
+        .then(data => {
+            const resultSpan = document.getElementById('id-check-result');
+            if (data.exists) {
+                resultSpan.textContent = "이미 사용 중인 ID입니다.";
+                resultSpan.style.color = "red";
+            } else {
+                resultSpan.textContent = "사용 가능한 ID입니다.";
+                resultSpan.style.color = "green";
+            }
+        })
+        .catch(error => {
+            console.error("ID 중복 확인 중 오류 발생:", error);
+            alert("ID 중복 확인에 실패했습니다. 다시 시도해주세요.");
+        });
+    });
+
+
+<!--이메일-->
+    function toggleEmailDomainInput() {
+        var emailSelect = document.getElementById('email_select');
+        var emailInput = document.getElementById('email_input');
+        emailInput.classList.toggle('d-none', emailSelect.value !== 'custom');
+    }
+
+    function updateSelectedValues(groupId, inputId) {
+        var selectedValues = [];
+        var buttons = document.querySelectorAll(`#${groupId} .btn`);
+        buttons.forEach(function(button) {
+            if (button.getAttribute('aria-pressed') === 'true') {
+                selectedValues.push(button.innerText);
+            }
+        });
+        document.getElementById(inputId).value = selectedValues.join(',');
+    }
+
+    document.querySelectorAll('.btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+            updateSelectedValues('my_genre', 'my_genre_input');
+            updateSelectedValues('my_play_mood', 'my_play_mood_input');
+            updateSelectedValues('my_play_keyword', 'my_play_keyword_input');
+        });
+    });
+
+    function validateForm() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (password !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return false;
+    }
+
+    // 최소 1개 선택 확인
+    const genreInput = document.getElementById('my_genre_input').value;
+    const moodInput = document.getElementById('my_play_mood_input').value;
+    const keywordInput = document.getElementById('my_play_keyword_input').value;
+
+    if (!genreInput) {
+        alert("선호하는 연극 장르를 최소 1개 선택해주세요.");
+        return false;
+    }
+    if (!moodInput) {
+        alert("연극 분위기를 최소 1개 선택해주세요.");
+        return false;
+    }
+    if (!keywordInput) {
+        alert("해시태그를 최소 1개 선택해주세요.");
+        return false;
+    }
+
+    // 동일한 id 확인
+    const selectedValues = new Set();
+    [genreInput, moodInput, keywordInput].forEach(value => {
+        if (selectedValues.has(value)) {
+            alert("이미 동일한 아이디(ID)가 있습니다.");
+            return false;
+        }
+        selectedValues.add(value);
+    });
+
+    return true;
+}
+
+</script>
+{% endblock %}
