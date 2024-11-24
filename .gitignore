@@ -1,15 +1,89 @@
-# Python 및 Django 관련 파일들
+# Django
+*.log
+*.pot
 *.pyc
-*~
 __pycache__/
-myvenv/
+local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media/
-.DS_Store
-.idea/
-*.log
-*.pot
+static/
+
+# 가상환경
 .env
-/static
-local_settings.py
+.venv
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+*.iml
+*.iws
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+.coverage
+.tox/
+htmlcov/
+
+# 운영체제
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# 기타
+.cache/
+.pytest_cache/
+*.tmp
+*.temp
+*.swp
+*.bak
+*.pid
+*.zip
+*.tar.gz
+*.rar
+.ipynb_checkpoints/
+
+# Django Static & Media
+/staticfiles/
+/static_root/
+/media_root/
+/collected_static/
+*.css.map
+*.js.map
+.sass-cache/
+node_modules/
+bower_components/
+
+# Asset 관련
+assets/bundles/
+webpack-stats.json
+.webpack-stats.json

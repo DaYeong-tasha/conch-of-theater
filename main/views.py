@@ -5,6 +5,7 @@ from django.shortcuts import render
 import xmltodict  # XML 파싱을 위한 라이브러리 추가
 from dotenv import load_dotenv
 import os
+from map.views import get_theaters_data
 
 # .env 파일 로드
 load_dotenv()
@@ -76,15 +77,60 @@ def fetch_seoul_boxoffice_data(ststype):
     return region_ranked_data
 
 
-# 뷰 함수
-def home(request):
-    # 서울(11) 지역의 데이터 가져오기
-    ststype = "day"  # 예시로 "day"를 사용 (여기에 필요한 `ststype` 값을 넣을 수 있음)
-    ranked_data = fetch_seoul_boxoffice_data(ststype)
+# # 뷰 함수
+# def home(request):
+#     # 서울(11) 지역의 데이터 가져오기
+#     ststype = "day"  # 예시로 "day"를 사용 (여기에 필요한 `ststype` 값을 넣을 수 있음)
+#     ranked_data = fetch_seoul_boxoffice_data(ststype)
 
-    if request.user.is_authenticated:  # 로그인 여부 체크
-        # 로그인 후 템플릿 렌더링
-        return render(request, 'main/home.html', {'ranked_data': ranked_data})
-    else:
-        # 로그인 전에도 박스오피스 데이터 전달
-        return render(request, 'main/before_login.html', {'ranked_data': ranked_data})  # 로그인 전 템플릿
+#     if request.user.is_authenticated:  # 로그인 여부 체크
+#         # 로그인 후 템플릿 렌더링
+#         return render(request, 'main/home.html', {'ranked_data': ranked_data})
+#     else:
+#         # 로그인 전에도 박스오피스 데이터 전달
+#         return render(request, 'main/before_login.html', {'ranked_data': ranked_data})  # 로그인 전 템플릿
+
+
+# 위에 코드랑, 지도에 필요한 코드랑 합쳤음
+def home(request):
+    context = {}
+    
+    try:
+        # 서울 박스오피스 데이터 가져오기
+        ststype = "day"  # 기본값으로 일간 데이터 사용
+        ranked_data = fetch_seoul_boxoffice_data(ststype)
+        context['ranked_data'] = ranked_data
+        
+        if request.user.is_authenticated:
+            try:
+                # 극장 데이터 가져오기
+                theater_context = get_theaters_data()
+                
+                # 극장 데이터 유효성 검증
+                theaters = theater_context.get('theaters', [])
+                if not theaters:
+                    print("Warning: No theaters data available")
+                
+                # 컨텍스트 병합
+                context.update({
+                    'theaters': theaters,
+                    'kakao_map_api_key': theater_context.get('kakao_map_api_key', '')
+                })
+                
+                template_name = 'main/home.html'
+            except Exception as theater_error:
+                print(f"Error fetching theater data: {theater_error}")
+                context.update({
+                    'theaters': [],
+                    'theater_error': "극장 정보를 불러오는 중 문제가 발생했습니다."
+                })
+                template_name = 'main/home.html'
+        else:
+            template_name = 'main/before_login.html'
+            
+    except Exception as e:
+        print(f"Error in home view: {e}")
+        context['error'] = "데이터를 불러오는 중 문제가 발생했습니다."
+        template_name = 'main/before_login.html' if not request.user.is_authenticated else 'main/home.html'
+    
+    return render(request, template_name, context)
