@@ -14,7 +14,7 @@ class Play_list(models.Model):
     play_id = models.CharField(primary_key=True, max_length=50)
     play_name = models.CharField(max_length=300)
     play_reg_date = models.DateTimeField() # API에서 연극 리스트 불러온 날짜(DAG 트리거 날짜)
-    genre = models.CharField(max_length=300, null=True) # 우리가 구분해서 추가할 장르
+    genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
 
     class Meta:
         # managed = False
