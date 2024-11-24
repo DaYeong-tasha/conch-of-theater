@@ -7,6 +7,7 @@
         max-width: 1000px;
         margin: 20px auto;
         overflow: hidden;
+        z-index: 1; /* 슬라이더의 z-index 낮추기 */
     }
 
     /* 슬라이더 내부의 슬라이드 컨테이너 스타일 */
@@ -88,7 +89,6 @@
         font-size: 18px;
         padding: 10px;
         cursor: pointer;
-        z-index: 10; /* 다른 요소 위로 버튼을 올리기 위해 설정 */
     }
 
     .prev-btn {
@@ -216,5 +216,4 @@
 
 </script>
 
-{% include 'modal_base.html' %} <!-- 모달 기능 포함 -->
 {% endblock %}
