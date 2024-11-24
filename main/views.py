@@ -3,9 +3,14 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from django.shortcuts import render
 import xmltodict  # XML 파싱을 위한 라이브러리 추가
+from dotenv import load_dotenv
+import os
 
-# KOPIS API 인증키
-service_key = "69d72dcef51346ba8fbc7b4acec944df"
+# .env 파일 로드
+load_dotenv()
+
+# KOPIS API 인증키를 .env에서 가져옴
+service_key = os.getenv("KOPIS_API_KEY")
 
 # 지역별 코드 매핑
 region_groups = {
@@ -29,7 +34,7 @@ print(f"데이터 수집 기준 날짜: {date}")
 # API 호출하여 데이터를 가져오는 함수
 def fetch_boxoffice_data(ststype, area_code, yesterday):
     # API URL 생성
-    url = f"https://kopis.or.kr/openApi/restful/boxoffice?service={service_key}&ststype={ststype}&date={ yesterday}&catecode=AAAA&area={area_code}"
+    url = f"https://kopis.or.kr/openApi/restful/boxoffice?service={service_key}&ststype={ststype}&date={yesterday}&catecode=AAAA&area={area_code}"
     response = requests.get(url)
 
     # API 호출 성공 시 데이터 반환, 실패 시 에러 메시지 출력
