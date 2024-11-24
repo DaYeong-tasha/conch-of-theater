@@ -3,9 +3,14 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from django.shortcuts import render
 import xmltodict  # XML 파싱을 위한 라이브러리 추가
+from dotenv import load_dotenv
+import os
 
-# KOPIS API 인증키
-service_key = "69d72dcef51346ba8fbc7b4acec944df"
+# .env 파일 로드
+load_dotenv()
+
+# KOPIS API 인증키를 .env에서 가져옴
+service_key = os.getenv("KOPIS_API_KEY")
 
 # 지역별 코드 매핑
 region_groups = {
