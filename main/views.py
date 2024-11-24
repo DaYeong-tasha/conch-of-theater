@@ -29,7 +29,7 @@ print(f"데이터 수집 기준 날짜: {date}")
 # API 호출하여 데이터를 가져오는 함수
 def fetch_boxoffice_data(ststype, area_code, yesterday):
     # API URL 생성
-    url = f"https://kopis.or.kr/openApi/restful/boxoffice?service={service_key}&ststype={ststype}&date={ yesterday}&catecode=AAAA&area={area_code}"
+    url = f"https://kopis.or.kr/openApi/restful/boxoffice?service={service_key}&ststype={ststype}&date={yesterday}&catecode=AAAA&area={area_code}"
     response = requests.get(url)
 
     # API 호출 성공 시 데이터 반환, 실패 시 에러 메시지 출력
