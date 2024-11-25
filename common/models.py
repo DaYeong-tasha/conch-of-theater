@@ -16,6 +16,26 @@ class Play_list(models.Model):
     play_reg_date = models.DateTimeField() # API에서 연극 리스트 불러온 날짜(DAG 트리거 날짜)
     genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
 
+    # 좋아요
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_plays',
+        blank=True
+    )
+    # 싫어요
+    dislike_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='disliked_plays',
+        blank=True
+    )
+
+    # 즐겨찾기
+    favorite_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='favorited_plays',
+        blank=True
+    )
+
     class Meta:
         # managed = False
         db_table = 'Play_list'
@@ -73,8 +93,6 @@ class Play_detail(models.Model):
     relate_8 = models.CharField(max_length=300, blank=True, null=True)
     relateurl_8 = models.CharField(max_length=300, blank=True, null=True)
 
-    #붐업/붐따 필드 필요시 추가 예정
-
     class Meta:
         # managed = False
         db_table = 'Play_detail'
@@ -126,7 +144,18 @@ class Review(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='username')
     review_reg_date = models.DateTimeField(auto_now_add=True, blank=True) # 리뷰 작성 날짜(자동)
 
-    # 붐업/붐따 필드 필요시 추가 예정
+    # 좋아요
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_reviews',
+        blank=True
+    )
+    # 싫어요
+    dislike_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='disliked_reviews',
+        blank=True
+    )
 
     class Meta:
         # managed = False
@@ -145,16 +174,3 @@ class Star(models.Model):
     def __str__(self):
         # 숫자 -> 문자열 변환
         return str(self.star_total)
-
-
-
-# Favorites : 즐겨찾기 모델 (common 앱에 위치)
-class Favorites(models.Model):
-    fav_id = models.AutoField(primary_key=True)
-    play_id = models.CharField(max_length=50)
-    username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column='username')
-    play_name = models.CharField(max_length=300)
-
-    class Meta:
-        # managed = False
-        db_table = 'Favorites'
