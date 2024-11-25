@@ -9,10 +9,13 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+
 from common.models import Users
 from .forms import LoginForm, UserProfileForm
 from django.db import transaction
-
+from django.shortcuts import render
+from django.http import JsonResponse
 from .models import Users
 
 
@@ -140,6 +143,27 @@ def mypage_home(request):
 
     return render(request, 'accounts/profile.html', {'user_profile': user_profile})
 
+@login_required
+def load_tab_content(request, tab_name):
+    try:
+        user_profile = Users.objects.get(id=request.user.id)
+    except Users.DoesNotExist:
+        user_profile = None  # 예외 처리
 
+    # 탭에 따라 적절한 콘텐츠 반환
+    if tab_name == 'profile':
+        content = render_to_string('accounts/profile_edit.html', {'user_profile': user_profile})
+    elif tab_name == 'favorites':
+        # 즐겨찾기 데이터를 가져오기
+        content = render_to_string('accounts/profile_favorites.html', {'user_profile': user_profile})
+    elif tab_name == 'reviews':
+        # 리뷰 데이터를 가져오기
+        content = render_to_string('accounts/profile_reviews_list.html', {'user_profile': user_profile})
+    elif tab_name == 'dashboard':
+        content = render_to_string('accounts/profile_dashboard.html', {'user_profile': user_profile})
+    else:
+        content = "Invalid tab"
+
+    return JsonResponse({'content': content})
 
 
