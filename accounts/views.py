@@ -167,3 +167,27 @@ def load_tab_content(request, tab_name):
     return JsonResponse({'content': content})
 
 
+#회원정보 수정
+@login_required
+def mypage_update(request):
+    try:
+        user_profile = Users.objects.get(id=request.user.id)
+    except Users.DoesNotExist:
+        user_profile = None
+        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')  # 사용자 프로필 없음 오류 메시지
+        return redirect('accounts:mypage_home')
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')  # 성공 메시지
+            # 수정이 완료되면 마이페이지로 리다이렉트
+            return redirect('accounts:mypage_home')
+        else:
+            messages.error(request, '입력한 정보에 오류가 있습니다.')  # 오류 메시지
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'accounts/profile_edit.html', {'form': form, 'user_profile': user_profile})
+
