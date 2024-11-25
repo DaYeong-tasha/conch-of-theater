@@ -9,7 +9,7 @@ class Users(AbstractUser):
     #password = models.CharField(max_length=150,  blank=False) #장고가 알아서함
     fullname = models.CharField(max_length=150, blank=False)
     address = models.CharField(max_length=150 , blank=False)
-    birth = models.DateField(blank=False) # 유저가 계속 쓴다고 생각하면, 넣고 연령대 계산을 하는 것이 더 나아보임.
+    birth = models.DateField(blank=False, null=True) # 유저가 계속 쓴다고 생각하면, 넣고 연령대 계산을 하는 것이 더 나아보임.
     # default='기타' 추가(MySQL에서 못불러옴)
     gender = models.CharField(max_length=10,default='기타',blank=False)
     # blank=False로 주기 위함 / MySQL에는 EmailField 타입이 없어 django에서 추가
