@@ -1,16 +1,19 @@
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from common.models import Users
-from .forms import LoginForm
+from .forms import LoginForm, UserProfileForm
 from django.db import transaction
+
+from .models import Users
 
 
 # 커스텀한 User 모델의 구성요소
@@ -127,5 +130,16 @@ def user_logout(request):
     return redirect('before_login')
 
 
-def mypage_home():
-    pass
+#회원정보 조회
+@login_required
+def mypage_home(request):
+    try:
+        user_profile = Users.objects.get(id=request.user.id)
+    except Users.DoesNotExist:
+        user_profile = None  # 예외 처리: 사용자 프로필이 없을 경우 None 처리
+
+    return render(request, 'accounts/profile.html', {'user_profile': user_profile})
+
+
+
+
