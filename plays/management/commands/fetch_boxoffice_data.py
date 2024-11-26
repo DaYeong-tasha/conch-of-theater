@@ -138,7 +138,7 @@ def save_to_db(all_data):
     try:
         for data in all_data:
             Play_rank.objects.update_or_create(
-                rank_id=data["rank_id"],  # rank_id가 이미 존재하면 업데이트, 없으면 새로 생성
+                rank_id=data.get("rank_id"),  # rank_id를 명시적으로 넣지 않도록 수정
                 defaults={
                     "rank": data["rank"],
                     "play_id": data["play_id"],
