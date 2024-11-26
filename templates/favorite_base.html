@@ -1,0 +1,94 @@
+{% block content %}
+<!-- 공통 즐겨찾기 버튼 템플릿 -->
+<button
+    class="favorite-btn"
+    data-id="{{ play_id }}"
+    aria-label="{% if is_favorite %}즐겨찾기 해제{% else %}즐겨찾기 추가{% endif %}"
+    {% if is_favorite %}data-active="true"{% endif %}
+>
+    <i class="heart-icon"></i>
+</button>
+
+<!-- 즐겨찾기 스타일 -->
+<style>
+    .favorite-btn {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        font-size: 24px;
+        color: white;
+        z-index: 2;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* 기본 하트 */
+    .heart-icon::before {
+        content: '♡'; /* 비어 있는 하트 */
+        font-size: 24px;
+        color: white;
+    }
+
+    /* 채워진 하트 */
+    .favorite-btn[data-active="true"] .heart-icon::before {
+        content: '❤️'; /* 채워진 하트 */
+        color: red;
+        transform: scale(1.2); /* 클릭 시 확대 효과 */
+    }
+
+    /* 버튼 비활성화 상태 */
+    .favorite-btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+</style>
+
+<!-- 즐겨찾기 스크립트 -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', async (event) => {
+                event.preventDefault();
+                const target = event.currentTarget;
+
+                // 중복 클릭 방지
+                target.disabled = true;
+
+                const isActive = target.dataset.active === "true"; // 현재 상태 확인
+                const playId = target.dataset.id;
+
+                try {
+                    const response = await fetch(`/favorite/${playId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': "{{ csrf_token }}", // CSRF 토큰 추가
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('서버 오류가 발생했습니다.');
+                    }
+
+                    const data = await response.json();
+                    console.log(data.message);
+
+                    // 상태 토글 및 접근성 라벨 업데이트
+                    target.dataset.active = isActive ? "false" : "true";
+                    target.setAttribute(
+                        'aria-label',
+                        isActive ? '즐겨찾기 추가' : '즐겨찾기 해제'
+                    );
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('요청을 처리하지 못했습니다. 잠시 후 다시 시도해주세요.');
+                } finally {
+                    target.disabled = false; // 버튼 활성화
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

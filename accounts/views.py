@@ -1,14 +1,17 @@
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from common.models import Users
+from django.views.decorators.csrf import csrf_exempt
+
+from common.models import Users, Play_list
 from .forms import LoginForm
 from django.db import transaction
 
@@ -71,8 +74,7 @@ def register(request):
 
                 user.save()
 
-                # 메시지 및 리다이렉트
-                messages.success(request, '회원가입이 완료되었습니다! 로그인을 진행해주세요.')
+                # 리다이렉트
                 return redirect('login')
         except ValidationError as ve:
             messages.error(request, str(ve))
@@ -129,3 +131,6 @@ def user_logout(request):
 
 def mypage_home():
     pass
+
+
+
