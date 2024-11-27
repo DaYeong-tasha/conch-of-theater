@@ -1,14 +1,30 @@
 import requests
 from datetime import datetime, timedelta
-
 from django.http import JsonResponse
 from django.shortcuts import render
 from common.models import Play_rank, Play_list
+import pytz
+from django.db.models import Max
 
 
 def home(request):
-    # 박스오피스 데이터를 순위대로 가져오기
-    ranked_data = Play_rank.objects.all().order_by('rank')
+    # `rank_reg_date`가 가장 최신인 데이터의 `날짜`와 `시간` (초 제외) 가져오기
+    kst = pytz.timezone('Asia/Seoul')
+    latest_rank_date = (
+        Play_rank.objects.annotate(latest_date=Max('rank_reg_date'))
+        .values_list('latest_date', flat=True)
+        .order_by('-latest_date')
+        .first()
+    )
+
+    if latest_rank_date:
+        # 초를 제외한 기준시간 계산
+        latest_rank_date = latest_rank_date.astimezone(kst).replace(second=0, microsecond=0)
+
+        # 최신 `rank_reg_date`와 일치하는 데이터만 필터링
+        ranked_data = Play_rank.objects.filter(rank_reg_date__gte=latest_rank_date).order_by('rank')
+    else:
+        ranked_data = Play_rank.objects.none()
 
     if request.user.is_authenticated:  # 로그인 여부 체크
         # Play_list에서 해당 연극의 즐겨찾기 여부를 미리 가져오기
