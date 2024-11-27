@@ -123,8 +123,8 @@ def aggregate_and_rank_by_region(ststype, date):
         # 순위 데이터 생성
         for rank, (perf_id, total_audience) in enumerate(sorted_region_performances, start=1):
             performance = performance_info[perf_id]
-            # 날짜와 시간을 'YYYY-MM-DD HH:MM' 형식으로 변환
-            rank_reg_date = timezone.now()
+            # 날짜와 시간을 한국 기준
+            rank_reg_date = datetime.now(kst)
             region_name = area_code_to_region.get(area_codes[0], "Unknown")  # 첫 번째 지역 코드에 해당하는 지역명만 가져옴
             region_ranked_data.append({
                 "rank": rank,
