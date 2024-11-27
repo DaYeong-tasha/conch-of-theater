@@ -13,5 +13,6 @@ urlpatterns = [
     path('profile/', views.mypage_home, name='profile'),
     path('profile/load_content/<str:tab_name>/', views.load_tab_content, name='load_tab_content'),  # 탭 콘텐츠 로드
     path('profile/edit/', views.mypage_update, name='mypage_update'),
+    #path('profile/reviews/list/', views.mypage_review_list, name='mypage_review_list'),
 
 ]

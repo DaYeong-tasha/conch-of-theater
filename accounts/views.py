@@ -194,6 +194,6 @@ def mypage_update(request):
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'accounts/profile_edit.html', {'form': form, 'user_profile': user_profile})
-
-
+def mypage_review_list(request):
+    pass
 

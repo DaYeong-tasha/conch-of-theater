@@ -22,6 +22,7 @@ class UserProfileForm(forms.ModelForm):
             'birth': forms.DateInput(attrs={'type': 'date'}),  # 날짜 입력 개선
         }
 
+
         # 필드를 수정할 수 없도록 clean() 메서드 오버라이드
         def clean(self):
             cleaned_data = super().clean()
