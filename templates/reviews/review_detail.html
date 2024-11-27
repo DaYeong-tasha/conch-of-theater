@@ -1,0 +1,38 @@
+{% extends 'nav_base.html' %}
+{% block title %}리뷰 상세보기{% endblock %}
+{% block content %}
+
+{% load static %}
+
+<style>
+.img-fluid {
+        width: 210px; /* 고정 너비 */
+        height: 280px; /* 고정 높이 */
+        object-fit: cover; /* 이미지가 고정 크기에 맞게 조정됨 */
+    }
+</style>
+
+<!-- 리뷰 상세보기 -->
+<div class="container mt-5">
+    <!-- 연극 포스터 -->
+    <div class="text-center mb-4">
+        <img src="{{ review.play_id.play_poster }}" alt="연극 포스터" class="img-fluid">
+    </div>
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'review_delete' pk=review.pk %}" class="btn btn-danger">삭제</a>
+       </div><br>
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+            <div class="post-id">ID: {{ review.review_id }}</div>
+            <div style="font-size: 1em; margin-bottom: 5px;">공연장: {{ review.theater_nm }}</div>
+            <div style="font-size: 1em; margin-bottom: 5px;">연극명: {{ review.play_name }}</div>
+            <div class="boardline"></div>
+            <h5 class="card-title">{{ review.review_title }}</h5>
+            <p class="card-text">{{ review.review_contents }}</p>
+        </div>
+    </div>
+</div>
+
+{% include 'modal_base.html' %}
+{% endblock %}
