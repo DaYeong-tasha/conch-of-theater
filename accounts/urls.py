@@ -4,6 +4,7 @@ from django.urls import path, include
 
 from accounts import views
 
+
 urlpatterns = [
     path('register/', views.register, name='register'),
     path('check-id/', views.check_id, name='check_id'),

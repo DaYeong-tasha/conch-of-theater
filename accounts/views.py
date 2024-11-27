@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -14,9 +14,7 @@ from django.template.loader import render_to_string
 from common.models import Users
 from .forms import LoginForm, UserProfileForm
 from django.db import transaction
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import Users
+
 
 
 # 커스텀한 User 모델의 구성요소
@@ -133,31 +131,37 @@ def user_logout(request):
     return redirect('before_login')
 
 
+
 #회원정보 조회
 @login_required
 def mypage_home(request):
     try:
-        user_profile = Users.objects.get(id=request.user.id)
+        user_profile = Users.objects.get(username=request.user.username)
     except Users.DoesNotExist:
-        user_profile = None  # 예외 처리: 사용자 프로필이 없을 경우 None 처리
+        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')  # 사용자 프로필 없음 오류 메시지
+        return redirect('profile')  # 프로필이 없으면 마이페이지로 리디렉션
 
     return render(request, 'accounts/profile.html', {'user_profile': user_profile})
+
+
+class FavoritePlay:
+    pass
+
 
 @login_required
 def load_tab_content(request, tab_name):
     try:
-        user_profile = Users.objects.get(id=request.user.id)
+        user_profile = Users.objects.get(username=request.user.username)
     except Users.DoesNotExist:
-        user_profile = None  # 예외 처리
+        user_profile = None
 
-    # 탭에 따라 적절한 콘텐츠 반환
     if tab_name == 'profile':
         content = render_to_string('accounts/profile_edit.html', {'user_profile': user_profile})
     elif tab_name == 'favorites':
-        # 즐겨찾기 데이터를 가져오기
-        content = render_to_string('accounts/profile_favorites.html', {'user_profile': user_profile})
+        # 즐겨찾기 데이터를 가져옵니다. 예를 들어 'FavoritePlay' 모델에서 즐겨찾기를 가져온다고 가정
+        favorites = FavoritePlay.objects.filter(user=user_profile)
+        content = render_to_string('accounts/profile_favorites.html', {'favorites': favorites})
     elif tab_name == 'reviews':
-        # 리뷰 데이터를 가져오기
         content = render_to_string('accounts/profile_reviews_list.html', {'user_profile': user_profile})
     elif tab_name == 'dashboard':
         content = render_to_string('accounts/profile_dashboard.html', {'user_profile': user_profile})
@@ -171,7 +175,7 @@ def load_tab_content(request, tab_name):
 @login_required
 def mypage_update(request):
     try:
-        user_profile = Users.objects.get(id=request.user.id)
+        user_profile = Users.objects.get(username=request.user.username)
     except Users.DoesNotExist:
         user_profile = None
         messages.error(request, '사용자 프로필을 찾을 수 없습니다.')  # 사용자 프로필 없음 오류 메시지
@@ -183,11 +187,13 @@ def mypage_update(request):
             form.save()
             messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')  # 성공 메시지
             # 수정이 완료되면 마이페이지로 리다이렉트
-            return redirect('accounts:mypage_home')
+            return redirect('profile') # 서버에서 리디렉션 처리
         else:
             messages.error(request, '입력한 정보에 오류가 있습니다.')  # 오류 메시지
     else:
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'accounts/profile_edit.html', {'form': form, 'user_profile': user_profile})
+
+
 
