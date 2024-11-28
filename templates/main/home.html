@@ -4,115 +4,119 @@
 {% block title %}극장의 소라고동{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"> 
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/theater_map.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <div class="main-container">
-  <!-- 상단 검색바 -->
-  <div class="search-bar">
-      <input type="text" placeholder="공연/출연진 검색" class="search-input">
-      <button class="search-button">
-          <i class="fas fa-search"></i>
-      </button>
-  </div>
-
-  <!-- TOP 10 연극 섹션 -->
-  <div class="section">
-      <div class="section-header">
-          <h2>TOP 10 연극</h2>
-          <select class="filter-select">
-              <option>전체순위별</option>
-          </select>
-      </div>
-      <div class="play-grid">
-          {% for i in '1234'|make_list %}
-          <div class="play-card">
-              <div class="poster-placeholder"></div>
-          </div>
-          {% endfor %}
-      </div>
-  </div>
-
-  <!-- 카테고리 필터 -->
-  <div class="category-filters">
-      <div class="filter-row">
-          <button class="filter-btn active">공연예정</button>
-          <button class="filter-btn">공연중</button>
-          <button class="filter-btn">오픈런</button>
-          <button class="filter-btn">리미티드런</button>
-          <button class="filter-btn">마감임박</button>
-      </div>
-      <div class="filter-row">
-          <button class="filter-btn">코미디</button>
-          <button class="filter-btn">드라마</button>
-          <button class="filter-btn">로맨스</button>
-          <button class="filter-btn">스릴러</button>
-          <button class="filter-btn">가족/아동</button>
-      </div>
-      <div class="filter-row">
-          <button class="filter-btn">즐거운</button>
-          <button class="filter-btn">우울한</button>
-          <button class="filter-btn">지친</button>
-          <button class="filter-btn">위로가필요한</button>
-          <button class="filter-btn">설레는</button>
-      </div>
-      <div class="filter-row">
-          <button class="filter-btn">꿀잼</button>
-          <button class="filter-btn">따뜻한 이야기</button>
-          <button class="filter-btn">믿고보는배우</button>
-          <button class="filter-btn">인상깊은</button>
-          <button class="filter-btn">기대이상</button>
-      </div>
-  </div>
-
-  <!-- 키워드/장르 추천 섹션 -->
-  <div class="section">
-      <h3>키워드/장르 추천</h3>
-      <div class="play-grid small-grid">
-          {% for i in '1234'|make_list %}
-          <div class="play-card small">
-              <div class="poster-placeholder"></div>
-          </div>
-          {% endfor %}
-      </div>
-  </div>
-
-<!-- 현재 위치 주변 극장 섹션 (지도) -->
-<div class="section">
-    <h3>현재 위치 주변 극장</h3>
-    <div class="radius-selector" style="margin-bottom: 10px;">
-        <div class="radius-btns">
-            <button class="radius-btn active" data-radius="5000">5km</button>
-            <button class="radius-btn" data-radius="10000">10km</button>
-            <button class="radius-btn" data-radius="20000">20km</button>
-        </div>
-    </div>
-    <div class="map-container">
-        <!-- 위치 권한 요청 모달 -->
-        <div id="locationModal" class="location-modal">
-            <div class="location-modal-content">
-                <h4>위치 정보 동의</h4>
-                <p>가까운 극장을 찾기 위해 <br>
-                    위치 정보가 필요합니다.<br>
-                    <br>
-                동의하시면 현재 위치로,<br>
-                거부하시면 카카오 본사 주변의<br>
-                극장을 보여드립니다.</p>
-                <div class="modal-buttons">
-                    <button id="allowLocation" class="btn-allow">동의</button>
-                    <button id="denyLocation" class="btn-deny">거부</button>
+    <!-- TOP 10 연극 섹션 -->
+    <div class="section">
+        <div class="section-header">
+            <div class="header-content">
+                <h2 class="title">TOP 10 연극</h2>
+                <select class="filter-select">
+                    <option value="all">전체순위별</option>
+                    <option value="rating">인기순</option>
+                    <option value="review">최신순</option>
+                    <option value="booking">평점순</option>
+                </select>
+                <div class="search-box">
+                    <input type="text" placeholder="공연/출연진 검색" class="search-input">
+                    <button class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </div>
         </div>
-        <div id="map"></div>
+        <div class="play-grid">
+            {% for i in '1234'|make_list %}
+            <div class="play-card">
+                <div class="poster-placeholder"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 카테고리 필터 -->
+    <div class="category-filters">
+        <div class="filter-row">
+            <button class="filter-btn active">전체</button>
+            <button class="filter-btn">공연예정</button>
+            <button class="filter-btn">공연중</button>
+            <button class="filter-btn">리미티드런</button>
+            <button class="filter-btn">마감임박</button>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn">코미디</button>
+            <button class="filter-btn">드라마</button>
+            <button class="filter-btn">로맨스</button>
+            <button class="filter-btn">스릴러</button>
+            <button class="filter-btn">가족/아동</button>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn">즐거운</button>
+            <button class="filter-btn">우울한</button>
+            <button class="filter-btn">지친</button>
+            <button class="filter-btn">위로가필요한</button>
+            <button class="filter-btn">설레는</button>
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn">꿀잼</button>
+            <button class="filter-btn">따뜻한 이야기</button>
+            <button class="filter-btn">믿고보는배우</button>
+            <button class="filter-btn">인상깊은</button>
+            <button class="filter-btn">기대이상</button>
+        </div>
+    </div>
+
+    <!-- 키워드/장르 추천 섹션 -->
+    <div class="section">
+        <h3>키워드/장르 추천</h3>
+        <div class="play-grid">
+            <div class="play-card">
+                <img src="{% static 'images/poster1.jpg' %}" alt="연극 포스터 1" class="poster-image">
+            </div>
+            <div class="play-card">
+                <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
+            </div>
+            <div class="play-card">
+                <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
+            </div>
+            <div class="play-card">
+                <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- 현재 위치 주변 극장 섹션 (지도) -->
+    <div class="section">
+        <h3>현재 위치 주변 극장</h3>
+        <div class="map-container">
+            <div id="locationModal" class="location-modal">
+                <div class="location-modal-content">
+                    <h4>위치 정보 동의</h4>
+                    <p>가까운 극장을 찾기 위해<br>위치 정보가 필요합니다.<br><br>
+                        동의하시면 현재 위치로,<br>거부하시면 카카오 본사 주변의<br>극장을 보여드립니다.</p>
+                    <div class="modal-buttons">
+                        <button id="allowLocation" class="btn-allow">동의</button>
+                        <button id="denyLocation" class="btn-deny">거부</button>
+                    </div>
+                </div>
+            </div>
+            <div id="map"></div>
+            <div class="map-controls">
+                <button class="radius-btn active" data-radius="5000">5km</button>
+                <button class="radius-btn" data-radius="10000">10km</button>
+                <button class="radius-btn" data-radius="20000">20km</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- 모달 베이스 include -->
 {% include 'modal_base.html' %}
 
-<!-- 카카오맵 API 스크립트 -->
 <script type="text/javascript">
-   console.log("API Key being used:", "{{ kakao_map_api_key }}");
+    console.log("API Key being used:", "{{ kakao_map_api_key }}");
 </script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_map_api_key }}&libraries=services,clusterer,geometry"></script>
 <script src="{% static 'js/theater_map.js' %}"></script>
@@ -127,17 +131,13 @@
                 console.warn('No theaters data available');
             }
 
-            // TheaterMap 클래스 초기화 (미니맵 모드로)
             var theaterMap = new TheaterMap('map', theaters, true);
 
-            // 반경 버튼 이벤트 리스너 추가
             document.querySelectorAll('.radius-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // 활성화된 버튼 스타일 변경
                     document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // 반경 변경 적용
                     const radius = this.dataset.radius;
                     theaterMap.filterMiniMapByRadius(parseInt(radius));
                 });
