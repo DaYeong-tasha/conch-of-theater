@@ -56,8 +56,7 @@ class Theater_location(models.Model):
 
 # play_detail : 연극 상세 모델 (common 앱에 위치)
 class Play_detail(models.Model):
-    playdt_id = models.AutoField(primary_key=True)
-    play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id')
+    play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id', primary_key=True)
     play_name = models.CharField(max_length=300)
     genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
     play_strdate = models.CharField(max_length=300) # 시작일
