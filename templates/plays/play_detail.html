@@ -1,0 +1,163 @@
+{% extends 'nav_base.html' %}
+{% block title %}연극 상세보기{% endblock %}
+{% block content %}
+
+{% load static %}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- 왼쪽 섹션 -->
+        <div class="col-md-5">
+            <h4>{{ play_detail.play_name }}</h4><br>
+            <img src="{{ play_detail.play_poster }}" alt="포스터 이미지" class="img-fluid">
+        </div>
+        <!-- 오른쪽 섹션 -->
+        <div class="col-md-6" style="margin-top: 50px;">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" id="booking-button">예매</button>
+            </div>
+            <div class="play-detail">
+            <p><strong>장소:</strong> {{ play_detail.theater_nm }}</p>
+            <p><strong>공연 기간:</strong> {{ play_detail.play_strdate }} ~ {{ play_detail.play_enddate }}</p>
+            <p><strong>러닝타임: </strong> {{ play_detail.play_runtime }}</p>
+            <p><strong>관람 연령:</strong> {{ play_detail.play_age }}</p>
+            <p><strong>가격:</strong> {{ play_detail.play_guidance }}</p>
+            <p><strong>공연 시간:</strong> {{ play_detail.dtguidance }}</p>
+        </div>
+            </div>
+    </div><br><br>
+
+    <!-- 추가된 nav -->
+<nav>
+    <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#play-info" data-toggle="tab">공연 정보</a>
+            </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#review-info" data-toggle="tab">후기</a>
+        </li>
+    </ul>
+
+</nav>
+
+ <div class="tab-content">
+    {% if play_detail.styurls_1 or play_detail.styurls_2 or play_detail.styurls_3 or play_detail.styurls_4 %}
+        <div class="tab-pane fade show active" id="play-info">
+            <p>공연 정보</p>
+            <!-- 공연 정보 내용 추가 -->
+            {% if play_detail.styurls_1 %}
+                <div>
+                    <img src="{{ play_detail.styurls_1 }}" alt="상세 이미지 1" class="img-fluid2">
+                </div>
+            {% endif %}
+            {% if play_detail.styurls_2 %}
+                <div>
+                    <img src="{{ play_detail.styurls_2 }}" alt="상세 이미지 2" class="img-fluid2">
+                </div>
+            {% endif %}
+            {% if play_detail.styurls_3 %}
+                <div>
+                    <img src="{{ play_detail.styurls_3 }}" alt="상세 이미지 3" class="img-fluid2">
+                </div>
+            {% endif %}
+            {% if play_detail.styurls_4 %}
+                <div>
+                    <img src="{{ play_detail.styurls_4 }}" alt="상세 이미지 4" class="img-fluid2">
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="tab-pane fade" id="review-info">
+    <p>후기</p>
+    {% for review in reviews %}
+        <p>별점: {{ review.star }}</p>
+        <p>작성자: {{ review.username }}</p>
+        <p>작성일: {{ review.review_reg_date }}</p>
+        <p>좋아요 수: {{ review.like_users.count }}</p>
+        <p>싫어요 수: {{ review.dislike_users.count }}</p>
+        <p>제목: {{ review.review_title }}</p>
+        <p>내용: {{ review.review_contents }}</p>
+    {% endfor %}
+</div>
+</div>
+</div>
+
+
+<!-- 모달 -->
+<div class="modal" id="bookingModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="bookingModalLabel">예매 링크</h5>
+            <button type="button" class="close-btn" id="closeModal">닫기</button>
+        </div>
+        <div class="modal-body">
+    {% if play_detail.relate_1 %}
+        <a href="{{ play_detail.relateurl_1 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_1 }}</a>
+    {% endif %}
+    {% if play_detail.relate_2 %}
+        <a href="{{ play_detail.relateurl_2 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_2 }}</a>
+    {% endif %}
+    {% if play_detail.relate_3 %}
+        <a href="{{ play_detail.relateurl_3 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_3 }}</a>
+    {% endif %}
+    {% if play_detail.relate_4 %}
+        <a href="{{ play_detail.relateurl_4 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_4 }}</a>
+    {% endif %}
+    {% if play_detail.relate_5 %}
+        <a href="{{ play_detail.relateurl_5 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_5 }}</a>
+    {% endif %}
+    {% if play_detail.relate_6 %}
+        <a href="{{ play_detail.relateurl_6 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_6 }}</a>
+    {% endif %}
+    {% if play_detail.relate_7 %}
+        <a href="{{ play_detail.relateurl_7 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_7 }}</a>
+    {% endif %}
+    {% if play_detail.relate_8 %}
+        <a href="{{ play_detail.relateurl_8 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_8 }}</a>
+    {% endif %}
+       <br><p style="color: red; font-size: small;">※안내 : 타임티켓이 예매처에 포함된 경우 할인이 적용될 수 있으니, 먼저 타임티켓을 확인해 보세요.</p>
+</div>
+    </div>
+</div>
+
+
+
+<style>
+    .play-detail strong {
+        display: inline-block;
+        width: 100px;
+        padding-right: 10px;
+    }
+
+    .img-fluid {
+        width: 210px; /* 고정 너비 */
+        height: 280px; /* 고정 높이 */
+        object-fit: cover;
+    }
+
+    .img-fluid2 {
+        max-width: 50%;
+        height: auto;
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('booking-button').addEventListener('click', function() {
+            document.getElementById('bookingModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('bookingModal').style.display = 'none';
+        });
+
+        document.getElementById('bookingModal').addEventListener('click', function(event) {
+            if (event.target === document.getElementById('bookingModal')) {
+                document.getElementById('bookingModal').style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% include 'modal_base.html' %}
+{% endblock %}
