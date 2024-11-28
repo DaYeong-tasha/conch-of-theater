@@ -28,13 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="play-grid">
-            {% for i in '1234'|make_list %}
-            <div class="play-card">
-                <div class="poster-placeholder"></div>
-            </div>
-            {% endfor %}
-        </div>
+        {% include 'play_rank_base.html' %}
     </div>
 
     <!-- 카테고리 필터 -->
