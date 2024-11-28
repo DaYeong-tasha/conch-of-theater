@@ -77,9 +77,6 @@ $RECYCLE.BIN/
 /static_root/
 /media_root/
 /collected_static/
-*.css.map
-*.js.map
-.sass-cache/
 node_modules/
 bower_components/
 
