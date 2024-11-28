@@ -78,6 +78,14 @@ $RECYCLE.BIN/
 /collected_static/
 node_modules/
 bower_components/
+static/admin/
+
+# static 폴더는 추적하도록 설정
+!static/
+!static/css/
+!static/data/
+!static/js/
+!static/images/
 
 # Asset 관련
 assets/bundles/
