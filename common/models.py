@@ -46,7 +46,7 @@ class Play_list(models.Model):
 class Theater_location(models.Model):
     mt10id = models.CharField(primary_key=True, max_length=50) # 공연시설ID
     theater_nm = models.CharField(max_length=300) # 공연장명
-    addr = models.CharField(max_length=300) # 공연장 전체 주소
+    addr = models.CharField(max_length=300, db_column='theater_addr') # 공연장 전체 주소
 
     class Meta:
         # managed = False

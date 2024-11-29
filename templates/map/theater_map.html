@@ -99,6 +99,9 @@
                level: 3
            };
 
+            var zoomControl = new kakao.maps.ZoomControl();
+            map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
            // 맵 생성
            var map = new kakao.maps.Map(mapContainer, mapOption);
            console.log('Map created successfully');
