@@ -1,16 +1,21 @@
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+
 from common.models import Users
-from .forms import LoginForm
+from .forms import LoginForm, UserProfileForm
 from django.db import transaction
+from .forms import ReviewForm
+from .models import Review
 
 
 # 커스텀한 User 모델의 구성요소
@@ -127,5 +132,99 @@ def user_logout(request):
     return redirect('before_login')
 
 
-def mypage_home():
+
+#회원정보 조회
+@login_required
+def mypage_home(request):
+    try:
+        user_profile = Users.objects.get(username=request.user.username)
+    except Users.DoesNotExist:
+        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')  # 사용자 프로필 없음 오류 메시지
+        return redirect('profile')  # 프로필이 없으면 마이페이지로 리디렉션
+
+    return render(request, 'accounts/profile.html', {'user_profile': user_profile})
+
+
+class FavoritePlay:
     pass
+
+
+@login_required
+def load_tab_content(request, tab_name):
+    try:
+        user_profile = Users.objects.get(username=request.user.username)
+    except Users.DoesNotExist:
+        user_profile = None
+
+    if tab_name == 'profile':
+        content = render_to_string('accounts/profile_edit.html', {'user_profile': user_profile})
+    elif tab_name == 'favorites':
+        # 즐겨찾기 데이터를 가져옵니다. 예를 들어 'FavoritePlay' 모델에서 즐겨찾기를 가져온다고 가정
+        favorites = FavoritePlay.objects.filter(user=user_profile)
+        content = render_to_string('accounts/profile_favorites.html', {'favorites': favorites})
+    elif tab_name == 'reviews':
+        content = render_to_string('accounts/profile_reviews_list.html', {'user_profile': user_profile})
+    elif tab_name == 'dashboard':
+        content = render_to_string('accounts/profile_dashboard.html', {'user_profile': user_profile})
+    else:
+        content = "Invalid tab"
+
+    return JsonResponse({'content': content})
+
+
+#회원정보 수정
+@login_required
+def mypage_update(request):
+    try:
+        user_profile = Users.objects.get(username=request.user.username)  # Users 모델로부터 사용자 가져오기
+    except Users.DoesNotExist:
+        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')
+        return redirect('accounts:mypage_home')
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            # ManyToManyField 및 JSONField 데이터 처리
+            user = form.save(commit=False)
+
+            # JSONField 및 CharField 처리
+            user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
+            user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)
+
+            user.save()  # 수정된 데이터 저장
+            form.save_m2m()  # ManyToMany 관계 저장
+            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
+            return redirect('profile')
+        else:
+            print("폼 에러:", form.errors)  # 에러 출력
+            messages.error(request, '정보 수정에 실패했습니다.')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'accounts/profile_edit.html', {'form': form})
+
+
+
+#my리뷰
+def mypage_reviews_list(request):
+    # 현재 사용자가 작성한 리뷰만 가져오기
+    user_reviews = Review.objects.filter(username=request.user.username)
+    return render(request, 'profile_reviews_list.html', {'user_reviews': user_reviews})
+
+
+
+#리뷰 수정
+def reviews_edit(request, review_id):
+    review = get_object_or_404(Review, review_id=review_id, username=request.user.username)  # 해당 리뷰 가져오기
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()  # 수정된 데이터 저장
+            return redirect('mypage_reviews_list')  # 수정 후 리뷰 리스트로 리다이렉트
+    else:
+        form = ReviewForm(instance=review)  # 기존 데이터로 폼 채우기
+
+    return render(request, 'review_edit.html', {'form': form})  # 수정 페이지 렌더링
+
+

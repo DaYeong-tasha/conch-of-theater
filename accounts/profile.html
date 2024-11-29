@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.fullname }}님의 마이페이지</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+     <h1>마이페이지</h1>
+
+    <!-- 탭 메뉴 -->
+    <ul class="tabs">
+        <li data-tab="profile">회원정보수정</li>
+        <li data-tab="favorites">즐겨찾기(💗)</li>
+        <li data-tab="reviews">my리뷰</li>
+        <li data-tab="dashboard">my돋보기</li>
+    </ul>
+
+    <!-- 탭 콘텐츠를 표시할 영역 -->
+    <div id="tab-content"></div>
+
+    <script>
+        $(document).ready(function() {
+            // 기본적으로 프로필 탭을 로드
+            loadTabContent('profile');
+
+            // 탭 클릭 시 AJAX로 콘텐츠 로드
+            $('.tabs li').click(function() {
+                var tabName = $(this).data('tab');
+                loadTabContent(tabName);
+            });
+
+            // 탭 콘텐츠 로드 함수
+            function loadTabContent(tabName) {
+                $.ajax({
+                    url: "{% url 'load_tab_content' 'PROFILE_TAB' %}".replace('PROFILE_TAB', tabName),
+                    method: "GET",
+                    success: function(response) {
+                        $('#tab-content').html(response.content);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
