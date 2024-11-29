@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        {% extends 'base.html' %}
+
+        {% block content %}
+        <h2>리뷰 수정</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {{ form.review_title.label_tag }}
+                {{ form.review_title }}  <!-- 제목 입력 필드 -->
+            </div>
+
+            <div class="form-group">
+                {{ form.review_contents.label_tag }}
+                {{ form.review_contents }}  <!-- 내용 입력 필드 -->
+            </div>
+
+            <div class="form-group">
+                {{ form.star.label_tag }}
+                {{ form.star }}  <!-- 별점 입력 필드 -->
+            </div>
+
+            <button type="submit" class="btn btn-success">수정 완료</button>
+            <a href="{% url 'mypage_reviews_list' %}" class="btn btn-secondary">취소</a>  <!-- 취소 버튼, 리뷰 목록으로 돌아감 -->
+        </form>
+
+        {% endblock %}
+
+
+    </body>
+</html>

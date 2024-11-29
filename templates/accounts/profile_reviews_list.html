@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        {% extends 'base.html' %}
+
+        {% block content %}
+        <h2>마이 리뷰</h2>
+
+        {% for review in user_reviews %}
+          <div class="review-item">
+            <h3>{{ review.review_title }}</h3>
+            <p>{{ review.review_contents }}</p>
+            <small>별점: {{ review.star }}</small>
+            <a href="{% url 'reviews_edit' review.review_id %}" class="btn btn-primary">수정하기</a>  <!-- 각 리뷰 수정 페이지로 이동 -->
+          </div>
+          <hr> <!-- 리뷰 간 구분선 추가 -->
+        {% endfor %}
+
+        {% endblock %}
+
+
+    </body>
+</html>

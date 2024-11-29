@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -14,7 +14,8 @@ from django.template.loader import render_to_string
 from common.models import Users
 from .forms import LoginForm, UserProfileForm
 from django.db import transaction
-
+from .forms import ReviewForm
+from .models import Review
 
 
 # 커스텀한 User 모델의 구성요소
@@ -175,25 +176,55 @@ def load_tab_content(request, tab_name):
 @login_required
 def mypage_update(request):
     try:
-        user_profile = Users.objects.get(username=request.user.username)
+        user_profile = Users.objects.get(username=request.user.username)  # Users 모델로부터 사용자 가져오기
     except Users.DoesNotExist:
-        user_profile = None
-        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')  # 사용자 프로필 없음 오류 메시지
+        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')
         return redirect('accounts:mypage_home')
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')  # 성공 메시지
-            # 수정이 완료되면 마이페이지로 리다이렉트
-            return redirect('profile') # 서버에서 리디렉션 처리
+            # ManyToManyField 및 JSONField 데이터 처리
+            user = form.save(commit=False)
+
+            # JSONField 및 CharField 처리
+            user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
+            user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)
+
+            user.save()  # 수정된 데이터 저장
+            form.save_m2m()  # ManyToMany 관계 저장
+            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
+            return redirect('profile')
         else:
-            messages.error(request, '입력한 정보에 오류가 있습니다.')  # 오류 메시지
+            print("폼 에러:", form.errors)  # 에러 출력
+            messages.error(request, '정보 수정에 실패했습니다.')
     else:
         form = UserProfileForm(instance=user_profile)
 
-    return render(request, 'accounts/profile_edit.html', {'form': form, 'user_profile': user_profile})
-def mypage_review_list(request):
-    pass
+    return render(request, 'accounts/profile_edit.html', {'form': form})
+
+
+
+#my리뷰
+def mypage_reviews_list(request):
+    # 현재 사용자가 작성한 리뷰만 가져오기
+    user_reviews = Review.objects.filter(username=request.user.username)
+    return render(request, 'profile_reviews_list.html', {'user_reviews': user_reviews})
+
+
+
+#리뷰 수정
+def reviews_edit(request, review_id):
+    review = get_object_or_404(Review, review_id=review_id, username=request.user.username)  # 해당 리뷰 가져오기
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()  # 수정된 데이터 저장
+            return redirect('mypage_reviews_list')  # 수정 후 리뷰 리스트로 리다이렉트
+    else:
+        form = ReviewForm(instance=review)  # 기존 데이터로 폼 채우기
+
+    return render(request, 'review_edit.html', {'form': form})  # 수정 페이지 렌더링
+
 
