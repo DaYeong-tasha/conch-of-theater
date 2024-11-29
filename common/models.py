@@ -173,3 +173,5 @@ class Star(models.Model):
     def __str__(self):
         # 숫자 -> 문자열 변환
         return str(self.star_total)
+
+# commit용 수정사항
