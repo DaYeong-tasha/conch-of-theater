@@ -1,46 +1,58 @@
-import requests
-from datetime import datetime, timedelta
-from django.http import JsonResponse
 from django.shortcuts import render
-from common.models import Play_rank, Play_list
-import pytz
+from django.http import JsonResponse
 from django.db.models import Max
+from common.models import Play_rank, Play_list
+from django.utils import timezone
 
 
-def home(request):
-    # `rank_reg_date`가 가장 최신인 데이터의 `날짜`와 `시간` (초 제외) 가져오기
-    kst = pytz.timezone('Asia/Seoul')
-    latest_rank_date = (
-        Play_rank.objects.annotate(latest_date=Max('rank_reg_date'))
-        .values_list('latest_date', flat=True)
-        .order_by('-latest_date')
-        .first()
-    )
+def get_latest_ranked_data(selected_area='서울', selected_ststype='day'):
+    """날짜 기준으로 최신 rank_reg_date 데이터를 가져오기"""
+    latest_date = Play_rank.objects.aggregate(
+        latest_date=Max('rank_reg_date')
+    )['latest_date']
 
-    if latest_rank_date:
-        # 초를 제외한 기준시간 계산
-        latest_rank_date = latest_rank_date.astimezone(kst).replace(second=0, microsecond=0)
+    if latest_date:
+        # 최신 날짜 기준으로 필터링
+        ranked_data = Play_rank.objects.filter(
+            rank_reg_date__date=latest_date.date()
+        ).order_by('rank')
 
-        # 최신 `rank_reg_date`와 일치하는 데이터만 필터링
-        ranked_data = Play_rank.objects.filter(rank_reg_date__gte=latest_rank_date).order_by('rank')
-    else:
-        ranked_data = Play_rank.objects.none()
+        if selected_area:
+            ranked_data = ranked_data.filter(link_area=selected_area)
+        if selected_ststype:
+            ranked_data = ranked_data.filter(ststypes=selected_ststype)
 
-    if request.user.is_authenticated:  # 로그인 여부 체크
-        # Play_list에서 해당 연극의 즐겨찾기 여부를 미리 가져오기
-        play_ids = [play.play_id for play in ranked_data]
-        play_lists = Play_list.objects.filter(play_id__in=play_ids)
+        return ranked_data
 
-        # 로그인한 사용자가 각 연극을 즐겨찾기 했는지 확인
-        for play in ranked_data:
-            play_list = play_lists.filter(play_id=play.play_id).first()
-            play.is_favorite = play_list.favorite_users.filter(id=request.user.id).exists() if play_list else False
+    return Play_rank.objects.none()
 
-        return render(request, 'main/home.html', {'ranked_data': ranked_data})
-    else:
-        return render(request, 'main/before_login.html', {'ranked_data': ranked_data})
+
+def get_ranked_context(selected_area='서울', selected_ststype='day'):
+    """공통 데이터를 처리하고 context를 반환"""
+    ranked_data = get_latest_ranked_data(selected_area, selected_ststype)
+    link_area = Play_rank.objects.values('link_area').distinct()
+    ststypes = Play_rank.objects.values('ststypes').distinct()
+
+    return {
+        'ranked_data': ranked_data,
+        'link_area': link_area,
+        'ststypes': ststypes,
+        'selected_area': selected_area,
+        'selected_ststype': selected_ststype,
+    }
+
+
+def play_rank(request):
+    """랭킹 페이지"""
+    selected_area = request.GET.get('link_area', '전체')  # 기본값: '서울'
+    selected_ststype = request.GET.get('ststypes', 'day')  # 기본값: 'day'
+
+    context = get_ranked_context(selected_area, selected_ststype)
+    return render(request, 'play_rank_base.html', context)
+
 
 def toggle_favorite(request, play_id):
+    """즐겨찾기 추가/제거"""
     if not request.user.is_authenticated:
         return JsonResponse({'message': '로그인 후 이용해주세요.'}, status=400)
 
@@ -49,9 +61,8 @@ def toggle_favorite(request, play_id):
     except Play_list.DoesNotExist:
         return JsonResponse({'message': '해당 연극이 존재하지 않습니다.'}, status=404)
 
-    is_favorite = request.user in play_list.favorite_users.all()
-
     try:
+        is_favorite = play_list.favorite_users.filter(id=request.user.id).exists()
         if is_favorite:
             play_list.favorite_users.remove(request.user)
             message = '즐겨찾기 해제되었습니다.'
@@ -62,3 +73,12 @@ def toggle_favorite(request, play_id):
         return JsonResponse({'message': f'오류 발생: {str(e)}'}, status=500)
 
     return JsonResponse({'message': message}, status=200)
+
+
+def home(request):
+    """홈 화면"""
+    template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
+
+    # 기본 필터 조건으로 공통 데이터를 가져옴
+    context = get_ranked_context(selected_area='전체', selected_ststype='day')
+    return render(request, template_name, context)
