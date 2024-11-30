@@ -46,7 +46,7 @@ class Play_list(models.Model):
 class Theater_location(models.Model):
     mt10id = models.CharField(primary_key=True, max_length=50) # 공연시설ID
     theater_nm = models.CharField(max_length=300) # 공연장명
-    addr = models.CharField(max_length=300, db_column='theater_addr') # 공연장 전체 주소
+    theater_addr = models.CharField(max_length=300, db_column='theater_addr') # 공연장 전체 주소
 
     class Meta:
         # managed = False
@@ -108,23 +108,23 @@ class Location(models.Model):
 
 
 
-# Play_rank : 연극 순위 모델 (common 앱에 위치)
-# class Play_rank(models.Model):
-#     rank_id = models.AutoField(primary_key=True) # PK용 필드
-#     rank = models.IntegerField() # 순위
-#     play_id = models.CharField(max_length=300)
-#     play_name = models.CharField(max_length=300)
-#     play_period = models.CharField(max_length=300) # 공연기간
-#     theater_nm = models.CharField(max_length=300)  # 공연장명
-#     rank_area = models.CharField(max_length=50) # 지역 (ex. 서울)
-#     play_poster = models.CharField(max_length=300)
-#     ststypes = models.CharField(max_length=50) # day/week/month
-#     link_area = models.CharField(max_length=50) # csv 저장용
-#     rank_reg_date = models.DateTimeField() # API에서 연극 순위 불러온 날짜(DAG 트리거 날짜)
-#
-#     class Meta:
-#         # managed = False
-#         db_table = 'Play_rank'
+#Play_rank : 연극 순위 모델 (common 앱에 위치)
+class Play_rank(models.Model):
+    rank_id = models.AutoField(primary_key=True) # PK용 필드
+    rank = models.IntegerField() # 순위
+    play_id = models.CharField(max_length=300)
+    play_name = models.CharField(max_length=300)
+    play_period = models.CharField(max_length=300) # 공연기간
+    theater_nm = models.CharField(max_length=300)  # 공연장명
+    rank_area = models.CharField(max_length=50) # 지역 (ex. 서울)
+    play_poster = models.CharField(max_length=300)
+    ststypes = models.CharField(max_length=50) # day/week/month
+    link_area = models.CharField(max_length=50) # csv 저장용
+    rank_reg_date = models.DateTimeField() # API에서 연극 순위 불러온 날짜(DAG 트리거 날짜)
+
+    class Meta:
+        # managed = False
+        db_table = 'Play_rank'
 
 
 
@@ -173,3 +173,5 @@ class Star(models.Model):
     def __str__(self):
         # 숫자 -> 문자열 변환
         return str(self.star_total)
+
+# commit용 수정사항
