@@ -11,11 +11,11 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 
-from common.models import Users
+from accounts.models import Users
 from .forms import LoginForm, UserProfileForm
 from django.db import transaction
 from .forms import ReviewForm
-from .models import Review
+from common.models import Review, Play_list 
 
 
 # 커스텀한 User 모델의 구성요소
