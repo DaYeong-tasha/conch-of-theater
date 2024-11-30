@@ -22,42 +22,6 @@ def play_review(request):
     reviews = Review.objects.all()
     return render(request, 'plays/play_review.html', {'reviews': reviews})
 
-# @login_required
-# @require_POST
-# def toggle_like(request, review_id):
-#     review = Review.objects.get(id=review_id)
-#     user = request.user
-#
-#     if user in review.like_users.all():
-#         review.like_users.remove(user)
-#     else:
-#         review.like_users.add(user)
-#         if user in review.dislike_users.all():
-#             review.dislike_users.remove(user)
-#
-#     return JsonResponse({
-#         'like_count': review.like_users.count(),
-#         'dislike_count': review.dislike_users.count()
-#     })
-#
-# @login_required
-# @require_POST
-# def toggle_dislike(request, review_id):
-#     review = Review.objects.get(id=review_id)
-#     user = request.user
-#
-#     if user in review.dislike_users.all():
-#         review.dislike_users.remove(user)
-#     else:
-#         review.dislike_users.add(user)
-#         if user in review.like_users.all():
-#             review.like_users.remove(user)
-#
-#     return JsonResponse({
-#         'like_count': review.like_users.count(),
-#         'dislike_count': review.dislike_users.count()
-#     })
-
 
 
 @login_required
