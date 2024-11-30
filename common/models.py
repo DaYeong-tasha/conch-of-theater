@@ -1,9 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-# Create your models here.
-from django.conf import settings
-from accounts.models import Users
+from django.conf import settings 
 
 
 ### 외래키는 전부 on_delete=models.CASCADE로 설정
