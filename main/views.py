@@ -18,13 +18,13 @@ def get_latest_ranked_data(selected_area='전국', selected_ststype='day'):
         ).order_by('rank')
 
         if selected_area:
-            print(f"Filter by link_area: {selected_area}")
+            #print(f"Filter by link_area: {selected_area}")
             ranked_data = ranked_data.filter(link_area=selected_area)
         if selected_ststype:
-            print(f"Filter by ststypes: {selected_ststype}")
+            #print(f"Filter by ststypes: {selected_ststype}")
             ranked_data = ranked_data.filter(ststypes=selected_ststype)
 
-        print(f"DEBUG: Final QuerySet = {ranked_data}")
+        #print(f"DEBUG: Final QuerySet = {ranked_data}")
         return ranked_data
 
     return Play_rank.objects.none()
@@ -54,7 +54,7 @@ def play_rank(request):
     selected_area = request.GET.get('link_area', '전국')  # 기본값: '전국'
     selected_ststype = request.GET.get('ststypes', 'day')  # 기본값: 'day'
 
-    print(f"DEBUG - link_area: {selected_area}, ststypes: {selected_ststype}")
+    #print(f"DEBUG - link_area: {selected_area}, ststypes: {selected_ststype}")
 
     context = get_ranked_context(selected_area, selected_ststype)
     return render(request, 'play_rank_base.html', context)
@@ -89,9 +89,9 @@ def home(request):
     selected_area = request.GET.get('link_area', '전국')  # 기본값: '전국'
     selected_ststype = request.GET.get('ststypes', 'day')  # 기본값: 'day'
 
-    print(f"DEBUG - home - link_area: {selected_area}, ststypes: {selected_ststype}")
+    #print(f"DEBUG - home - link_area: {selected_area}, ststypes: {selected_ststype}")
 
-    # 기본 필터 조건으로 공통 데이터를 가져옴
+    # 기본 필터 조건으로 공통 데이터를 가져옴 #홈에 가지고 와야 띄우지? ^^
     context = get_ranked_context(selected_area, selected_ststype)
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)

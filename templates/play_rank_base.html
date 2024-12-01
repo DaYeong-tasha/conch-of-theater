@@ -14,11 +14,12 @@
     }
 
     .slide {
-        min-width: 22%;
+        min-width: 22%; /* 4개씩 보이게 설정 (22% -> 23%로 조금 더 조정) */
         box-sizing: border-box;
         text-align: center;
         position: relative;
-        margin: 15px;
+        margin-right: 15px; /* 좌우 마진을 줄여서 간격을 조정 */
+        margin-left: 15px;
         transition: transform 0.3s ease-in-out;
     }
 
@@ -123,7 +124,6 @@
 
 <!-- 로그인 여부에 따른 드롭다운 및 랭크 표시 -->
 {% if user.is_authenticated %}
-    <!-- 로그인 된 사용자에게만 드롭다운 보여주기 -->
     <form method="GET" action="">
         <select name="link_area" onchange="this.form.submit()">
             <option value="전국" {% if selected_area == '전국' %}selected{% endif %}>지역 선택</option>
@@ -167,35 +167,49 @@
     <button class="slider-btn next-btn">&#10095;</button>
 </div>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        let currentSlide = 0;
-        const slides = document.querySelector('.slides');
-        const slideCount = document.querySelectorAll('.slide').length;
+   document.addEventListener('DOMContentLoaded', () => {
+    // 현재 슬라이드를 추적할 변수 초기화
+    let currentSlide = 0;
+    const slides = document.querySelector('.slides');
+    const slideCount = document.querySelectorAll('.slide').length;
+    const nextBtn = document.querySelector('.next-btn');
+    const prevBtn = document.querySelector('.prev-btn');
 
-        const nextBtn = document.querySelector('.next-btn');
-        const prevBtn = document.querySelector('.prev-btn');
+    const slidesPerView = 4; // 한 화면에 보이는 슬라이드 개수
 
-        nextBtn.addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % slideCount;
-            updateSlidePosition();
-        });
+    // '다음' 버튼 클릭 시 슬라이드를 한 번에 4개씩 넘기는 이벤트 리스너
+    nextBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide + slidesPerView) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    });
 
-        prevBtn.addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
-            updateSlidePosition();
-        });
+    // '이전' 버튼 클릭 시 슬라이드를 한 번에 4개씩 뒤로 넘기는 이벤트 리스너
+    prevBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide - slidesPerView + slideCount) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    });
 
-        function updateSlidePosition() {
+    // 자동 슬라이드 전환 추가 (7초마다)
+    setInterval(() => {
+        currentSlide = (currentSlide + slidesPerView) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    }, 7000);  // 7초마다 슬라이드를 넘기기
+
+    // 슬라이드 위치를 업데이트하는 함수
+    function updateSlidePosition() {
         const slideElement = document.querySelector('.slide');
+
         if (!slideElement) {
             console.warn('No slides available to calculate position');
-            return; // 슬라이드가 없으면 함수 종료
+            return;
         }
-        const offset = -currentSlide * slideElement.offsetWidth;
-        slides.style.transform = `translateX(${offset}px)`;
-}
 
-    });
+        // 슬라이드의 총 너비 계산
+        const offset = -currentSlide * slideElement.offsetWidth;
+
+        // 슬라이드 컨테이너의 transform을 변경하여 슬라이드를 이동시킴
+        slides.style.transform = `translateX(${offset}px)`;
+    }
+});
 </script>
