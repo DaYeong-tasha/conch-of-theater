@@ -1,4 +1,3 @@
-
 <style>
     /* 슬라이더 스타일 */
     .slider {
@@ -97,29 +96,28 @@
         h4 { font-size: 16px; }
 
         .slide img {
-        height: 250px;
-        width: 200px;
-
+            height: 250px;
+            width: 200px;
         }
         .slide .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        padding: 3px;
-        font-size: 13px;
-    }
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3px;
+            font-size: 13px;
+        }
         .ranking-info {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 3px 5px;
-        font-size: 15px;
-        border-radius: 5px;
-    }
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 5px;
+            font-size: 15px;
+            border-radius: 5px;
+        }
     }
 </style>
 
@@ -127,26 +125,22 @@
 {% if user.is_authenticated %}
     <!-- 로그인 된 사용자에게만 드롭다운 보여주기 -->
     <form method="GET" action="">
-    <select name="link_area" onchange="this.form.submit()">
-        <option value="" {% if not selected_area %}selected{% endif %}>지역 선택</option>
-        {% for area in link_area %}
-        <option value="{{ area.link_area }}"
-                {% if selected_area == area.link_area %}selected{% endif %}>
-            {{ area.link_area }}
-        </option>
-        {% endfor %}
-    </select>
-    <select name="ststypes" onchange="this.form.submit()">
-        <option value="" {% if not selected_ststype %}selected{% endif %}>날짜 선택</option>
-        {% for ststype in ststypes %}
-        <option value="{{ ststype.ststypes }}"
-                {% if selected_ststype == ststype.ststypes %}selected{% endif %}>
-            {% if ststype.ststypes == "day" %}일별{% elif ststype.ststypes == "week" %}주별{% elif ststype.ststypes == "month" %}월별{% endif %}
-        </option>
-        {% endfor %}
-    </select>
-</form>
- {% endif %}
+        <select name="link_area" onchange="this.form.submit()">
+            <option value="전국" {% if selected_area == '전국' %}selected{% endif %}>지역 선택</option>
+            {% for area in link_area %}
+            <option value="{{ area }}"
+                    {% if selected_area == area %}selected{% endif %}>
+                {{ area }}
+            </option>
+            {% endfor %}
+        </select>
+        <select name="ststypes" onchange="this.form.submit()">
+            <option value="day" {% if selected_ststype == 'day' %}selected{% endif %}>일별</option>
+            <option value="week" {% if selected_ststype == 'week' %}selected{% endif %}>주별</option>
+            <option value="month" {% if selected_ststype == 'month' %}selected{% endif %}>월별</option>
+        </select>
+    </form>
+{% endif %}
 
 <!-- 랭크 표시 -->
 <div class="slider">
@@ -161,20 +155,18 @@
                 <p>{{ play.theater_nm }}</p>
                 {% include "favorite_base.html" with object_id=play.id is_favorite=play.is_favorite %}
             </div>
-            <div class="ranking-info">
-                <span>{{ play.rank }}위</span>
-            </div>
+            <div class="ranking-info">{{ forloop.counter }}위</div>
         </div>
         {% endfor %}
-     {% else %}
-            <p>표시할 데이터가 없습니다.</p>
+        {% else %}
+        <p>현재 랭킹 정보가 없습니다.</p>
         {% endif %}
     </div>
-    {% if ranked_data.exists %}
-        <button class="slider-btn prev-btn">&#10094;</button>
-        <button class="slider-btn next-btn">&#10095;</button>
-    {% endif %}
+
+    <button class="slider-btn prev-btn">&#10094;</button>
+    <button class="slider-btn next-btn">&#10095;</button>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -196,9 +188,14 @@
         });
 
         function updateSlidePosition() {
-            const offset = -currentSlide * (document.querySelector('.slide').offsetWidth);
-            slides.style.transform = `translateX(${offset}px)`;
+        const slideElement = document.querySelector('.slide');
+        if (!slideElement) {
+            console.warn('No slides available to calculate position');
+            return; // 슬라이드가 없으면 함수 종료
         }
+        const offset = -currentSlide * slideElement.offsetWidth;
+        slides.style.transform = `translateX(${offset}px)`;
+}
+
     });
 </script>
-

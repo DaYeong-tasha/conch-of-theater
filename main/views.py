@@ -5,7 +5,7 @@ from common.models import Play_rank, Play_list
 from django.utils import timezone
 
 
-def get_latest_ranked_data(selected_area='서울', selected_ststype='day'):
+def get_latest_ranked_data(selected_area='전국', selected_ststype='day'):
     """날짜 기준으로 최신 rank_reg_date 데이터를 가져오기"""
     latest_date = Play_rank.objects.aggregate(
         latest_date=Max('rank_reg_date')
@@ -18,20 +18,27 @@ def get_latest_ranked_data(selected_area='서울', selected_ststype='day'):
         ).order_by('rank')
 
         if selected_area:
+            print(f"Filter by link_area: {selected_area}")
             ranked_data = ranked_data.filter(link_area=selected_area)
         if selected_ststype:
+            print(f"Filter by ststypes: {selected_ststype}")
             ranked_data = ranked_data.filter(ststypes=selected_ststype)
 
+        print(f"DEBUG: Final QuerySet = {ranked_data}")
         return ranked_data
 
     return Play_rank.objects.none()
 
 
-def get_ranked_context(selected_area='서울', selected_ststype='day'):
+def get_ranked_context(selected_area='전국', selected_ststype='day'):
     """공통 데이터를 처리하고 context를 반환"""
     ranked_data = get_latest_ranked_data(selected_area, selected_ststype)
-    link_area = Play_rank.objects.values('link_area').distinct()
-    ststypes = Play_rank.objects.values('ststypes').distinct()
+    link_area = ['전국', '서울', '경기', '충청', '경상', '전라', '강원', '대학로', '제주']
+    ststypes = [
+        {'key': 'day', 'label': '일별'},
+        {'key': 'week', 'label': '주별'},
+        {'key': 'month', 'label': '월별'}
+    ]
 
     return {
         'ranked_data': ranked_data,
@@ -44,8 +51,10 @@ def get_ranked_context(selected_area='서울', selected_ststype='day'):
 
 def play_rank(request):
     """랭킹 페이지"""
-    selected_area = request.GET.get('link_area', '전체')  # 기본값: '서울'
+    selected_area = request.GET.get('link_area', '전국')  # 기본값: '전국'
     selected_ststype = request.GET.get('ststypes', 'day')  # 기본값: 'day'
+
+    print(f"DEBUG - link_area: {selected_area}, ststypes: {selected_ststype}")
 
     context = get_ranked_context(selected_area, selected_ststype)
     return render(request, 'play_rank_base.html', context)
@@ -77,8 +86,12 @@ def toggle_favorite(request, play_id):
 
 def home(request):
     """홈 화면"""
-    template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
+    selected_area = request.GET.get('link_area', '전국')  # 기본값: '전국'
+    selected_ststype = request.GET.get('ststypes', 'day')  # 기본값: 'day'
+
+    print(f"DEBUG - home - link_area: {selected_area}, ststypes: {selected_ststype}")
 
     # 기본 필터 조건으로 공통 데이터를 가져옴
-    context = get_ranked_context(selected_area='전체', selected_ststype='day')
+    context = get_ranked_context(selected_area, selected_ststype)
+    template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)
