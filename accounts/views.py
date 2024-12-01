@@ -9,12 +9,13 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from django.template.loader import render_to_string
 
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 from accounts.models import Users
-from .forms import LoginForm, UserProfileForm
+
 from django.db import transaction
-from .forms import ReviewForm
+from .forms import ReviewForm, LoginForm, UserProfileForm
 from common.models import Review, Play_list 
 
 
@@ -76,8 +77,7 @@ def register(request):
 
                 user.save()
 
-                # 메시지 및 리다이렉트
-                messages.success(request, '회원가입이 완료되었습니다! 로그인을 진행해주세요.')
+                # 리다이렉트
                 return redirect('login')
         except ValidationError as ve:
             messages.error(request, str(ve))
@@ -226,5 +226,6 @@ def reviews_edit(request, review_id):
         form = ReviewForm(instance=review)  # 기존 데이터로 폼 채우기
 
     return render(request, 'review_edit.html', {'form': form})  # 수정 페이지 렌더링
+
 
 

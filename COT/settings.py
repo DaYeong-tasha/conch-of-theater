@@ -128,10 +128,12 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
+#TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
@@ -155,3 +157,4 @@ SESSION_COOKIE_AGE = 3600  # 세션 유지 시간 (초 단위)
 # 세션 데이터가 저장될 위치
 SESSION_FILE_PATH = None  # None이면 DB에 저장
 SESSION_SAVE_EVERY_REQUEST = True  # 모든 요청에 대해 세션 갱신
+
