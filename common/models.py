@@ -1,9 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-# Create your models here.
-from django.conf import settings
-from accounts.models import Users
+from django.conf import settings 
 
 
 ### 외래키는 전부 on_delete=models.CASCADE로 설정
@@ -46,7 +43,7 @@ class Play_list(models.Model):
 class Theater_location(models.Model):
     mt10id = models.CharField(primary_key=True, max_length=50) # 공연시설ID
     theater_nm = models.CharField(max_length=300) # 공연장명
-    addr = models.CharField(max_length=300) # 공연장 전체 주소
+    theater_addr = models.CharField(max_length=300, db_column='theater_addr') # 공연장 전체 주소
 
     class Meta:
         # managed = False
@@ -56,8 +53,7 @@ class Theater_location(models.Model):
 
 # play_detail : 연극 상세 모델 (common 앱에 위치)
 class Play_detail(models.Model):
-    playdt_id = models.AutoField(primary_key=True)
-    play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id')
+    play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id', primary_key=True)
     play_name = models.CharField(max_length=300)
     genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
     play_strdate = models.CharField(max_length=300) # 시작일
@@ -127,10 +123,6 @@ class Play_rank(models.Model):
         # managed = False
         db_table = 'Play_rank'
 
-
-
-
-
 # Review: 리뷰 모델 (common 앱에 위치)
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
@@ -176,3 +168,5 @@ class Star(models.Model):
     def __str__(self):
         # 숫자 -> 문자열 변환
         return str(self.star_total)
+
+# commit용 수정사항

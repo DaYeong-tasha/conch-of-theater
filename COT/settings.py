@@ -29,13 +29,14 @@ AUTH_USER_MODEL = 'accounts.Users' #오류나서 만들고
 
 # Django Secret Key
 SECRET_KEY = env("SECRET_KEY")
+KAKAO_MAP_API_KEY = env('KAKAO_MAP_API_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #배포할 때 False 여야 함
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -142,6 +143,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",]  # 프로젝트의 static 디렉토리
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # collectstatic 명령어로 파일이 모이는 곳
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

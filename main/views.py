@@ -95,3 +95,4 @@ def home(request):
     context = get_ranked_context(selected_area, selected_ststype)
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)
+
