@@ -1,8 +1,8 @@
+import pytz
 import requests
 import xmltodict
 from collections import defaultdict
 from datetime import datetime, timedelta
-import pytz #한국 시간대
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -11,6 +11,12 @@ import time
 import os
 from dotenv import load_dotenv
 from django.db import connection
+
+
+#  crontab -e
+#  crontab -l
+# 크론 수동 실행
+#/Users/tasha/Mywork/my_venv/bin/python3 /Users/tasha/Mywork/finalProject/conch-of-theater/plays/management/commands/fetch_boxoffice_data.py
 
 
 # .env 파일 로드
@@ -45,8 +51,8 @@ area_code_to_region = {
 
 # 지역별 코드 매핑 정보
 region_groups = {
-    "전체": ["11", "41", "28", "43", "44", "30", "47", "48", "27", "26", "31", "45", "46", "29", "51", "50", "UNI"],
-    "서울": ["11"],
+    "전국": ["11", "41", "28", "43", "44", "30", "47", "48", "27", "26", "31", "45", "46", "29", "51", "50", "UNI"],
+    "서울": ["11", "UNI"],
     "경기": ["41", "28"],  # 41: 경기도, 28: 인천
     "충청": ["43", "44", "30"],  # 43: 충북, 44: 충남, 30: 대전
     "경상": ["47", "48", "27", "26", "31"],  # 47: 경북, 48: 경남, 27: 대구, 26: 울산, 31: 부산
@@ -56,11 +62,9 @@ region_groups = {
     "대학로": ["UNI"]
 }
 
-# 한국 시간대 설정
-kst = pytz.timezone('Asia/Seoul')
 
-# 어제 날짜 계산 (현재 날짜 - 1일) 및 한국 시간으로 변환
-yesterday = datetime.now(kst) - timedelta(days=1)
+# 어제 날짜 계산 (현재 날짜 - 1일) 및
+yesterday = datetime.now() - timedelta(days=1)
 date = yesterday.strftime("%Y%m%d")  # YYYYMMDD 형식으로 변환
 print(f"데이터 수집 기준 날짜: {date}")
 
@@ -123,8 +127,10 @@ def aggregate_and_rank_by_region(ststype, date):
         # 순위 데이터 생성
         for rank, (perf_id, total_audience) in enumerate(sorted_region_performances, start=1):
             performance = performance_info[perf_id]
-            # 한국 시간으로 rank_reg_date 계산 (UTC + 9시간)
-            rank_reg_date = datetime.now() + timedelta(hours=9)
+            # 서울 시간대(datetime 객체를 aware로 생성)
+            kst = pytz.timezone('Asia/Seoul')
+            rank_reg_date = datetime.now(kst)  # 현재 시간에 서울 시간대 적용
+            rank_reg_date = rank_reg_date + timedelta(hours=9)  # 시간 더하기 (필요한 만큼)
             region_name = area_code_to_region.get(area_codes[0], "Unknown")  # 첫 번째 지역 코드에 해당하는 지역명만 가져옴
             region_ranked_data.append({
                 "rank": rank,
