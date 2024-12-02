@@ -1,9 +1,7 @@
 from django import forms
 from django.contrib.auth.models import AbstractUser
-
-from accounts import models
-from accounts.models import Users, Review
-
+from common.models import Review
+from accounts.models import Users 
 
 #장고 password랑 부딪히지 x, 제약조건 수월하게 걸기 위함.
 class LoginForm(forms.Form):

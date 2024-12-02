@@ -1,9 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-# Create your models here.
-from django.conf import settings
-from accounts.models import Users
+from django.conf import settings 
 
 
 ### 외래키는 전부 on_delete=models.CASCADE로 설정
@@ -125,8 +122,6 @@ class Play_rank(models.Model):
     class Meta:
         # managed = False
         db_table = 'Play_rank'
-
-
 
 # Review: 리뷰 모델 (common 앱에 위치)
 class Review(models.Model):
