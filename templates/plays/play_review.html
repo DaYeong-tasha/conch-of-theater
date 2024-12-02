@@ -1,6 +1,34 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div style="text-align: right;">
+    <a href="{% url 'plays:write_review' play_id=play_id %}" class="btn btn-primary mb-2">리뷰 작성</a>
+</div>
+<br>
+
+<!-- 검색창 부분 -->
+    <form action="" method="GET">
+        <div style="margin: 0px 0px 20px">
+            <div class="d-flex justify-content-end">
+                <div>
+                    <select name="sort">
+                        <option value="latest">최신순</option>
+                        <option value="oldest">오래된순</option>
+                        <option value="likes">좋아요순</option>
+                        <option value="dislikes">싫어요순</option>
+                    </select>
+                    <select name="type">
+                        <option value="all">전체</option>
+                        <option value="review_title">제목</option>
+                        <option value="review_contents">내용</option>
+                    </select>
+                    <input type="text" name="q" value="{{ q }}" style="width: 15em;" placeholder="검색어를 입력해주세요.">
+                    <button type="submit">검색</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
 <div>
-    <p>후기</p>
     {% for review in reviews %}
     <div class="review-card">
         <div class="review-header">
@@ -17,24 +45,46 @@
                 <span>작성자: {{ review.username }}</span>
                 <span>작성일: {{ review.review_reg_date }}</span>
                 <span>
-                    <i class="fa fa-thumbs-up" onclick="toggleLike({{ review.review_id }})" id="like-btn-{{ review.review_id }}"></i>
-                    좋아요: <span id="like-count-{{ review.review_id }}">{{ review.like_users.count }}</span>
+                    <a href="javascript:void(0)" data-uri="{% url 'plays:toggle_like' review.review_id %}"
+                    class="positive  btn btn-sm btn-outline-secondary">좋아요
+                    <span class="badge text-bg-success">{{ review.like_users.count }}</span>
+                    </a>
                 </span>
                 <span>
-                    <i class="fa fa-thumbs-down" onclick="toggleDislike({{ review.review_id }})" id="dislike-btn-{{ review.review_id }}"></i>
-                    싫어요: <span id="dislike-count-{{ review.review_id }}">{{ review.dislike_users.count }}</span>
+                    <a href="javascript:void(0)" data-uri="{% url 'plays:toggle_dislike' review.review_id %}"
+                    class="negative  btn btn-sm btn-outline-secondary">싫어요
+                    <span class="badge text-bg-danger">{{ review.dislike_users.count }}</span>
+                </a>
                 </span>
             </div>
         </div>
         <div class="review-body">
             <h5>제목: {{ review.review_title }}</h5>
             <p>내용: {{ review.review_contents }}</p>
+
+    <div class="review-bottom">
+    <a href="{% url 'plays:edit_review' play_id=play_id review_id=review.review_id %}" role="button" class="a_but">수정</a>
+    <form action="{% url 'plays:delete_review' play_id=play_id review_id=review.review_id %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <a role="button" onclick="this.closest('form').submit();" class="a_but">삭제</a>
+</form>
+        {% csrf_token %}
+
+    </form>
+</div>
+
+            </div>
         </div>
     </div>
     {% endfor %}
+
+
+
 </div>
 
+
 <style>
+
     .review-card {
         border: 1px solid #ddd;
         border-radius: 5px;
@@ -43,6 +93,7 @@
         display: flex;
         flex-direction: column;
         background-color: white;
+        position: relative;
     }
 
     .review-header {
@@ -50,6 +101,16 @@
         justify-content: space-between;
         align-items: center;
     }
+
+    .review-bottom {
+    position: absolute; /* 수정 */
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: end;
+    gap: 5px;
+}
+
 
     .star-rating {
         display: flex;
@@ -83,70 +144,77 @@
     .fa-thumbs-up:hover, .fa-thumbs-down:hover {
         color: #007bff;
     }
+
+    .review-actions {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .a_but {
+    text-decoration: underline;
+    }
+
+    .review-form {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: white;
+    }
+
+    .review-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .review-form .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    .review-form .btn {
+        margin-top: 10px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .step-links a {
+        margin: 0 5px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .step-links .current {
+        margin: 0 5px;
+    }
 </style>
 
 <script>
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const positive_elements = document.getElementsByClassName("positive");
+    Array.from(positive_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if (confirm("'좋아요'를 누를까요?")) {
+                window.location.href = this.dataset.uri; // 페이지 이동
             }
-        }
-        return cookieValue;
-    }
+        });
+    });
 
-    const csrftoken = getCookie('csrftoken');
-
-    function toggleLike(reviewId) {
-        fetch(`/reviews/${reviewId}/like/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-                'Content-Type': 'application/json'
+    const negative_elements = document.getElementsByClassName("negative");
+    Array.from(negative_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            if (confirm("'싫어요'를 누를까요?")) {
+                window.location.href = this.dataset.uri; // 페이지 이동
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById(`like-count-${reviewId}`).innerText = data.like_count;
-            document.getElementById(`dislike-count-${reviewId}`).innerText = data.dislike_count;
-            updateActiveClass(reviewId, 'like');
-        })
-        .catch(error => console.error('Error:', error));
-    }
+        });
+    });
+});
 
-    function toggleDislike(reviewId) {
-        fetch(`/reviews/${reviewId}/dislike/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById(`like-count-${reviewId}`).innerText = data.like_count;
-            document.getElementById(`dislike-count-${reviewId}`).innerText = data.dislike_count;
-            updateActiveClass(reviewId, 'dislike');
-        })
-        .catch(error => console.error('Error:', error));
-    }
 
-    function updateActiveClass(reviewId, type) {
-        const likeBtn = document.getElementById(`like-btn-${reviewId}`);
-        const dislikeBtn = document.getElementById(`dislike-btn-${reviewId}`);
-
-        if (type === 'like') {
-            likeBtn.classList.add('active');
-            dislikeBtn.classList.remove('active');
-        } else {
-            dislikeBtn.classList.add('active');
-            likeBtn.classList.remove('active');
-        }
-    }
 </script>

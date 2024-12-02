@@ -59,7 +59,7 @@
             {% for review in reviews %}
             <tr>
                 <td>{{ review.theater_nm }}</td>
-                <td>{{ review.play_name }}</td>
+                <td><a href="{% url 'plays:play_detail' pk=review.play_id.pk %}">{{ review.play_name }}</a></td>
                 <td><a href="{% url 'review_detail' review.pk %}">{{ review.review_title }}</a></td>
                 <td>{{ review.username }}</td>
                 <td>{{ review.review_reg_date|date:"Y-m-d H:i" }}</td>

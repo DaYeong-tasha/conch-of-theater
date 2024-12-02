@@ -1,10 +1,17 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q, Count
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
 from common.models import Play_detail, Review, Theater_location
 from django.conf import settings
+
+from plays.forms import ReviewForm
+from django.views.generic import ListView
+
 
 def play_detail(request, pk):
     play_detail = get_object_or_404(Play_detail, pk=pk)
@@ -17,45 +24,156 @@ def play_detail(request, pk):
                 'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY})
 
 
+
+# 연극 상세 - 리뷰 ListView아닌 버전
+# def play_review(request, play_id):
+#     reviews = Review.objects.filter(play_id=play_id).order_by('-review_reg_date')
+#     return render(request, 'plays/play_review.html',
+#                   {'reviews': reviews, 'user': request.user, 'play_id': play_id})
+
 # 연극 상세 - 리뷰
-def play_review(request):
-    reviews = Review.objects.all()
-    return render(request, 'plays/play_review.html', {'reviews': reviews})
+class PlayReviewListView(LoginRequiredMixin, ListView):
+    model = Review
+    template_name = 'plays/play_review.html'
+    context_object_name = 'reviews'
+    paginate_by = 10
+
+    def get_queryset(self):
+        play_id = self.kwargs['play_id']
+        queryset = Review.objects.filter(play_id=play_id)
+
+        # 정렬 기능 추가
+        sort = self.request.GET.get('sort', 'latest')
+        if sort == 'likes':
+            queryset = queryset.annotate(num_likes=Count('like_users')).order_by('-num_likes')
+        elif sort == 'dislikes':
+            queryset = queryset.annotate(num_dislikes=Count('dislike_users')).order_by('-num_dislikes')
+        elif sort == 'oldest':
+            queryset = queryset.order_by('review_reg_date')
+        else:
+            queryset = queryset.order_by('-review_reg_date')
+
+        # 검색 기능 추가
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        valid_search_types = ['all', 'play_name', 'theater_nm', 'loc', 'review_title', 'review_contents']
+        if search_type not in valid_search_types:
+            search_type = 'all'
+
+        if search_keyword:
+            if search_type == 'all':
+                queryset = queryset.filter(
+                    Q(review_title__icontains=search_keyword) |
+                    Q(review_contents__icontains=search_keyword)
+                )
+
+            elif search_type == 'review_title':
+                queryset = queryset.filter(review_title__icontains=search_keyword)
+            elif search_type == 'review_contents':
+                queryset = queryset.filter(review_contents__icontains=search_keyword)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['play_id'] = self.kwargs['play_id']
+        return context
 
 
 
-@login_required
-@require_POST
+
+@login_required(login_url='login')
 def toggle_like(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    user = request.user
-
-    if user in review.like_users.all():
-        review.like_users.remove(user)
+    review = get_object_or_404(Review,pk=review_id)
+    play_id = review.play_id
+    if request.user == review.username:
+        messages.error(request, '작성자는 좋아요를 누를 수 없습니다.')
     else:
-        review.like_users.add(user)
-        if user in review.dislike_users.all():
-            review.dislike_users.remove(user)
+        review.like_users.add(request.user)
+    return redirect('plays:play_detail', play_id=play_id)
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-    return JsonResponse({
-        'like_count': review.like_users.count(),
-        'dislike_count': review.dislike_users.count()
-    })
+
+
+
+@login_required(login_url='login')
+def toggle_dislike(request, review_id):
+    review = get_object_or_404(Review,pk=review_id)
+    play_id = review.play_id
+    if request.user == review.username:
+        messages.error(request, '작성자는 싫어요를 누를 수 없습니다.')
+    else:
+        review.dislike_users.add(request.user)
+    return redirect('plays:play_detail', play_id=play_id)
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+# 찐
+@login_required(login_url='login')
+def write_review(request, play_id):
+    play = get_object_or_404(Play_detail, pk=play_id)
+    if request.method == 'GET':
+        form = ReviewForm()
+        return render(request, 'plays/play_review_write.html', {'form': form, 'play_id': play_id})
+
+    elif request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.play_id = play
+            review.theater_nm = play.theater_nm
+            review.play_name = play.play_name
+            review.loc = play.loc
+            review.username = request.user
+            review.save()
+            messages.success(request, '리뷰가 작성되었습니다.')
+            return redirect('plays:play_detail', pk=play_id)
+
+    return render(request, 'plays/play_review_write.html', {'form': form, 'play_id': play_id})
+
+
+
+
+
+@login_required(login_url='login')
+def edit_review(request, play_id, review_id):
+    play = get_object_or_404(Play_detail, pk=play_id)
+    review = get_object_or_404(Review, pk=review_id)
+
+    if review.username != request.user:
+        messages.error(request, "수정 권한이 없습니다.")
+        return redirect('plays:play_detail', pk=play_id)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "수정되었습니다.")
+            return redirect('plays:play_detail', pk=play_id)  # 수정 후 리디렉션할 뷰 이름
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, 'plays/play_review_write.html', {'form': form, 'review': review, 'play_id': play_id, 'play':play})
+
 
 @login_required
 @require_POST
-def toggle_dislike(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
-    user = request.user
+def delete_review(request, play_id, review_id):
+    play = get_object_or_404(Play_detail, pk=play_id)
+    review = get_object_or_404(Review, pk=review_id)
 
-    if user in review.dislike_users.all():
-        review.dislike_users.remove(user)
+    if review.username == request.user:
+        review.delete()
+        messages.success(request, '리뷰가 삭제되었습니다.')
+
+        return redirect('plays:play_detail', pk=play_id)
+
     else:
-        review.dislike_users.add(user)
-        if user in review.like_users.all():
-            review.like_users.remove(user)
+        messages.error(request, '삭제 권한이 없습니다.')
+        return redirect('plays:play_detail', pk=play_id)
 
-    return JsonResponse({
-        'like_count': review.like_users.count(),
-        'dislike_count': review.dislike_users.count()
-    })
+
+# 커밋용 수정
