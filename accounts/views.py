@@ -221,7 +221,7 @@ def delete_review(request, review_id):
     if review.username == request.user.username:
         review.delete()  # 리뷰 삭제
 
-    return redirect('accounts:mypage_reviews_list')  # 리뷰 리스트 페이지로 리디렉션
+    return redirect('accounts:profile_reviews_list')  # 리뷰 리스트 페이지로 리디렉션
 
 
 #리뷰 수정
