@@ -9,8 +9,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
-
 from accounts.models import Users
 from .forms import LoginForm, UserProfileForm
 from django.db import transaction
@@ -209,8 +209,19 @@ def mypage_update(request):
 def mypage_reviews_list(request):
     # 현재 사용자가 작성한 리뷰만 가져오기
     user_reviews = Review.objects.filter(username=request.user.username)
-    return render(request, 'profile_reviews_list.html', {'user_reviews': user_reviews})
+    return render(request, 'accounts/profile_reviews_list.html', {'user_reviews': user_reviews})
 
+
+#리뷰 리스트 삭제
+def delete_review(request, review_id):
+    # 삭제할 리뷰를 가져옵니다.
+    review = get_object_or_404(Review, review_id=review_id)
+
+    # 해당 리뷰가 현재 사용자의 것인지 확인 (보안)
+    if review.username == request.user.username:
+        review.delete()  # 리뷰 삭제
+
+    return redirect('accounts:mypage_reviews_list')  # 리뷰 리스트 페이지로 리디렉션
 
 
 #리뷰 수정
@@ -225,6 +236,6 @@ def reviews_edit(request, review_id):
     else:
         form = ReviewForm(instance=review)  # 기존 데이터로 폼 채우기
 
-    return render(request, 'review_edit.html', {'form': form})  # 수정 페이지 렌더링
+    return render(request, 'accounts/review_edit.html', {'form': form})  # 수정 페이지 렌더링
 
 
