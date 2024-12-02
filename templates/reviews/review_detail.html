@@ -3,20 +3,26 @@
 {% block content %}
 
 {% load static %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-.img-fluid {
+    .img-fluid {
         width: 210px; /* 고정 너비 */
         height: 280px; /* 고정 높이 */
         object-fit: cover; /* 이미지가 고정 크기에 맞게 조정됨 */
     }
+
+    .checked {
+    color: orange;
+}
 </style>
 
 <!-- 리뷰 상세보기 -->
 <div class="container mt-5">
     <!-- 연극 포스터 -->
     <div class="text-center mb-4">
-        <img src="{{ review.play_id.play_poster }}" alt="연극 포스터" class="img-fluid">
+        <a href="{% url 'play_detail' pk=review.play_id.pk %}">
+            <img src="{{ review.play_id.play_poster }}" alt="연극 포스터" class="img-fluid">
+        </a>
     </div>
     <div class="d-flex justify-content-end">
         <a href="{% url 'review_delete' pk=review.pk %}" class="btn btn-danger">삭제</a>
@@ -26,10 +32,19 @@
         <div class="card-body">
             <div class="post-id">ID: {{ review.review_id }}</div>
             <div style="font-size: 1em; margin-bottom: 5px;">공연장: {{ review.theater_nm }}</div>
-            <div style="font-size: 1em; margin-bottom: 5px;">연극명: {{ review.play_name }}</div>
+            <div style="font-size: 1em; margin-bottom: 5px;">연극명: {{ review.play_name }}</div><br>
             <div class="boardline"></div>
-            <h5 class="card-title">{{ review.review_title }}</h5>
-            <p class="card-text">{{ review.review_contents }}</p>
+            <div class="star-rating">별점:
+                 {% for i in "12345" %}
+                    {% if forloop.counter <= review.star.star_total %}
+                        <span class="fa fa-star checked"></span>
+                    {% else %}
+                        <span class="fa fa-star"></span>
+                    {% endif %}
+                {% endfor %}
+            </div><br>
+            <h5 class="card-title">제목: {{ review.review_title }}</h5>
+            <p class="card-text">내용<br>{{ review.review_contents }}</p>
         </div>
     </div>
 </div>

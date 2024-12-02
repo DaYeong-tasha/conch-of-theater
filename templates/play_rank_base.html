@@ -1,56 +1,49 @@
-{% block content %}
 <style>
-    /* 슬라이더 컨테이너 스타일 */
+    /* 슬라이더 스타일 */
     .slider {
         position: relative;
         width: 100%;
         max-width: 1000px;
         margin: 20px auto;
         overflow: hidden;
-        z-index: 1; /* 슬라이더의 z-index 낮추기 */
     }
 
-    /* 슬라이더 내부의 슬라이드 컨테이너 스타일 */
     .slides {
         display: flex;
         transition: transform 0.5s ease-in-out;
     }
 
-    /* 각 슬라이드의 기본 스타일 */
     .slide {
-        min-width: 22%; /* 슬라이드 하나의 너비 설정 (한 번에 4개씩 표시) */
+        min-width: 22%; /* 4개씩 보이게 설정 (22% -> 23%로 조금 더 조정) */
         box-sizing: border-box;
         text-align: center;
         position: relative;
-        margin-right: 15px; /* 슬라이드 간 간격 */
+        margin-right: 15px; /* 좌우 마진을 줄여서 간격을 조정 */
         margin-left: 15px;
         transition: transform 0.3s ease-in-out;
     }
 
-    /* 슬라이드 내부 이미지 스타일 */
     .slide img {
         width: 100%;
-        height: 300px; /* 이미지 높이 고정 */
-        border-radius: 10px; /* 테두리를 둥글게 설정 */
-        object-fit: cover; /* 이미지가 박스 안에 비율에 맞게 채워짐 */
+        height: 300px;
+        border-radius: 10px;
+        object-fit: cover;
         transition: transform 0.3s ease-in-out;
     }
 
-    /* 슬라이드 이미지에 마우스 오버 시 확대 효과 */
     .slide:hover img {
         transform: scale(1.05);
     }
 
-    /* 슬라이드 정보 오버레이 스타일 */
     .slide .overlay {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
+        background: rgba(0, 0, 0, 0.5);
         color: white;
-        opacity: 0; /* 기본적으로 숨김 */
+        opacity: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -60,12 +53,10 @@
         transition: opacity 0.3s ease-in-out;
     }
 
-    /* 슬라이드 오버레이에 마우스 오버 시 정보 표시 */
     .slide:hover .overlay {
         opacity: 1;
     }
 
-    /* 슬라이드 순위 정보 표시 스타일 */
     .ranking-info {
         position: absolute;
         top: 10px;
@@ -77,10 +68,8 @@
         border-radius: 5px;
     }
 
-    /* 슬라이더 네비게이션 버튼 스타일 */
     .slider-btn {
         position: absolute;
-        text-align: center;
         top: 50%;
         transform: translateY(-50%);
         background-color: rgba(0, 0, 0, 0.5);
@@ -94,126 +83,133 @@
     .prev-btn {
         left: -5px;
     }
+
     .next-btn {
         right: -5px;
     }
 
-    /* 반응형 디자인: 화면이 768px 이하일 때 */
     @media (max-width: 768px) {
         .slide {
-            min-width: 50%; /* 슬라이드 하나의 너비를 50%로 설정 (2개씩 표시) */
-            margin-right: 25px;
+            min-width: 50%;
         }
 
-        h2 {
-            font-size: 20px;
-        }
+        h2 { font-size: 20px; }
+        h4 { font-size: 16px; }
 
-        h4 {
-            font-size: 16px;
+        .slide img {
+            height: 250px;
+            width: 200px;
+        }
+        .slide .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3px;
+            font-size: 13px;
+        }
+        .ranking-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 5px;
+            font-size: 15px;
+            border-radius: 5px;
         }
     }
 </style>
 
-<!-- 슬라이더 컨테이너 -->
+<!-- 로그인 여부에 따른 드롭다운 및 랭크 표시 -->
+{% if user.is_authenticated %}
+    <form method="GET" action="">
+        <select name="link_area" onchange="this.form.submit()">
+            <option value="전국" {% if selected_area == '전국' %}selected{% endif %}>지역 선택</option>
+            {% for area in link_area %}
+            <option value="{{ area }}"
+                    {% if selected_area == area %}selected{% endif %}>
+                {{ area }}
+            </option>
+            {% endfor %}
+        </select>
+        <select name="ststypes" onchange="this.form.submit()">
+            <option value="day" {% if selected_ststype == 'day' %}selected{% endif %}>일별</option>
+            <option value="week" {% if selected_ststype == 'week' %}selected{% endif %}>주별</option>
+            <option value="month" {% if selected_ststype == 'month' %}selected{% endif %}>월별</option>
+        </select>
+    </form>
+{% endif %}
+
+<!-- 랭크 표시 -->
 <div class="slider">
-    <!-- 슬라이더 내부 슬라이드 -->
     <div class="slides">
-        <!-- ranked_data를 반복하여 슬라이드 생성 -->
+        {% if ranked_data.exists %}
         {% for play in ranked_data %}
         <div class="slide">
-            <!-- 각 슬라이드의 이미지와 텍스트 -->
             <img src="{{ play.play_poster }}" alt="{{ play.play_name }}">
             <div class="overlay">
-                <h5>{{ play.play_name }}</h5> <!-- 연극 이름 -->
-                <p>{{ play.play_period }}</p> <!-- 공연 기간 -->
-                <p>{{ play.theater_nm }}</p> <!-- 공연 극장 이름 -->
+                <h5>{{ play.play_name }}</h5>
+                <p>{{ play.play_period }}</p>
+                <p>{{ play.theater_nm }}</p>
+                {% include "favorite_base.html" with object_id=play.id is_favorite=play.is_favorite %}
             </div>
-            <div class="ranking-info">
-                <span>{{ play.rank }}위</span> <!-- 순위 표시 -->
-            </div>
+            <div class="ranking-info">{{ forloop.counter }}위</div>
         </div>
         {% endfor %}
+        {% else %}
+        <p>현재 랭킹 정보가 없습니다.</p>
+        {% endif %}
     </div>
 
-    <!-- 네비게이션 버튼 -->
     <button class="slider-btn prev-btn">&#10094;</button>
     <button class="slider-btn next-btn">&#10095;</button>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    let currentSlide = 0; // 현재 슬라이드의 인덱스
-    const slides = document.querySelector('.slides'); // 슬라이드 컨테이너
-    const slideCount = document.querySelectorAll('.slide').length; // 슬라이드 총 개수
-    let slidesToShow = 4; // 한 번에 표시할 슬라이드 개수
-    let slideWidth = 100 / slidesToShow; // 각 슬라이드의 너비
+   document.addEventListener('DOMContentLoaded', () => {
+    // 현재 슬라이드를 추적할 변수 초기화
+    let currentSlide = 0;
+    const slides = document.querySelector('.slides');
+    const slideCount = document.querySelectorAll('.slide').length;
+    const nextBtn = document.querySelector('.next-btn');
+    const prevBtn = document.querySelector('.prev-btn');
 
-    // 슬라이드를 업데이트하는 함수
-    const updateSlide = () => {
-        slides.style.transition = 'transform 0.5s ease-in-out'; // 부드러운 전환
-        slides.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
-    };
+    const slidesPerView = 4; // 한 화면에 보이는 슬라이드 개수
 
-    // 다음 슬라이드로 이동
-    const nextSlide = () => {
-        if (currentSlide + slidesToShow >= slideCount) {
-            // 마지막 슬라이드를 지나면 첫 번째 슬라이드로 돌아가지만, 이때는 transition을 끄고 바로 이동
-            slides.style.transition = 'none';
-            currentSlide = 0;
-            updateSlide();
+    // '다음' 버튼 클릭 시 슬라이드를 한 번에 4개씩 넘기는 이벤트 리스너
+    nextBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide + slidesPerView) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    });
 
-            // 잠시 후 transition을 다시 활성화
-            setTimeout(() => {
-                slides.style.transition = 'transform 0.5s ease-in-out';
-            }, 50); // 50ms 후에 transition을 다시 활성화
-        } else {
-            currentSlide += slidesToShow;
-            updateSlide();
+    // '이전' 버튼 클릭 시 슬라이드를 한 번에 4개씩 뒤로 넘기는 이벤트 리스너
+    prevBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide - slidesPerView + slideCount) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    });
+
+    // 자동 슬라이드 전환 추가 (7초마다)
+    setInterval(() => {
+        currentSlide = (currentSlide + slidesPerView) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    }, 7000);  // 7초마다 슬라이드를 넘기기
+
+    // 슬라이드 위치를 업데이트하는 함수
+    function updateSlidePosition() {
+        const slideElement = document.querySelector('.slide');
+
+        if (!slideElement) {
+            console.warn('No slides available to calculate position');
+            return;
         }
-    };
 
-    // 이전 슬라이드로 이동
-    const prevSlide = () => {
-        if (currentSlide - slidesToShow < 0) {
-            // 첫 번째 슬라이드를 지나면 마지막 슬라이드로 돌아감
-            slides.style.transition = 'none';
-            currentSlide = slideCount - slidesToShow;
-            updateSlide();
+        // 슬라이드의 총 너비 계산
+        const offset = -currentSlide * slideElement.offsetWidth;
 
-            // 잠시 후 transition을 다시 활성화
-            setTimeout(() => {
-                slides.style.transition = 'transform 0.5s ease-in-out';
-            }, 50);
-        } else {
-            currentSlide -= slidesToShow;
-            updateSlide();
-        }
-    };
-
-    // 네비게이션 버튼 이벤트 핸들러 추가
-    document.querySelector('.next-btn').addEventListener('click', nextSlide);
-    document.querySelector('.prev-btn').addEventListener('click', prevSlide);
-
-    // 자동 슬라이드 (7초 간격)
-    setInterval(nextSlide, 7000);
-
-    // 창 크기 변화에 따른 슬라이드 개수 조정
-    const adjustSlidesToShow = () => {
-        if (window.innerWidth <= 768) {
-            slidesToShow = 2; // 768px 이하에서는 2개씩 보이도록
-        } else {
-            slidesToShow = 4; // 그 이상에서는 4개씩 보이도록
-        }
-        slideWidth = 100 / slidesToShow; // 슬라이드 너비 계산
-        updateSlide();
-    };
-
-    // 초기 슬라이드 설정 및 이벤트 리스너 추가
-    adjustSlidesToShow();
-    window.addEventListener('resize', adjustSlidesToShow);
+        // 슬라이드 컨테이너의 transform을 변경하여 슬라이드를 이동시킴
+        slides.style.transform = `translateX(${offset}px)`;
+    }
 });
-
 </script>
-
-{% endblock %}
