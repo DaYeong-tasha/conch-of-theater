@@ -123,8 +123,6 @@ class Play_rank(models.Model):
         # managed = False
         db_table = 'Play_rank'
 
-
-
 # Review: 리뷰 모델 (common 앱에 위치)
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
