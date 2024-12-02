@@ -174,3 +174,6 @@ def delete_review(request, play_id, review_id):
     else:
         messages.error(request, '삭제 권한이 없습니다.')
         return redirect('plays:play_detail', pk=play_id)
+
+
+# 커밋용 수정
