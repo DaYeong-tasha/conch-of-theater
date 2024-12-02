@@ -18,10 +18,10 @@
               <h3>{{ review.review_title }}</h3>
               <p>{{ review.review_contents }}</p>
               <small>별점: {{ review.star }}</small>
-              <a href="{% url 'reviews_edit' review.review_id %}" class="btn" aria-label="수정하기">
+              <a href="{% url 'profile_reviews_edit' review.review_id %}" class="btn" aria-label="수정하기">
                 수정하기
               </a>
-              <a href="{% url 'reviews_delete' review.review_id %}" class="btn btn-danger" aria-label="삭제하기" onclick="return confirm('정말 삭제하시겠습니까?')">
+              <a href="{% url 'profile_reviews_delete' review.review_id %}" class="btn btn-danger" aria-label="삭제하기" onclick="return confirm('정말 삭제하시겠습니까?')">
                  삭제하기
               </a> <!-- 삭제 버튼 -->
             </div>
