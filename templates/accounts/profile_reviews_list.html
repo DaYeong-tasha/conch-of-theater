@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="ko">
+    {% extends 'nav_base.html' %}
+
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title>{{ user.fullname }}님의 리뷰</title>
+
     </head>
+
     <body>
-        {% extends 'base.html' %}
-
         {% block content %}
-        <h2>마이 리뷰</h2>
+        <h2>{{ user.fullname }}님의 리뷰</h2>
 
-        {% for review in user_reviews %}
-          <div class="review-item">
-            <h3>{{ review.review_title }}</h3>
-            <p>{{ review.review_contents }}</p>
-            <small>별점: {{ review.star }}</small>
-            <a href="{% url 'reviews_edit' review.review_id %}" class="btn btn-primary">수정하기</a>  <!-- 각 리뷰 수정 페이지로 이동 -->
-          </div>
-          <hr> <!-- 리뷰 간 구분선 추가 -->
-        {% endfor %}
+        {% if user_reviews %}
+          {% for review in user_reviews %}
+            <div class="review-item mb-4">
+              <h3>{{ review.review_title }}</h3>
+              <p>{{ review.review_contents }}</p>
+              <small>별점: {{ review.star }}</small>
+              <a href="{% url 'reviews_edit' review.review_id %}" class="btn" aria-label="수정하기">
+                수정하기
+              </a>
+              <a href="{% url 'reviews_delete' review.review_id %}" class="btn btn-danger" aria-label="삭제하기" onclick="return confirm('정말 삭제하시겠습니까?')">
+                 삭제하기
+              </a> <!-- 삭제 버튼 -->
+            </div>
+            <hr> <!-- 리뷰 간 구분선 추가 -->
+          {% endfor %}
+        {% else %}
+          <div class="no-reviews">
+            <p>작성한 리뷰가 없습니다. 리뷰를 작성해주세요!</p>
+        {% endif %}
 
         {% endblock %}
-
-
     </body>
 </html>

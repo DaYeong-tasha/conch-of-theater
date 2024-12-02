@@ -1,46 +1,147 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ user.fullname }}님의 마이페이지</title>
     <style>
-        /* 탭 버튼 스타일링 */
-        .tab-button {
-            cursor: pointer;
-            display: inline-block;
-            padding: 10px 20px;
-            border: 1px solid #ccc;
+        /* Flexbox를 활용한 페이지 전체 레이아웃 */
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            margin: 0 auto;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            margin: 5px;
-            background-color: #f0f0f0;
+            background-color: #f9f9f9;
         }
 
-        .tab-button a {
-            text-decoration: none;  /* 기본 밑줄 제거 */
-            color: #333;            /* 글씨 색상 변경 */
+        /* 사이드바 스타일 */
+        .sidebar {
+            width: 20%;
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-right: 1px solid #ddd;
         }
 
-        .tab-button:hover {
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
             background-color: #ddd;
         }
 
-        .tab-button a:hover {
-            color: #000;           /* 마우스를 올렸을 때 글씨 색상 변경 */
+        /* 메인 컨텐츠 스타일 */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
         }
 
+        .main-content h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .profile-details {
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .profile-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .profile-details table th,
+        .profile-details table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .profile-details table th {
+            width: 30%;
+            background-color: #f2f2f2;
+        }
+
+        .profile-details table td {
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
-     <h1>{{  user.fullname }}님의 마이페이지</h1>
+    <div class="container">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+            <ul>
+                <li><a href="{% url 'mypage_update' %}">회원정보수정</a></li>
+                <li><a href="#">즐겨찾기(💗)</a></li>
+                <li><a href="{% url 'profile_reviews_list' %}">my리뷰(🎬)</a></li>
+                <li><a href="#">my돋보기(🔍)</a></li>
+            </ul>
+        </div>
 
-    <!-- 탭 메뉴 -->
-    <ul class="tabs">
-        <li class="tab-button"><a href="{% url 'mypage_update' %}">회원정보수정</a></li>
-        <li class="tab-button"><a href=>즐겨찾기(💗)</a></li>
-        <li class="tab-button"><a href=>my리뷰(🎬)</a></li>
-        <li class="tab-button"><a href=>my돋보기(🔍)</a></li>
-
-    </ul>
+        <!-- 메인 컨텐츠 -->
+        <div class="main-content">
+            <h1>{{ user.fullname }}님의 기본 정보</h1>
+            <div class="profile-details">
+                <table>
+                    <tr>
+                        <th>이름</th>
+                        <td>{{ user.fullname }}</td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>생년월일</th>
+                        <td>{{ user_profile.birth }}</td>
+                    </tr>
+                    <tr>
+                        <th>성별</th>
+                        <td>{{ user_profile.gender }}</td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td>{{ user_profile.address }}</td>
+                    </tr>
+                    <tr>
+                        <th>선호 배우</th>
+                        <td>{{ user_profile.my_actor }}</td>
+                    </tr>
+                    <tr>
+                        <th>선호 키워드</th>
+                        <td>{{ user_profile.my_play_keyword }}</td>
+                    </tr>
+                    <tr>
+                        <th>선호 장르</th>
+                        <td>{{ user_profile.my_genre }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
