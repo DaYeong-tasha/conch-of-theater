@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.contrib import messages
 from common.models import Review
+from plays.forms import ReviewForm
 
 
 # Create your views here.
@@ -77,19 +78,35 @@ def review_write(request):
 @login_required(login_url='login')  # 로그인 필수 지정
 def review_detail(request, pk):
     review = get_object_or_404(Review, pk=pk)
-
+    play_id = review.play_id
     context = {
         'review': review,
+        'play_id': play_id
         }
     return render(request, 'reviews/review_detail.html', context)
-
 
 
 # 리뷰 수정
 @login_required(login_url='login')  # 로그인 필수 지정
 def review_edit(request, pk):
-    pass
+    review = get_object_or_404(Review, pk=pk)
 
+    if review.username != request.user:
+        messages.error(request, "수정 권한이 없습니다.")
+        return redirect('review_detail', pk=pk)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+
+        if form.is_valid() :
+            form.play_id = review.play_id
+            form.save()
+            messages.success(request, "수정되었습니다.")
+            return redirect('review_detail', pk=pk)
+
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, 'reviews/review_edit.html', context={'form': form})
 
 
 # 리뷰 삭제

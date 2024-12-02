@@ -37,7 +37,7 @@
                 <a class="nav-link" href="#location-info" data-toggle="tab">공연장 위치</a>
             </li>
 <li class="nav-item">
-    <a class="nav-link" href="#review-info" data-toggle="tab" data-url="{% url 'play_review' %}">후기</a>
+    <a class="nav-link" href="#review-info" data-toggle="tab" data-url="{% url 'plays:play_review' play_id=play_detail.pk %}">후기</a>
 </li>
         </ul>
     </nav>
@@ -123,6 +123,8 @@
         </div>
     </div>
 </div>
+
+
 
 <style>
     p.thick {
@@ -354,6 +356,5 @@
     });
 });
 </script>
-
 {% include 'modal_base.html' %}
 {% endblock %}
