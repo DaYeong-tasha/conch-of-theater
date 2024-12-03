@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Max
-from common.models import Play_rank, Play_list
+
+from COT import settings
+from common.models import Play_rank, Play_list, Theater_location
+from map.views import get_theaters_data
 from django.utils import timezone
 
 
@@ -90,9 +93,21 @@ def home(request):
     selected_ststype = request.GET.get('ststypes', 'day')  # 기본값: 'day'
 
     #print(f"DEBUG - home - link_area: {selected_area}, ststypes: {selected_ststype}")
-
     # 기본 필터 조건으로 공통 데이터를 가져옴 #홈에 가지고 와야 띄우지? ^^
     context = get_ranked_context(selected_area, selected_ststype)
+
+    # 극장 데이터 가져오기
+    theater_context = get_theaters_data()
+
+    # 극장 데이터 유효성 검증
+    theaters = theater_context.get('theaters', [])
+
+    context.update({
+        'theaters': theaters,
+        'kakao_map_api_key': settings.KAKAO_MAP_API_KEY,
+    })
+
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)
+
 
