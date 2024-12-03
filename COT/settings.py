@@ -55,11 +55,11 @@ INSTALLED_APPS = [
     'reviews',
     'common',
     'dashboard',
-    'corsheaders',
+    #'corsheaders',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    #'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -160,6 +160,8 @@ SESSION_COOKIE_AGE = 3600  # 세션 유지 시간 (초 단위)
 SESSION_FILE_PATH = None  # None이면 DB에 저장
 SESSION_SAVE_EVERY_REQUEST = True  # 모든 요청에 대해 세션 갱신
 
+'''
+
 # CORS 허용 도메인 설정
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",  # 로컬
@@ -189,3 +191,4 @@ CORS_ALLOW_HEADERS = (
 "x-csrftoken",
 "x-requested-with",
 )
+'''
