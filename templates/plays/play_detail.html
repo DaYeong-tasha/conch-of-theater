@@ -10,6 +10,20 @@
         <div class="col-md-5">
             <h4><strong>{{ play_detail.play_name }}</strong></h4><br>
             <img src="{{ play_detail.play_poster }}" alt="포스터 이미지" class="img-fluid">
+            <br>
+            <span>
+                <form action="{% url 'plays:toggle_play_favorite' play_id=play_detail.pk %}" method='POST'>
+                    {% csrf_token %}
+                    <button class="heart-button">
+                      {% if request.user in play.favorite_users.all %}
+                        <i class="fa fa-heart filled"></i>
+                      {% else %}
+                        <i class="fa fa-heart"></i>
+                      {% endif %} {{ play_list.favorite_users.all|length }}
+
+                    </button>
+                </form>
+            </span>
         </div>
         <!-- 오른쪽 섹션 -->
         <div class="col-md-6" style="margin-top: 50px;">
@@ -330,6 +344,41 @@
         grid-template-columns: repeat(2, 1fr);
     }}
 
+/* 연극 즐겨찾기 */
+    .heart-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: #ff6b6b;
+    transition: transform 0.2s;
+}
+
+.heart-button:hover {
+    transform: scale(1.1);
+}
+
+.heart-button .fa-heart {
+    margin-right: 5px;
+    transition: color 0.2s;
+}
+
+.heart-button .fa-heart.filled {
+    color: #ff6b6b;
+}
+
+.heart-button .fa-heart:not(.filled) {
+    color: #ccc;
+}
+
+.heart-button:hover .fa-heart:not(.filled) {
+    color: #ff6b6b;
+}
+    .heart-button:focus {
+    outline: none;
+}
 </style>
 
 <!-- 카카오맵 API 스크립트 -->
@@ -477,6 +526,10 @@
         });
     });
 });
+
+
+
+
 </script>
 {% include 'modal_base.html' %}
 {% endblock %}

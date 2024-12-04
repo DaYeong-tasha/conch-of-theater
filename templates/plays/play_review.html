@@ -45,16 +45,28 @@
                 <span>작성자: {{ review.username }}</span>
                 <span>작성일: {{ review.review_reg_date }}</span>
                 <span>
-                    <a href="javascript:void(0)" data-uri="{% url 'plays:toggle_like' review.review_id %}"
-                    class="positive  btn btn-sm btn-outline-secondary">좋아요
-                    <span class="badge text-bg-success">{{ review.like_users.count }}</span>
-                    </a>
+                    <form action="{% url 'plays:toggle_like' review.review_id %}" method='POST'>
+                        {% csrf_token %}
+                        <button style='border:none;'>
+                          {% if request.user in review.like_users.all %}
+                            <i class="fa fa-thumbs-o-up" style="font-size:12px;"></i>
+                          {% else %}
+                            <i class="fa fa-thumbs-o-up" style="font-size:12px;"></i>
+                          {% endif %}좋아요 {{ review.like_users.all|length }}
+                        </button>
+                    </form>
                 </span>
                 <span>
-                    <a href="javascript:void(0)" data-uri="{% url 'plays:toggle_dislike' review.review_id %}"
-                    class="negative  btn btn-sm btn-outline-secondary">싫어요
-                    <span class="badge text-bg-danger">{{ review.dislike_users.count }}</span>
-                </a>
+                    <form action="{% url 'plays:toggle_dislike' review.review_id %}" method='POST'>
+                        {% csrf_token %}
+                        <button style='border:none;'>
+                          {% if request.user in review.dislike_users.all %}
+                            <i class="fa fa-thumbs-o-down" style="font-size:12px;"></i>
+                          {% else %}
+                            <i class="fa fa-thumbs-o-down" style="font-size:12px;"></i>
+                          {% endif %}싫어요 {{ review.dislike_users.all|length }}
+                        </button>
+                    </form>
                 </span>
             </div>
         </div>
@@ -192,29 +204,12 @@
     .step-links .current {
         margin: 0 5px;
     }
+
 </style>
 
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-    const positive_elements = document.getElementsByClassName("positive");
-    Array.from(positive_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if (confirm("'좋아요'를 누를까요?")) {
-                window.location.href = this.dataset.uri; // 페이지 이동
-            }
-        });
-    });
 
-    const negative_elements = document.getElementsByClassName("negative");
-    Array.from(negative_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if (confirm("'싫어요'를 누를까요?")) {
-                window.location.href = this.dataset.uri; // 페이지 이동
-            }
-        });
-    });
-});
 
 
 </script>

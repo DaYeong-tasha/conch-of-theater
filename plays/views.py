@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
-from common.models import Play_detail, Review, Theater_location
+from common.models import Play_detail, Review, Theater_location, Play_list
 from django.conf import settings
 
 from plays.forms import ReviewForm
@@ -15,13 +16,16 @@ from django.views.generic import ListView
 
 def play_detail(request, pk):
     play_detail = get_object_or_404(Play_detail, pk=pk)
+    play_list = get_object_or_404(Play_list, pk=pk)
+
     # mt10id 필드가 이미 Theater_location 객체를 반환하므로, 추가 조회가 필요없음
     theater_location = play_detail.mt10id  # 직접 ForeignKey 객체 사용
 
     return render(request, 'plays/play_detail.html',
-                {'play_detail': play_detail, 
-                'theater_location': theater_location,
-                'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY})
+                {'play_detail': play_detail,
+                        'play_list': play_list,
+                        'theater_location': theater_location,
+                        'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY})
 
 
 
@@ -83,35 +87,64 @@ class PlayReviewListView(LoginRequiredMixin, ListView):
 
 
 
-@login_required(login_url='login')
+@require_POST
 def toggle_like(request, review_id):
-    review = get_object_or_404(Review,pk=review_id)
-    play_id = review.play_id
-    if request.user == review.username:
-        messages.error(request, '작성자는 좋아요를 누를 수 없습니다.')
-    else:
-        review.like_users.add(request.user)
-    return redirect('plays:play_detail', play_id=play_id)
-    # return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    if request.user.is_authenticated:
+        review = Review.objects.get(pk=review_id)
+        play_id = review.play_id.pk
+        if review.username == request.user:
+            messages.error(request, '작성자는 좋아요를 누를 수 없습니다.')
+        else:
+            if review.like_users.filter(pk=request.user.pk).exists():
+                review.like_users.remove(request.user)
+                messages.success(request, '좋아요 취소 완료!😢')
+            else:
+                review.like_users.add(request.user)
+                messages.success(request, '좋아요 반영 완료!😄')
+        return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=review-info')
+    return redirect('login')
 
 
-
-
-@login_required(login_url='login')
+@require_POST
 def toggle_dislike(request, review_id):
-    review = get_object_or_404(Review,pk=review_id)
-    play_id = review.play_id
-    if request.user == review.username:
-        messages.error(request, '작성자는 싫어요를 누를 수 없습니다.')
-    else:
-        review.dislike_users.add(request.user)
-    return redirect('plays:play_detail', play_id=play_id)
-    # return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    if request.user.is_authenticated:
+        review = Review.objects.get(pk=review_id)
+        play_id = review.play_id.pk
+        if review.username == request.user:
+            messages.error(request, '작성자는 싫어요를 누를 수 없습니다.')
+        else:
+            if review.dislike_users.filter(pk=request.user.pk).exists():
+                review.dislike_users.remove(request.user)
+                messages.success(request, '싫어요 취소 완료!😊')
+            else:
+                review.dislike_users.add(request.user)
+                messages.success(request, '싫어요 반영 완료!😠')
+        return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=review-info')
+    return redirect('login')
 
 
+@require_POST
+def toggle_play_favorite(request, play_id):
+    if request.user.is_authenticated:
+        play = get_object_or_404(Play_list, pk=play_id)
+        if play.favorite_users.filter(pk=request.user.pk).exists():
+            play.favorite_users.remove(request.user)
+            messages.success(request, '즐겨찾기 취소 완료!')
+        else:
+            play.favorite_users.add(request.user)
+            messages.success(request, '즐겨찾기 반영 완료!')
 
 
+        return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=play-info')
+    return redirect('login')
 
+@require_POST
+def toggle_play_like(request, play_id):
+    pass
+
+@require_POST
+def toggle_play_dislike(request, play_id):
+    pass
 # 찐
 @login_required(login_url='login')
 def write_review(request, play_id):
