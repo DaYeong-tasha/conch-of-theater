@@ -14,8 +14,8 @@ urlpatterns = [
     path('profile/load_content/<str:tab_name>/', views.load_tab_content, name='load_tab_content'),  # 탭 콘텐츠 로드
     path('profile/edit/', views.mypage_update, name='mypage_update'),
     path('profile/reviews/list/', views.mypage_reviews_list, name='profile_reviews_list'),
-    path('profile/reviews/<int:review_id>/', views.reviews_edit, name='profile_reviews_edit'),
-    path('reviews/delete/<int:review_id>/', views.delete_review, name='profile_reviews_delete'),
+    path('profile/reviews/edit/<int:review_id>/', views.reviews_edit, name='profile_reviews_edit'),
+    path('profile/reviews/delete/<int:review_id>/', views.delete_review, name='profile_reviews_delete'),
 ]
 
 

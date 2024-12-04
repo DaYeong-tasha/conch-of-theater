@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    {% extends 'nav_base.html' %}
-    {% block title %}회원가입 및 취향 설정{% endblock %}
-</head>
-<body>
-    {% block content %}
+
+{% extends 'nav_base.html' %}
+{% block title %}회원가입 및 취향 설정{% endblock %}
+{% load static %}
+
+{% block content %}
     <title>회원정보 수정</title>
     <style>
         body {
@@ -18,7 +15,7 @@
 
         .container {
             width: 80%;
-            max-width: 1200px;
+            max-width: 700px;
             margin: 30px auto;
             background-color: #fff;
             padding: 20px;
@@ -104,7 +101,30 @@
 
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}  <!-- 폼 필드 출력 -->
+            <div class="form-group">
+                <label for="{{ form.fullname.id_for_label }}">이름:</label>
+                {{ form.fullname }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.birth.id_for_label }}">생년월일:</label>
+                {{ form.birth }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.gender.id_for_label }}">성별:</label>
+                {{ form.gender }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">이메일:</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.address.id_for_label }}">주소:</label>
+                {{ form.address }}
+            </div>
 
 
 
@@ -114,12 +134,10 @@
             </div>
         </form>
     </div>
-
+{% include 'modal_base.html' %}
     <script>
         document.querySelector("form").onsubmit = function() {
             window.location.href = "{% url 'profile' %}";
         }
     </script>
-    {% endblock %}
-</body>
-</html>
+{% endblock %}
