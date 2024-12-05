@@ -204,25 +204,30 @@ def mypage_update(request):
 
 
 #my리뷰
+@login_required
 def mypage_reviews_list(request):
     # 현재 사용자가 작성한 리뷰만 가져오기
     user_reviews = Review.objects.filter(username=request.user.username)
     return render(request, 'accounts/profile_reviews_list.html', {'user_reviews': user_reviews})
 
 
-#리뷰 리스트 삭제
+
+# 리뷰 리스트 삭제
 def delete_review(request, review_id):
-    # 삭제할 리뷰를 가져옵니다.
-    review = get_object_or_404(Review, review_id=review_id)
+    if request.method == 'POST':  # POST 요청만 처리
+        review = get_object_or_404(Review, review_id=review_id)  # review_id로 가져오기
 
-    # 해당 리뷰가 현재 사용자의 것인지 확인 (보안)
-    if review.username == request.user.username:
-        review.delete()  # 리뷰 삭제
+        # 해당 리뷰가 현재 사용자의 것인지 확인 (보안)
+        if review.username == request.user.username:  # username으로 확인
+            review.delete()  # 리뷰 삭제
 
-    return redirect('accounts:profile_reviews_list')  # 리뷰 리스트 페이지로 리디렉션
+        return redirect('profile_reviews_list')  # 리뷰 리스트 페이지로 리디렉션
+    else:
+        return redirect('profile_reviews_list')  # 잘못된 요청일 경우, 리뷰 리스트로 리디렉션
 
 
 #리뷰 수정
+@login_required
 def reviews_edit(request, review_id):
     review = get_object_or_404(Review, review_id=review_id, username=request.user.username)  # 해당 리뷰 가져오기
 
@@ -230,11 +235,12 @@ def reviews_edit(request, review_id):
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
             form.save()  # 수정된 데이터 저장
-            return redirect('mypage_reviews_list')  # 수정 후 리뷰 리스트로 리다이렉트
+            messages.success(request, "수정되었습니다.")
+            return redirect('profile_reviews_list')  # 수정 후 리뷰 리스트로 리다이렉트
     else:
         form = ReviewForm(instance=review)  # 기존 데이터로 폼 채우기
 
-    return render(request, 'accounts/review_edit.html', {'form': form})  # 수정 페이지 렌더링
+    return render(request, 'accounts/profile_reviews_edit.html', {'form': form})  # 수정 페이지 렌더링
 
 
 

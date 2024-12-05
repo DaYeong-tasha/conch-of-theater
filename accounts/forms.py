@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import AbstractUser
+from django.forms import ModelForm
+
 from common.models import Review
 from accounts.models import Users 
 
@@ -70,13 +72,18 @@ class UserProfileForm(forms.ModelForm):
 
 
 
-class ReviewForm(forms.ModelForm):
+class ReviewForm(ModelForm):
     class Meta:
-        # model = Review  # 연결할 모델
-        fields = ['review_title', 'review_contents', 'star']  # 수정할 필드 지정
-        widgets = {
-            'review_title': forms.TextInput(attrs={'class': 'form-control'}),
-            'review_contents': forms.Textarea(attrs={'class': 'form-control'}),
-            'star': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
+        model = Review
+        fields = ['review_title', 'review_contents', 'star']
 
+        widgets = {
+            'review_title': forms.Textarea(attrs={
+                'style': 'border: none; outline: none;',
+                'placeholder': '제목을 입력하세요...',
+            }),
+
+            'review_contents': forms.Textarea(attrs={
+                'style': 'border: none; outline: none;',
+                'placeholder': '내용을 입력하세요...',
+            }), }

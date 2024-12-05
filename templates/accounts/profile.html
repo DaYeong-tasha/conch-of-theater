@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="ko">
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ user.fullname }}님의 마이페이지</title>
+{% extends 'nav_base.html' %}
+{% load static %}
+
+    {% block title %}{{ user.fullname }}님의 마이페이지{% endblock %}
+{% block content %}
     <style>
         /* Flexbox를 활용한 페이지 전체 레이아웃 */
         .container {
@@ -130,18 +130,11 @@
                         <th>선호 배우</th>
                         <td>{{ user_profile.my_actor }}</td>
                     </tr>
-                    <tr>
-                        <th>선호 키워드</th>
-                        <td>{{ user_profile.my_play_keyword }}</td>
-                    </tr>
-                    <tr>
-                        <th>선호 장르</th>
-                        <td>{{ user_profile.my_genre }}</td>
-                    </tr>
                 </table>
             </div>
         </div>
     </div>
+{% include 'modal_base.html' %}
+{% endblock %}
 
-</body>
-</html>
+
