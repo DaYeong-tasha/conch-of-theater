@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Max
 
 from COT import settings
-from common.models import Play_rank, Play_list, Theater_location
+from common.models import Play_rank, Play_list, Theater_location, Play_detail
 from map.views import get_theaters_data
 from django.utils import timezone
 
@@ -61,6 +61,8 @@ def play_rank(request):
 
     context = get_ranked_context(selected_area, selected_ststype)
     return render(request, 'play_rank_base.html', context)
+
+
 
 
 def toggle_favorite(request, play_id):
