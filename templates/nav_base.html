@@ -33,7 +33,7 @@
         <div class="container">
             <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'before_login' %}{% endif %}">
                 {% load static %}
-                <img src="{% static 'img/logo_side_lower.png' %}" alt="극장의 소라고동" style="height: 30px; width: 150px;">
+                <img src="{% static 'images/conch.png' %}" alt="극장의 소라고동" style="height: 30px; width: 150px;">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
