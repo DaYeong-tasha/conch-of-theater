@@ -135,7 +135,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="bookingModalLabel">예매 링크</h5>
-            <button type="button" class="close-btn" id="closeModal">닫기</button>
+            <button type="button" class="close-btn" id="booking_closeModal">닫기</button>
         </div>
         <div class="modal-body">
             {% if play_detail.relate_1 %}
@@ -354,31 +354,31 @@
     font-size: 24px;
     color: #ff6b6b;
     transition: transform 0.2s;
-}
+    }
 
-.heart-button:hover {
-    transform: scale(1.1);
-}
+    .heart-button:hover {
+        transform: scale(1.1);
+    }
 
-.heart-button .fa-heart {
-    margin-right: 5px;
-    transition: color 0.2s;
-}
+    .heart-button .fa-heart {
+        margin-right: 5px;
+        transition: color 0.2s;
+    }
 
-.heart-button .fa-heart.filled {
-    color: #ff6b6b;
-}
+    .heart-button .fa-heart.filled {
+        color: #ff6b6b;
+    }
 
-.heart-button .fa-heart:not(.filled) {
-    color: #ccc;
-}
+    .heart-button .fa-heart:not(.filled) {
+        color: #ccc;
+    }
 
-.heart-button:hover .fa-heart:not(.filled) {
-    color: #ff6b6b;
-}
-    .heart-button:focus {
-    outline: none;
-}
+    .heart-button:hover .fa-heart:not(.filled) {
+        color: #ff6b6b;
+    }
+        .heart-button:focus {
+        outline: none;
+    }
 </style>
 
 <!-- 카카오맵 API 스크립트 -->
@@ -404,7 +404,7 @@
         document.getElementById('bookingModal').style.display = 'flex';
     });
 
-    document.getElementById('closeModal').addEventListener('click', function() {
+    document.getElementById('booking_closeModal').addEventListener('click', function() {
         document.getElementById('bookingModal').style.display = 'none';
     });
 

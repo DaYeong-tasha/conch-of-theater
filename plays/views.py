@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
@@ -100,6 +100,7 @@ def toggle_like(request, review_id):
                 messages.success(request, '좋아요 취소 완료!😢')
             else:
                 review.like_users.add(request.user)
+                review.dislike_users.remove(request.user)  # 싫어요 취소
                 messages.success(request, '좋아요 반영 완료!😄')
         return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=review-info')
     return redirect('login')
@@ -118,9 +119,11 @@ def toggle_dislike(request, review_id):
                 messages.success(request, '싫어요 취소 완료!😊')
             else:
                 review.dislike_users.add(request.user)
+                review.like_users.remove(request.user)  # 좋아요 취소
                 messages.success(request, '싫어요 반영 완료!😠')
         return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=review-info')
     return redirect('login')
+
 
 
 @require_POST
