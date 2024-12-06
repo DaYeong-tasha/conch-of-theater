@@ -33,6 +33,7 @@
 
     <!-- 카테고리 필터 -->
     <div class="category-filters">
+         <h3>키워드 선택</h3>
         <div class="filter-row">
             <button class="filter-btn active">전체</button>
             <button class="filter-btn">공연예정</button>
@@ -64,24 +65,26 @@
 
     </div>
 
-    <!-- 키워드/장르 추천 섹션 -->
-    <div class="section">
-        <h3>키워드/장르 추천</h3>
-        <div class="play-grid">
-            <div class="play-card">
-                <img src="{% static 'images/poster1.jpg' %}" alt="연극 포스터 1" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
-            </div>
+    <!-- 장르 추천 섹션. 전부 수정해야 함. 리스트에서 값 받아와서 띄우는 것으로 바꿀 것. 링크도 각자 하지말고, 자동화할 것. 공연리스트로 연결해야 함  -->
+<div class="section">
+    <h3>키워드/장르 추천</h3>
+    <div class="play-grid">
+        <div class="play-card">
+            <a href="http://127.0.0.1:8000/plays/play/PF253607/">
+                <img src="{% static 'images/poster0.jpg' %}" alt="연극 포스터 1" class="poster-image">
+            </a>
+        </div>
+        <div class="play-card">
+            <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
+        </div>
+        <div class="play-card">
+            <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
+        </div>
+        <div class="play-card">
+            <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
         </div>
     </div>
+</div>
 
     <!-- 현재 위치 주변 극장 섹션 (지도) -->
     <div class="section">
@@ -121,7 +124,7 @@
             console.log('Initializing map...');
             var theaters = {{ theaters|safe }};
             console.log('Theaters data:', theaters);
-            
+
             if (!theaters || theaters.length === 0) {
                 console.warn('No theaters data available');
             }
@@ -132,7 +135,7 @@
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
+
                     const radius = this.dataset.radius;
                     theaterMap.filterMiniMapByRadius(parseInt(radius));
                 });
