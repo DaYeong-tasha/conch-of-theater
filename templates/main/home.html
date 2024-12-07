@@ -9,29 +9,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <div class="main-container">
-    <!-- TOP 10 연극 섹션 -->
-    <div class="section">
-        <div class="section-header">
-            <div class="header-content">
-                <h2 class="title">TOP 10 연극</h2>
-                <select class="filter-select">
-                    <option value="all">전체순위별</option>
-                    <option value="rating">인기순</option>
-                    <option value="review">최신순</option>
-                    <option value="booking">평점순</option>
-                </select>
-                <div class="search-box">
-                    <input type="text" placeholder="공연/출연진 검색" class="search-input">
-                    <button class="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        {% include 'play_rank_base.html' %}
-    </div>
 
-    <!-- 카테고리 필터 -->
+        <!-- 카테고리 필터 -->
     <div class="category-filters">
          <h3>키워드 선택</h3>
         <div class="filter-row">
@@ -65,7 +44,7 @@
 
     </div>
 
-    <!-- 장르 추천 섹션. 전부 수정해야 함. 리스트에서 값 받아와서 띄우는 것으로 바꿀 것. 링크도 각자 하지말고, 자동화할 것. 공연리스트로 연결해야 함  -->
+        <!-- 장르 추천 섹션. 전부 수정해야 함. 리스트에서 값 받아와서 띄우는 것으로 바꿀 것. 링크도 각자 하지말고, 자동화할 것. 공연리스트로 연결해야 함  -->
 <div class="section">
     <h3>키워드/장르 추천</h3>
     <div class="play-grid">
@@ -75,16 +54,36 @@
             </a>
         </div>
         <div class="play-card">
-            <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
+            <a href="http://127.0.0.1:8000/plays/play/PF250246/">
+                <img src="{% static 'images/poster1.jpg' %}" alt="연극 포스터 2" class="poster-image">
+            </a>
         </div>
         <div class="play-card">
-            <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
+             <a href="http://127.0.0.1:8000/plays/play/PF253513/">
+                <img src="{% static 'images/poster7.jpg' %}" alt="연극 포스터 3" class="poster-image">
+             </a>
         </div>
         <div class="play-card">
-            <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
+             <a href="http://127.0.0.1:8000/plays/play/PF253818/">
+                <img src="{% static 'images/poster8.jpg' %}" alt="연극 포스터 4" class="poster-image">
+             </a>
         </div>
     </div>
 </div>
+
+    <!-- TOP 10 연극 섹션 -->
+    <div class="section">
+        <h3>연극 TOP 50</h3>
+                <select class="filter-select">
+                    <option value="all">전체순위별</option>
+                    <option value="rating">인기순</option>
+                    <option value="review">최신순</option>
+                    <option value="booking">평점순</option>
+                </select>
+        {% include 'play_rank_base.html' %}
+    </div>
+
+
 
     <!-- 현재 위치 주변 극장 섹션 (지도) -->
     <div class="section">
