@@ -1,12 +1,9 @@
-
 {% extends 'nav_base.html' %}
-{% load static %}
-
-    {% block title %}{{ user.fullname }}님의 마이페이지{% endblock %}
+{% block title %}{{ user.fullname }}님의 마이페이지{% endblock %}
 {% block content %}
     <style>
         /* Flexbox를 활용한 페이지 전체 레이아웃 */
-        .container {
+        .container_profile {
             display: flex;
             flex-direction: row;
             width: 80%;
@@ -19,7 +16,7 @@
         /* 사이드바 스타일 */
         .sidebar {
             width: 20%;
-            background-color: #f2f2f2;
+            background-color: #f9f9f9;
             padding: 20px;
             border-right: 1px solid #ddd;
         }
@@ -48,22 +45,17 @@
             background-color: #ddd;
         }
 
-        /* 메인 컨텐츠 스타일 */
-        .main-content {
+        /* 메인 콘텐츠 스타일 */
+        .profile-details {
             flex-grow: 1;
             padding: 20px;
         }
 
-        .main-content h1 {
+        .profile-details h1 {
             font-size: 1.5em;
             margin-bottom: 20px;
             border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
-        }
-
-        .profile-details {
-            width: 60%;
-            margin: 0 auto;
         }
 
         .profile-details table {
@@ -88,9 +80,8 @@
             background-color: #fff;
         }
     </style>
-</head>
-<body>
-    <div class="container">
+
+    <div class="container_profile">
         <!-- 사이드바 -->
         <div class="sidebar">
             <ul>
@@ -101,40 +92,36 @@
             </ul>
         </div>
 
-        <!-- 메인 컨텐츠 -->
-        <div class="main-content">
+        <!-- 메인 콘텐츠 -->
+        <div class="profile-details">
             <h1>{{ user.fullname }}님의 기본 정보</h1>
-            <div class="profile-details">
-                <table>
-                    <tr>
-                        <th>이름</th>
-                        <td>{{ user.fullname }}</td>
-                    </tr>
-                    <tr>
-                        <th>이메일</th>
-                        <td>{{ user.email }}</td>
-                    </tr>
-                    <tr>
-                        <th>생년월일</th>
-                        <td>{{ user_profile.birth }}</td>
-                    </tr>
-                    <tr>
-                        <th>성별</th>
-                        <td>{{ user_profile.gender }}</td>
-                    </tr>
-                    <tr>
-                        <th>주소</th>
-                        <td>{{ user_profile.address }}</td>
-                    </tr>
-                    <tr>
-                        <th>선호 배우</th>
-                        <td>{{ user_profile.my_actor }}</td>
-                    </tr>
-                </table>
-            </div>
+            <table>
+                <tr>
+                    <th>이름</th>
+                    <td>{{ user.fullname }}</td>
+                </tr>
+                <tr>
+                    <th>이메일</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>생년월일</th>
+                    <td>{{ user_profile.birth }}</td>
+                </tr>
+                <tr>
+                    <th>성별</th>
+                    <td>{{ user_profile.gender }}</td>
+                </tr>
+                <tr>
+                    <th>주소</th>
+                    <td>{{ user_profile.address }}</td>
+                </tr>
+                <tr>
+                    <th>선호 배우</th>
+                    <td>{{ user_profile.my_actor }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 {% include 'modal_base.html' %}
 {% endblock %}
-
-
