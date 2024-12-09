@@ -1,100 +1,128 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지 리뷰</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%; /* 전체 높이 */
-        }
+{% extends 'nav_base.html' %}
+{% load static %}
 
-        .container {
-            display: flex; /* Flexbox 적용 */
-            height: 100vh; /* 부모 높이 전체 */
-        }
+{% block title %}마이페이지 리뷰{% endblock %}
 
-        .sidebar {
-            width: 250px; /* 사이드바 너비 설정 */
-            background-color: #CECEF6; /* 여기에 말풍선 색을 적용 */
-            color: white;
-            padding: 20px;
-            box-sizing: border-box;
-            position: fixed; /* 고정 위치 */
-            height: 100vh; /* 화면 전체 높이 */
-        }
+{% block content %}
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%; /* 전체 높이 설정 */
+        overflow: hidden; /* 메인 콘텐츠에서만 스크롤 가능하도록 제한 */
+    }
 
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    .container_mypagelist {
+        display: flex; /* Flexbox로 레이아웃 배치 */
+        height: 100%; /* 전체 화면 높이 */
+    }
 
-        .sidebar ul li {
-            margin: 20px 0;
-        }
+    .sidebar {
+        width: 250px; /* 사이드바 너비 */
+        background-color: #CECEF6; /* 말풍선 색상 */
+        color: white;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow-y: auto; /* 내용 스크롤 가능 */
+    }
 
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-        }
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
 
-        .content {
-            margin-left: 270px; /* 사이드바와 겹치지 않도록 여백 설정 */
-            padding: 30px;
-            box-sizing: border-box;
-            width: calc(100% - 250px); /* 전체 너비에서 사이드바 너비 빼기 */
-        }
+    .sidebar ul li {
+        margin: 20px 0;
+    }
 
-        .review-item {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+    .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+    }
 
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+    .content-wrapper {
+        flex: 1; /* 나머지 공간을 차지 */
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* 전체 높이 */
+        overflow: hidden;
+    }
 
-        .edit-btn, .delete-btn {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 12px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
+    .content-header {
+        background-color: #f8f9fa; /* 배경색 */
+        padding: 20px 30px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #ddd; /* 하단 경계선 */
+    }
 
-        .edit-btn {
-            background-color: #4caf50; /* 수정 버튼 색상 */
-        }
+    .content-main {
+        flex: 1; /* 나머지 공간을 차지 */
+        overflow-y: auto; /* 리뷰 목록 스크롤 가능 */
+        padding: 30px;
+        box-sizing: border-box;
+    }
 
-        .delete-btn:hover {
-            background-color: #e74c3c; /* 삭제 버튼 호버 */
-        }
+    .review-item {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
 
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li><a href="{% url 'mypage_update' %}">회원정보수정</a></li>
-                <li><a href="#">즐겨찾기(💗)</a></li>
-                <li><a href="{% url 'profile_reviews_list' %}">my리뷰(🎬)</a></li>
-                <li><a href="#">my돋보기(🔍)</a></li>
-            </ul>
-        </div>
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
 
-        <div class="content">
+    .edit-btn, .delete-btn {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .edit-btn {
+        background-color: #4caf50; /* 수정 버튼 색상 */
+    }
+
+    .delete-btn:hover {
+        background-color: #e74c3c; /* 삭제 버튼 호버 */
+    }
+</style>
+
+<div class="container_mypagelist">
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="{% url 'mypage_update' %}">회원정보수정</a></li>
+            <li><a href="#">즐겨찾기(💗)</a></li>
+            <li><a href="{% url 'profile_reviews_list' %}">my리뷰(🎬)</a></li>
+            <li><a href="#">my돋보기(🔍)</a></li>
+        </ul>
+    </div>
+
+    <!-- 콘텐츠 영역 -->
+    <div class="content-wrapper">
+        <div class="content-header">
             <h2>{{ user.fullname }}님의 리뷰</h2>
+        </div>
+        <div class="content-main">
+             <!-- 메시지 표시 -->
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             {% if user_reviews %}
                 {% for review in user_reviews %}
                 <div class="review-item">
@@ -107,7 +135,7 @@
                         <a href="{% url 'profile_reviews_edit' review_id=review.review_id %}" style="color: white; text-decoration: none;">수정하기</a>
                     </button>
 
-                    <!-- 삭제 버튼: form을 사용하여 POST 요청 -->
+                    <!-- 삭제 버튼 -->
                     <form action="{% url 'profile_reviews_delete' review_id=review.review_id %}" method="POST" style="display: inline-block;">
                         {% csrf_token %}
                         <button type="submit" class="delete-btn" onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</button>
@@ -119,5 +147,5 @@
             {% endif %}
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
