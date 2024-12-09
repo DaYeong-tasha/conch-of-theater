@@ -36,13 +36,11 @@
             margin-bottom: 40px;
         }
 
-
-
-
     </style>
 </head>
 <body>
 <header>
+<!--   nav에서 검색 before_login에서 검색 기능 뺄 것 -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'before_login' %}{% endif %}">
@@ -50,15 +48,17 @@
                 <img src="{% static 'images/conch.png' %}" alt="극장의 소라고동">
             </a>
             <div class="section-header_search">
-            <div class="header-content">
-<!--                  <img src="{% static 'images/spongebob.png' %}" alt="연극 포스터 1" style="height=150px; ">-->
-                <div class="search-box_home">
-                    <input type="text" placeholder="공연/출연진 검색" class="search-input_home">
-                    <button class="search-button_home">
-                        <i class="fas fa-search"></i>
-                    </button>
+                {% if user.is_authenticated %}
+                <div class="header-content">
+    <!--            <img src="{% static 'images/spongebob.png' %}" alt="연극 포스터 1" style="height=150px; ">-->
+                    <div class="search-box_home">
+                        <input type="text" placeholder="공연/출연진 검색" class="search-input_home">
+                        <button class="search-button_home">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-                </div>
+                {% endif %}
         </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
