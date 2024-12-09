@@ -211,8 +211,8 @@ def mypage_reviews_list(request):
     return render(request, 'accounts/profile_reviews_list.html', {'user_reviews': user_reviews})
 
 
-
 # 리뷰 리스트 삭제
+@login_required
 def delete_review(request, review_id):
     if request.method == 'POST':  # POST 요청만 처리
         review = get_object_or_404(Review, review_id=review_id)  # review_id로 가져오기
@@ -220,10 +220,13 @@ def delete_review(request, review_id):
         # 해당 리뷰가 현재 사용자의 것인지 확인 (보안)
         if review.username == request.user.username:  # username으로 확인
             review.delete()  # 리뷰 삭제
+            messages.success(request, "리뷰가 성공적으로 삭제되었습니다.")
+        else:
+            messages.error(request, "리뷰를 삭제할 권한이 없습니다.")
+        return redirect('profile_reviews_list')
 
-        return redirect('profile_reviews_list')  # 리뷰 리스트 페이지로 리디렉션
-    else:
-        return redirect('profile_reviews_list')  # 잘못된 요청일 경우, 리뷰 리스트로 리디렉션
+    messages.error(request, "잘못된 요청입니다.")
+    return redirect('profile_reviews_list')
 
 
 #리뷰 수정
