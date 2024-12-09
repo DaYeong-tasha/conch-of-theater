@@ -21,6 +21,7 @@
         margin-right: 15px; /* 좌우 마진을 줄여서 간격을 조정 */
         margin-left: 15px;
         transition: transform 0.3s ease-in-out;
+
     }
 
     .slide img {
@@ -87,6 +88,20 @@
     .next-btn {
         right: -5px;
     }
+    .filter-select {
+        padding: 8px 16px;
+        border: 2px solid #4B89DC;
+        border-radius: 20px;
+        background: white;
+        font-size: 14px;
+        min-width: 120px;
+        color: #4B89DC;
+        margin-left: auto;
+    }
+    h3 {
+    font-size: 28px;
+    font-weight: bold;
+    }
 
     @media (max-width: 768px) {
         .slide {
@@ -119,13 +134,15 @@
             font-size: 15px;
             border-radius: 5px;
         }
+
     }
 </style>
 
 <!-- 로그인 여부에 따른 드롭다운 및 랭크 표시 -->
 {% if user.is_authenticated %}
+    <h3>연극 TOP 50</h3>
     <form method="GET" action="">
-        <select name="link_area" onchange="this.form.submit()">
+        <select class="filter-select" name="link_area" onchange="this.form.submit()">
             <option value="전국" {% if selected_area == '전국' %}selected{% endif %}>지역 선택</option>
             {% for area in link_area %}
             <option value="{{ area }}"
@@ -134,7 +151,7 @@
             </option>
             {% endfor %}
         </select>
-        <select name="ststypes" onchange="this.form.submit()">
+        <select class="filter-select" name="ststypes" onchange="this.form.submit()">
             <option value="day" {% if selected_ststype == 'day' %}selected{% endif %}>일별</option>
             <option value="week" {% if selected_ststype == 'week' %}selected{% endif %}>주별</option>
             <option value="month" {% if selected_ststype == 'month' %}selected{% endif %}>월별</option>
