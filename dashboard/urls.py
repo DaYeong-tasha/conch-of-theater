@@ -5,5 +5,5 @@ from django.urls import path, include
 from dashboard import views
 
 urlpatterns = [
-    path('profile/', views.dashboard, name='dashboard')
+    path('dashboard/', views.dashboard, name='dashboard')
 ]

@@ -7,32 +7,146 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/theater_map.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* 슬라이더 스타일 */
+    .slider {
+        position: relative;
+        width: 100%;
+        max-width: 1000px;
+        margin: 20px auto;
+        overflow: hidden;
+    }
+
+    .slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+        min-width: 22%; /* 4개씩 보이게 설정 (22% -> 23%로 조금 더 조정) */
+        box-sizing: border-box;
+        text-align: center;
+        position: relative;
+        margin-right: 15px; /* 좌우 마진을 줄여서 간격을 조정 */
+        margin-left: 15px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 300px;
+        border-radius: 10px;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .slide:hover img {
+        transform: scale(1.05);
+    }
+
+    .slide .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        font-size: 18px;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .slide:hover .overlay {
+        opacity: 1;
+    }
+
+    .status-info {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 18px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .prev-btn {
+        left: -5px;
+    }
+
+    .next-btn {
+        right: -5px;
+    }
+    .filter-select {
+        padding: 8px 16px;
+        border: 2px solid #4B89DC;
+        border-radius: 20px;
+        background: white;
+        font-size: 14px;
+        min-width: 120px;
+        color: #4B89DC;
+        flex-shrink: 0;
+        margin-right: auto;
+    }
+    @media (max-width: 768px) {
+        .slide {
+            min-width: 50%;
+        }
+
+        h2 { font-size: 20px; }
+        h4 { font-size: 16px; }
+
+        .slide img {
+            height: 250px;
+            width: 200px;
+        }
+        .slide .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3px;
+            font-size: 13px;
+        }
+        .ranking-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 5px;
+            font-size: 15px;
+            border-radius: 5px;
+        }
+
+    }
+</style>
 
 <div class="main-container">
-    <!-- TOP 10 연극 섹션 -->
-    <div class="section">
-        <div class="section-header">
-            <div class="header-content">
-                <h2 class="title">TOP 10 연극</h2>
-                <select class="filter-select">
-                    <option value="all">전체순위별</option>
-                    <option value="rating">인기순</option>
-                    <option value="review">최신순</option>
-                    <option value="booking">평점순</option>
-                </select>
-                <div class="search-box">
-                    <input type="text" placeholder="공연/출연진 검색" class="search-input">
-                    <button class="search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        {% include 'play_rank_base.html' %}
-    </div>
 
-    <!-- 카테고리 필터 -->
+        <!-- 카테고리 필터 -->
     <div class="category-filters">
+         <h3>키워드 선택</h3>
         <div class="filter-row">
             <button class="filter-btn active">전체</button>
             <button class="filter-btn">공연예정</button>
@@ -64,24 +178,35 @@
 
     </div>
 
-    <!-- 키워드/장르 추천 섹션 -->
-    <div class="section">
-        <h3>키워드/장르 추천</h3>
-        <div class="play-grid">
-            <div class="play-card">
-                <img src="{% static 'images/poster1.jpg' %}" alt="연극 포스터 1" class="poster-image">
+        <!-- 장르 추천 섹션. 전부 수정해야 함. 리스트에서 값 받아와서 띄우는 것으로 바꿀 것. 링크도 각자 하지말고, 자동화할 것. 공연리스트로 연결해야 함  -->
+<div class="section">
+    <h3>키워드/장르 추천</h3>
+    <div class="slider">
+        <div class="slides">
+            {% if play_details %}
+            {% for play in play_details %}
+            <div class="slide">
+                <a href="{% url 'play_detail' play.play_id %}">
+                    <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
+                </a>
+                <div class="overlay">
+                    <h5>{{ play.play_name }}</h5>
+                    <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
+                    <p>{{ play.theater_nm }}</p>
+                </div>
+                <div class="status-info">{{ play.play_status }}</div>
             </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
-            </div>
+            {% endfor %}
+            {% else %}
+            <p>현재 추천 정보가 없습니다.</p>
+            {% endif %}
         </div>
+
+        <!-- 슬라이더 버튼 -->
+        <button class="slider-btn prev-btn">&#10094;</button>
+        <button class="slider-btn next-btn">&#10095;</button>
     </div>
+</div>
 
     <!-- 현재 위치 주변 극장 섹션 (지도) -->
     <div class="section">
@@ -115,13 +240,14 @@
 </script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_map_api_key }}&libraries=services,clusterer,geometry"></script>
 <script src="{% static 'js/theater_map.js' %}"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         try {
             console.log('Initializing map...');
             var theaters = {{ theaters|safe }};
             console.log('Theaters data:', theaters);
-            
+
             if (!theaters || theaters.length === 0) {
                 console.warn('No theaters data available');
             }
@@ -132,7 +258,7 @@
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
+
                     const radius = this.dataset.radius;
                     theaterMap.filterMiniMapByRadius(parseInt(radius));
                 });
@@ -141,6 +267,55 @@
             console.error('Error initializing map:', error);
         }
     });
+
+<!--    추천 띄우기-->
+
+   document.addEventListener('DOMContentLoaded', () => {
+    // 현재 슬라이드를 추적할 변수 초기화
+    let currentSlide = 0;
+    const slides = document.querySelector('.slides');
+    const slideCount = document.querySelectorAll('.slide').length;
+    const nextBtn = document.querySelector('.next-btn');
+    const prevBtn = document.querySelector('.prev-btn');
+
+    const slidesPerView = 4; // 한 화면에 보이는 슬라이드 개수
+
+    // '다음' 버튼 클릭 시 슬라이드를 한 번에 4개씩 넘기는 이벤트 리스너
+    nextBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide + slidesPerView) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    });
+
+    // '이전' 버튼 클릭 시 슬라이드를 한 번에 4개씩 뒤로 넘기는 이벤트 리스너
+    prevBtn.addEventListener('click', () => {
+        currentSlide = (currentSlide - slidesPerView + slideCount) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    });
+
+    // 자동 슬라이드 전환 추가 (7초마다)
+    setInterval(() => {
+        currentSlide = (currentSlide + slidesPerView) % slideCount;
+        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+    }, 7000);  // 7초마다 슬라이드를 넘기기
+
+    // 슬라이드 위치를 업데이트하는 함수
+    function updateSlidePosition() {
+        const slideElement = document.querySelector('.slide');
+
+        if (!slideElement) {
+            console.warn('No slides available to calculate position');
+            return;
+        }
+
+        // 슬라이드의 총 너비 계산
+        const offset = -currentSlide * slideElement.offsetWidth;
+
+        // 슬라이드 컨테이너의 transform을 변경하여 슬라이드를 이동시킴
+        slides.style.transform = `translateX(${offset}px)`;
+    }
+});
+
+
 </script>
 
 {% endblock %}

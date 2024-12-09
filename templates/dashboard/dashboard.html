@@ -1,7 +1,23 @@
 {% extends 'nav_base.html' %}
 {% block title %}연극 돋보기{% endblock %}
+{% load static %}
 {% block content %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/theater_map.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+    <!-- TOP 10 연극 섹션 -->
+    <div class="section">
+<!--                <select class="filter-select">-->
+<!--                    <option value="all">전체순위별</option>-->
+<!--                    <option value="rating">인기순</option>-->
+<!--                    <option value="review">최신순</option>-->
+<!--                    <option value="booking">평점순</option>-->
+<!--                </select>-->
+        {% include 'play_rank_base.html' %}
+    </div>
 
 
 

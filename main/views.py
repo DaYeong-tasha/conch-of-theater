@@ -1,11 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Max
 
 from COT import settings
-from common.models import Play_rank, Play_list, Theater_location
+from common.models import Play_rank, Play_list, Theater_location, Play_detail
 from map.views import get_theaters_data
 from django.utils import timezone
+from django.db.models import F
+
+
+def get_play_details():
+    """공연중 또는 공연 예정인 Play_detail 데이터를 가져오기"""
+    play_details = Play_detail.objects.filter(
+        play_status__in=['공연중', '공연예정']
+    ).values('play_id', 'play_name', 'play_poster', 'play_strdate', 'play_enddate', 'play_status', 'theater_nm')
+
+    return play_details
 
 
 def get_latest_ranked_data(selected_area='전국', selected_ststype='day'):
@@ -63,30 +73,9 @@ def play_rank(request):
     return render(request, 'play_rank_base.html', context)
 
 
-def toggle_favorite(request, play_id):
-    """즐겨찾기 추가/제거"""
-    if not request.user.is_authenticated:
-        return JsonResponse({'message': '로그인 후 이용해주세요.'}, status=400)
 
-    try:
-        play_list = Play_list.objects.get(play_id=play_id)
-    except Play_list.DoesNotExist:
-        return JsonResponse({'message': '해당 연극이 존재하지 않습니다.'}, status=404)
-
-    try:
-        is_favorite = play_list.favorite_users.filter(id=request.user.id).exists()
-        if is_favorite:
-            play_list.favorite_users.remove(request.user)
-            message = '즐겨찾기 해제되었습니다.'
-        else:
-            play_list.favorite_users.add(request.user)
-            message = '즐겨찾기가 추가되었습니다.'
-    except Exception as e:
-        return JsonResponse({'message': f'오류 발생: {str(e)}'}, status=500)
-
-    return JsonResponse({'message': message}, status=200)
-
-
+# 랭크를 대시보드로 옮겼으니, 수정하고,
+# 엔간하면, 지도, 순위, 홈 다 분리할 것
 def home(request):
     """홈 화면"""
     selected_area = request.GET.get('link_area', '전국')  # 기본값: '전국'
@@ -95,6 +84,9 @@ def home(request):
     #print(f"DEBUG - home - link_area: {selected_area}, ststypes: {selected_ststype}")
     # 기본 필터 조건으로 공통 데이터를 가져옴 #홈에 가지고 와야 띄우지? ^^
     context = get_ranked_context(selected_area, selected_ststype)
+
+    # 공연중 또는 공연 예정인 Play_detail 데이터 가져오기
+    play_details = get_play_details()
 
     # 극장 데이터 가져오기
     theater_context = get_theaters_data()
@@ -105,6 +97,7 @@ def home(request):
     context.update({
         'theaters': theaters,
         'kakao_map_api_key': settings.KAKAO_MAP_API_KEY,
+        'play_details': play_details,  # 추가된 부분
     })
 
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
