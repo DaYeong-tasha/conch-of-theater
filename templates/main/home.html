@@ -22,6 +22,13 @@
         transition: transform 0.5s ease-in-out;
     }
 
+    /* 슬라이드 링크 */
+    .slide-link {
+        position: relative; /* 오버레이와 이미지를 함께 포함 */
+        display: block; /* 클릭 범위를 전체로 확장 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+        color: inherit; /* 텍스트 색상 상속 */
+    }
     .slide {
         min-width: 22%; /* 4개씩 보이게 설정 (22% -> 23%로 조금 더 조정) */
         box-sizing: border-box;
@@ -58,12 +65,13 @@
         justify-content: center;
         align-items: center;
         padding: 10px;
-        font-size: 18px;
+        font-size: 14px;
         transition: opacity 0.3s ease-in-out;
+        opacity: 0; /* 기본적으로 숨김 */
     }
 
     .slide:hover .overlay {
-        opacity: 1;
+        opacity: 1; /* 슬라이드 호버 시 오버레이 표시 */
     }
 
     .status-info {
@@ -73,7 +81,7 @@
         background-color: rgba(0, 0, 0, 0.7);
         color: white;
         padding: 5px 10px;
-        font-size: 18px;
+        font-size: 14px;
         border-radius: 5px;
     }
 
@@ -182,26 +190,26 @@
 <div class="section">
     <h3>키워드/장르 추천</h3>
     <div class="slider">
-        <div class="slides">
-            {% if play_details %}
-            {% for play in play_details %}
-            <div class="slide">
-                <a href="{% url 'play_detail' play.play_id %}">
-                    <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
-                </a>
-                <div class="overlay">
-                    <h5>{{ play.play_name }}</h5>
-                    <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
-                    <p>{{ play.theater_nm }}</p>
-                </div>
-                <div class="status-info">{{ play.play_status }}</div>
+<div class="slides">
+    {% if play_details %}
+    {% for play in play_details %}
+    <div class="slide">
+        <!-- 슬라이드 전체를 감싸는 링크 -->
+        <a href="{% url 'plays:play_detail' play.play_id %}" class="slide-link">
+            <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
+            <div class="overlay">
+                <h5>{{ play.play_name }}</h5>
+                <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
+                <p>{{ play.theater_nm }}</p>
             </div>
-            {% endfor %}
-            {% else %}
-            <p>현재 추천 정보가 없습니다.</p>
-            {% endif %}
-        </div>
-
+            <div class="status-info">{{ play.play_status }}</div>
+        </a>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>현재 추천 정보가 없습니다.</p>
+    {% endif %}
+</div>
         <!-- 슬라이더 버튼 -->
         <button class="slider-btn prev-btn">&#10094;</button>
         <button class="slider-btn next-btn">&#10095;</button>

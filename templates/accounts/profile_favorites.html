@@ -1,14 +1,14 @@
 {% extends 'nav_base.html' %}
 {% load static %}
 
-{% block title %}마이페이지 리뷰{% endblock %}
+{% block title %}즐겨찾기(💗)한 연극 목록{% endblock %}
 
 {% block content %}
 <style>
     body, html {
         margin: 0;
         padding: 0;
-        height: 100%;
+        height: 100%; /* 전체 높이 설정 */
         overflow: hidden; /* 메인 콘텐츠에서만 스크롤 가능하도록 제한 */
     }
 
@@ -58,12 +58,12 @@
 
     .content-main {
         flex: 1; /* 나머지 공간을 차지 */
-        overflow-y: auto; /* 리뷰 목록 스크롤 가능 */
+        overflow-y: auto; /* 연극 목록 스크롤 가능 */
         padding: 30px;
         box-sizing: border-box;
     }
 
-    .review-item {
+    .favorite-item {
         background-color: #f8f9fa;
         border: 1px solid #ddd;
         border-radius: 10px;
@@ -71,29 +71,34 @@
         margin-bottom: 20px;
     }
 
-    .review-header {
+    .favorite-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;
     }
 
-    .edit-btn, .delete-btn {
+    .remove-btn {
         background-color: #ff6b6b;
         color: white;
         border: none;
         border-radius: 5px;
         padding: 8px 12px;
         cursor: pointer;
-        margin-right: 10px;
     }
 
-    .edit-btn {
-        background-color: #4caf50; /* 수정 버튼 색상 */
+    .remove-btn:hover {
+        background-color: #e74c3c;
     }
 
-    .delete-btn:hover {
-        background-color: #e74c3c; /* 삭제 버튼 호버 */
+    .play-poster {
+        max-width: 200px;
+        max-height: 300px;
+        margin-bottom: 10px;
+    }
+
+    .play-title {
+        font-weight: bold;
     }
 </style>
 
@@ -111,10 +116,10 @@
     <!-- 콘텐츠 영역 -->
     <div class="content-wrapper">
         <div class="content-header">
-            <h2>{{ user.fullname }}님의 리뷰</h2>
+            <h2>{{ user.fullname }}님의 즐겨찾기(💗)한 연극</h2>
         </div>
         <div class="content-main">
-             <!-- 메시지 표시 -->
+
             {% if messages %}
                 <ul>
                     {% for message in messages %}
@@ -123,28 +128,26 @@
                 </ul>
             {% endif %}
 
-            {% if user_reviews %}
-                {% for review in user_reviews %}
-                <div class="review-item">
-                    <div class="review-header">
-                        <span class="username">{{ review.username }}</span>
-                        <span class="review-rating">★ {{ review.star }}.0</span>
+            <ul>
+                {% for play in favorite_plays %}
+                <li class="favorite-item">
+                    <div class="favorite-header">
+                        <span class="play-title">{{ play.play_name }}</span>
+                        <span class="play-theater">{{ play.theater_nm }}</span>
                     </div>
-                    <p>{{ review.review_contents }}</p>
-                    <button class="edit-btn">
-                        <a href="{% url 'profile_reviews_edit' review_id=review.review_id %}" style="color: white; text-decoration: none;">수정하기</a>
-                    </button>
+                    <p>{{ play.loc }}</p>
+                    <a href="{% url 'plays:play_detail' pk=play.pk %}" class="btn btn-primary">상세보기</a>
 
-                    <!-- 삭제 버튼 -->
-                    <form action="{% url 'profile_reviews_delete' review_id=review.review_id %}" method="POST" style="display: inline-block;">
+                    <!-- 즐겨찾기 취소 버튼 -->
+                    <form action="{% url 'remove_from_favorites' play_id=play.pk %}" method="POST" style="display: inline-block;">
                         {% csrf_token %}
-                        <button type="submit" class="delete-btn" onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</button>
+                        <button type="submit" class="remove-btn" onclick="return confirm('즐겨찾기에서 제거하시겠습니까?')">즐겨찾기 취소</button>
                     </form>
-                </div>
+                </li>
+                {% empty %}
+                <p>즐겨찾기한 연극이 없습니다.</p>
                 {% endfor %}
-            {% else %}
-                <p>작성한 리뷰가 없습니다.</p>
-            {% endif %}
+            </ul>
         </div>
     </div>
 </div>

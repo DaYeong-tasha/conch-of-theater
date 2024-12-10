@@ -16,6 +16,8 @@ urlpatterns = [
     path('profile/reviews/list/', views.mypage_reviews_list, name='profile_reviews_list'),
     path('profile/reviews/edit/<int:review_id>/', views.reviews_edit, name='profile_reviews_edit'),
     path('profile/reviews/delete/<int:review_id>/', views.delete_review, name='profile_reviews_delete'),
+    path('profile/favorites/', views.mypage_favorites, name='profile_favorites'),
+    path('profile/favorites/remove_from_favorites/<str:play_id>/', views.remove_from_favorites, name='remove_from_favorites'),
 ]
 
 
