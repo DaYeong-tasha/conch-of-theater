@@ -211,6 +211,7 @@ def mypage_reviews_list(request):
     return render(request, 'accounts/profile_reviews_list.html', {'user_reviews': user_reviews})
 
 
+
 # 리뷰 리스트 삭제
 @login_required
 def delete_review(request, review_id):
@@ -226,7 +227,6 @@ def delete_review(request, review_id):
 
     messages.error(request, "잘못된 요청입니다.")
     return redirect('profile_reviews_list')
-
 
 #리뷰 수정
 @login_required
@@ -245,24 +245,4 @@ def reviews_edit(request, review_id):
     return render(request, 'accounts/profile_reviews_edit.html', {'form': form})  # 수정 페이지 렌더링
 
 
-#즐겨찾기♡
-def mypage_favorites(request):
-    # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
-    # 현재 로그인한 사용자가 즐겨찾기한 연극 목록 가져오기
-    favorite_plays = Play_list.objects.filter(favorite_users=request.user)
-
-    context = {
-        'favorite_plays': favorite_plays
-    }
-    return render(request, 'accounts/profile_favorites.html', context)
-    return redirect('login')
-
-
-def remove_from_favorites(request, play_id):
-    if request.user.is_authenticated:
-        play = get_object_or_404(Play_list, pk=play_id)
-        # 즐겨찾기에서 제거하는 로직 추가
-        play.favorite_users.remove(request.user)
-        return redirect('accounts:profile_favorites')  # 즐겨찾기 페이지로 리디렉션
-    return redirect('login')
 
