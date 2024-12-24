@@ -45,34 +45,42 @@
                 <span>작성자: {{ review.username }}</span>
                 <span>작성일: {{ review.review_reg_date }}</span>
                 <span>
+                <div class="like-dislike">
+                    <div class="d-flex" >
                     <form action="{% url 'plays:toggle_like' review.review_id %}" method='POST'>
-    {% csrf_token %}
-    <button class="like-button" style='border:none;'>
-        <i class="fa fa-thumbs-o-up" style="font-size:12px;"></i>
-        <span class="like-count">좋아요 {{ review.like_users.all|length }}</span>
-    </button>
-</form>
+                        {% csrf_token %}
+                        <button class="like-button" style='border:none;'>
+                            <i class="fa fa-thumbs-o-up" style="font-size:12px;"></i>
+                            <span class="like-count"> {{ review.like_users.all|length }}</span>
+                        </button>
+                    </form>
 
-<form action="{% url 'plays:toggle_dislike' review.review_id %}" method='POST'>
-    {% csrf_token %}
-    <button class="dislike-button" style='border:none;'>
-        <i class="fa fa-thumbs-o-down" style="font-size:12px;"></i>
-        <span class="dislike-count">싫어요 {{ review.dislike_users.all|length }}</span>
-    </button>
-</form>
+                    <form action="{% url 'plays:toggle_dislike' review.review_id %}" method='POST'>
+                        {% csrf_token %}
+                        <button class="dislike-button" style='border:none;'>
+                            <i class="fa fa-thumbs-o-down" style="font-size:12px;"></i>
+                            <span class="dislike-count"> {{ review.dislike_users.all|length }}</span>
+                        </button>
+                    </form>
+                    </div>
+                </div>
                 </span>
             </div>
         </div>
         <div class="review-body">
+            <div class="h5-review">
             <h5>제목: {{ review.review_title }}</h5>
+            </div>
+            <div class="p-review">
             <p>내용: {{ review.review_contents }}</p>
+            </div>
 
     <div class="review-bottom">
     <a href="{% url 'plays:edit_review' play_id=play_id review_id=review.review_id %}" role="button" class="a_but">수정</a>
     <form action="{% url 'plays:delete_review' play_id=play_id review_id=review.review_id %}" method="post" style="display:inline;">
     {% csrf_token %}
     <a role="button" onclick="this.closest('form').submit();" class="a_but">삭제</a>
-</form>
+    </form>
         {% csrf_token %}
 
     </form>
@@ -90,6 +98,8 @@
 
 <style>
 
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Hahmlet:wght@100..900&family=Poor+Story&display=swap');
+
     .review-card {
         border: 1px solid #ddd;
         border-radius: 5px;
@@ -105,16 +115,28 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        font-family: "Hahmlet", sans-serif;
+        font-weight: 200;
+    }
+
+    .h5-review {
+        font-family: "Hahmlet", sans-serif;
+        font-weight: 200;
+    }
+
+    .p-review {
+        font-family: "Hahmlet", sans-serif;
+        font-weight: 200;
     }
 
     .review-bottom {
-    position: absolute; /* 수정 */
-    bottom: 10px;
-    right: 10px;
-    display: flex;
-    align-items: end;
-    gap: 5px;
-}
+        position: absolute; /* 수정 */
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+    }
 
 
     .star-rating {
@@ -158,6 +180,20 @@
 
     .a_but {
     text-decoration: underline;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #000;
+    background-color: #f0f0f0;
+    border: 0.5px solid #cccccc;
+    border-radius: 3px;
+    padding: 10px 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 40px;
+    margin-bottom: 5px;
+    weight: 0;
+    }
+
+    form .a_but {
+        margin: 0;
     }
 
     .review-form {

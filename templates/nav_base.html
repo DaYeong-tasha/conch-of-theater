@@ -21,13 +21,188 @@
             text-align: right;
             padding: 10px;
         }
+        .navbar {
+        background-color: #ffffff !important; /* 배경 색상을 흰색으로 설정 */
+        }
+
+        .nav-link {
+            position: relative; /* 밑줄을 추가하기 위해 position 설정 */
+            text-decoration: none; /* 기본 텍스트 밑줄 제거 */
+            transition: all 0.3s ease;
+            line-height: 1.5; /* 기본 줄 높이 설정 */
+            padding: 0;
+            font-size: 16px; /* 텍스트 크기 명시적으로 설정 */
+            color: black;
+            display: inline-block;
+            border-radius: 3px;
+            background-color: #fff;
+        }
+
+
+
+        .nav-link:hover::after {
+            content: ""; /* 가상 요소 생성 */
+            position: absolute;
+            bottom: -2px;
+            left:0;
+            width: 100%;
+            height: 2.0px;
+            background-color: #f7f796; /* 밑줄 색상 */
+        }
+
+        .nav-link.active {
+            color: black; /* 활성화된 페이지의 글씨 색상 */
+            background-color: #f7f796; /* 활성화된 링크의 배경색 */
+            position: relative;
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #f7f796; /* 활성화된 링크의 밑줄 색 */
+        }
+
+        .nav-tabs .nav-item {
+            margin-bottom: -10px;
+            padding: 10px;
+
+        }
+
+        /* 기본 컨테이너 스타일 */
+        .tabs-container {
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 탭 메뉴 스타일 */
+        .nav-tabs {
+            list-style: none;
+            display: flex;
+
+            margin: 0 !important;
+            padding: 0 !important;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 20px !important;
+            cursor: pointer;
+            font-size: 16px;
+            color: #555;
+            border: 3px solid #ddd;
+            border-bottom: none;
+            background: #f9f9f9;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .tab-item:hover {
+            background: #eee;
+            color: #333;
+        }
+
+        .tab-item.active {
+            background: #fff;
+            color: #000;
+            font-weight: bold;
+            border-bottom: 2px solid #fff;
+        }
+
+        /* 탭 콘텐츠 스타일 */
+        .tab-content {
+            border: 2px solid #ddd;
+            border-top: none;
+            padding: 20px;
+            background: #fff;
+            animation: fadeIn 0.5s ease-in-out;
+
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* 페이드 효과 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+
+          /* play_nav */
+        .play_nav {
+            background-color: #ffffff !important; /* 배경 색상 설정 */
+            padding: 10px 20px; /* 여백 설정 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 섬세한 그림자 */
+        }
+
+        .play_nav-item {
+            display: inline-block;
+            margin-right: 20px; /* 탭 간격 설정 */
+        }
+
+        .play_nav-link {
+            text-decoration: none; /* 기본 텍스트 밑줄 제거 */
+            font-size: 16px; /* 폰트 크기 */
+            color: black; /* 기본 글씨 색상 */
+            position: relative; /* 밑줄을 위한 포지션 설정 */
+            padding: 10px 20px; /* 버튼 여백 */
+            transition: all 0.3s ease; /* 부드러운 애니메이션 */
+            display: inline-block;
+        }
+
+        .play_nav-link:hover {
+            color: #f7f796; /* 마우스 호버 시 색상 */
+        }
+
+        .play_nav-link.active {
+            color: #f7f796; /* 활성화된 링크 글씨 색 */
+        }
+
+        .play_nav-link.active::after {
+            content: "";
+            position: absolute;
+            bottom: -3px; /* 밑줄 위치 */
+            left: 0;
+            width: 100%; /* 밑줄 너비 */
+            height: 2px; /* 밑줄 두께 */
+            background-color: #f7f796; /* 밑줄 색상 */
+        }
+
+        .play_nav-link:hover::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #f7f796; /* 호버 시 밑줄 색상 */
+        }
+
+
+
 
         body {
-            background-color: #F6F6F6;
+            background-color: #FFF;
         }
         .navbar-brand img {
             height: 60px;
             width:270px;
+
         }
         .navbar-brand {
             padding-top: 40px;
@@ -45,12 +220,12 @@
         <div class="container">
             <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'before_login' %}{% endif %}">
                 {% load static %}
-                <img src="{% static 'images/conch.png' %}" alt="극장의 소라고동">
+                <img src="{% static 'images/logo_final_.png' %}" alt="극장의 소라고동">
             </a>
             <div class="section-header_search">
                 {% if user.is_authenticated %}
                 <div class="header-content">
-    <!--            <img src="{% static 'images/spongebob.png' %}" alt="연극 포스터 1" style="height=150px; ">-->
+    <!--            <img src="{% static 'images/ticket_white_.png' %}" alt="연극 포스터 1" style="height=150px; ">-->
                     <div class="search-box_home">
                         <input type="text" placeholder="공연/출연진 검색" class="search-input_home">
                         <button class="search-button_home">
@@ -67,23 +242,23 @@
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' %}">{{ user.username }}님</a>
+                        <a class="nav-link{% if request.path_info == '/accounts/profile/' %}active{% endif %}" href="{% url 'profile' %}">{{ user.username }}님</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'review' %}">후기 게시판</a>
+                        <a class="nav-link{% if request.path == '/reviews/' %}active{% endif %}" href="{% url 'review' %}">후기 게시판</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'dashboard' %}">연극 돋보기</a>
+                        <a class="nav-link{% if request.path == '/dashboard/dashboard/' %}active{% endif %}" href="{% url 'dashboard' %}">연극 돋보기</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'logout' %}">로그아웃</a>
+                        <a class="nav-link{% if request.path == '/logout/' %}active{% endif %}" href="{% url 'logout' %}">로그아웃</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">로그인</a>
+                        <a class="nav-link{% if request.path == '/accounts/login/' %}active{% endif %}" href="{% url 'login' %}">로그인</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{% url 'register' %}">회원가입</a>
+                        <a class="nav-link{% if request.path == '/accounts/register/' %}active{% endif %}" href="{% url 'register' %}">회원가입</a>
                     </li>
                     {% endif %}
                 </ul>
