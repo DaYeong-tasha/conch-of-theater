@@ -143,11 +143,35 @@ def toggle_play_favorite(request, play_id):
 
 @require_POST
 def toggle_play_like(request, play_id):
-    pass
+    if request.user.is_authenticated:
+        play = get_object_or_404(Play_list, pk=play_id)
+        if play.like_users.filter(pk=request.user.pk).exists():
+            play.like_users.remove(request.user)
+            message = '연극 좋아요 취소 완료!😢'
+        else:
+            play.like_users.add(request.user)
+            play.dislike_users.remove(request.user)  # 싫어요 취소
+            message = '연극 좋아요 반영 완료!😄'
+
+        return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=review-info')
+    return redirect('login')
+
+
 
 @require_POST
 def toggle_play_dislike(request, play_id):
-    pass
+    if request.user.is_authenticated:
+        play = get_object_or_404(Play_list, pk=play_id)
+        if play.dislike_users.filter(pk=request.user.pk).exists():
+            play.dislike_users.remove(request.user)
+            message = '연극 싫어요 취소 완료!😊'
+        else:
+            play.dislike_users.add(request.user)
+            play.like_users.remove(request.user)  # 좋아요 취소
+            message = '연극 싫어요 반영 완료!😠'
+
+        return HttpResponseRedirect(reverse('plays:play_detail', args=[play_id]) + '?tab=review-info')
+    return redirect('login')
 # 찐
 @login_required(login_url='login')
 def write_review(request, play_id):

@@ -18,8 +18,8 @@ urlpatterns = [
 
     # 연극 즐겨찾기, 좋아요, 싫어요
     path('reviews/favorite/<str:play_id>/', views.toggle_play_favorite, name='toggle_play_favorite'),
-    path('reviews/like/<str:play_id>/', views.toggle_play_like, name='toggle_play_like'),
-    path('reviews/dislike/<str:play_id>/', views.toggle_play_dislike, name='toggle_play_dislike'),
+    path('play/like/<str:play_id>/', views.toggle_play_like, name='toggle_play_like'),
+    path('play/dislike/<str:play_id>/', views.toggle_play_dislike, name='toggle_play_dislike'),
 
     # 리뷰 작성, 수정, 삭제
     path('reviews/write/<str:play_id>/', views.write_review, name='write_review'),
