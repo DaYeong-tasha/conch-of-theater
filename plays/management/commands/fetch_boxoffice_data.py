@@ -12,6 +12,7 @@ import os
 from dotenv import load_dotenv
 from django.db import connection
 
+## date 나중에 제거할 것.
 
 #  crontab -e
 #  crontab -l
@@ -70,7 +71,7 @@ print(f"데이터 수집 기준 날짜: {date}")
 
 # API 호출하여 데이터를 가져오는 함수 (재시도 로직 추가)
 def fetch_boxoffice_data(ststype, area_code, date, retries=3, delay=2):
-    url = f"https://kopis.or.kr/openApi/restful/boxoffice?service={service_key}&ststype={ststype}&date={date}&catecode=AAAA&area={area_code}"
+    url = f"https://kopis.or.kr/openApi/restful/boxoffice?service={service_key}&stdate=20241201&eddate=20241231&ststype={ststype}&catecode=AAAA&area={area_code}"
     for attempt in range(retries):
         try:
             response = requests.get(url)
@@ -115,7 +116,7 @@ def aggregate_and_rank_by_region(ststype, date):
                                     "perf_name": record.get("prfnm", ""),
                                     "performance_location": record.get("prfplcnm", ""),
                                     "performance_period": record.get("prfpd", ""),
-                                    "poster": f"https://www.kopis.or.kr{record.get('poster', '')}"
+                                    "poster": record.get('poster', '')
                                 }
                 except Exception as e:
                     print(f"XML 파싱 오류 (ststype={ststype}, area={area_code}): {e}")
