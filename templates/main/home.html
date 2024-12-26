@@ -16,7 +16,7 @@
     }
 
     .section {
-        margin-top: 130px;
+        margin-top: 50px;
     }
 
     .category-filters {
@@ -45,7 +45,7 @@
         padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
     }
 
-    <!--타이틀 추가-->
+    <!--타이틀 추가 적용 안됨-->
 
     .filter-small-title {
         text-align: left; /* 제목을 왼쪽 정렬 */
@@ -220,116 +220,97 @@
         padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
     }
 
-    /* 슬라이더 스타일 */
-    .slider {
-        position: relative;
-        width: 100%;
-        max-width: 2000px;
-        margin: 20px auto;
-        overflow: hidden;
-    }
+/* 슬라이더 스타일 */
+.slider {
+    position: relative;
+    width: 100%;
+    max-width: 2000px;
+    margin: 20px auto;
+    overflow: hidden;
+    height: 600px; /* 3줄 높이만 보이도록 설정 */
+}
 
-    .slides {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-        width: 100%; /* 슬라이더의 전체 너비 */
+.slides {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개씩 배치 */
+    grid-gap: 35px; /* 슬라이드 사이의 간격 설정 */
+    height: 100%; /* 슬라이드 영역 높이를 100%로 설정 */
+    overflow-x: auto; /* 가로 스크롤 활성화 */
+    scroll-snap-type: x mandatory; /* 스크롤 시 각 슬라이드가 정확히 맞춰지도록 설정 */
+    scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
+}
 
-    }
+.slide {
+    position: relative;
+    text-align: center;
+    box-sizing: border-box;
+    scroll-snap-align: start; /* 각 슬라이드가 왼쪽에 맞춰지도록 설정 */
+}
 
-    /* 슬라이드 링크 */
-    .home-slide-link {
-        position: relative; /* 오버레이와 이미지를 함께 포함 */
-        display: block; /* 클릭 범위를 전체로 확장 */
-        text-decoration: none; /* 링크 밑줄 제거 */
-        color: inherit; /* 텍스트 색상 상속 */
-    }
-    .slide {
-        min-width: 21%; /* 4개씩 보이게 설정 (22% -> 23%로 조금 더 조정) */
-        box-sizing: border-box;
-        text-align: center;
-        position: relative;
-        margin-right: 18px; /* 좌우 마진을 줄여서 간격을 조정 */
-        margin-left: 18px;
-        transition: transform 0.3s ease-in-out;
-        width: 100%; /* 슬라이더의 전체 너비 */
-    }
+.slide img {
+    width: 100%;
+    height: 300px; /* 고정된 높이로 이미지 설정 */
+    border-radius: 10px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
 
-    .slide img {
-        width: 100%;
-        height: 300px;
-        border-radius: 10px;
-        object-fit: cover;
-        transition: transform 0.3s ease-in-out;
-    }
+.slide:hover img {
+    transform: scale(1.05);
+}
 
-    .slide:hover img {
-        transform: scale(1.05);
-    }
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 14px;
+    transition: opacity 0.3s ease-in-out;
+}
 
-    .slide .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        opacity: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        font-size: 14px;
-        transition: opacity 0.3s ease-in-out;
-        opacity: 0; /* 기본적으로 숨김 */
-    }
+.slide:hover .overlay {
+    opacity: 1;
+}
 
-    .slide:hover .overlay {
-        opacity: 1; /* 슬라이드 호버 시 오버레이 표시 */
-    }
+.status-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
 
-    .status-info {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 5px 10px;
-        font-size: 14px;
-        border-radius: 5px;
-    }
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 18px;
+    padding: 10px;
+    cursor: pointer;
+}
 
-    .slider-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        font-size: 18px;
-        padding: 10px;
-        cursor: pointer;
-    }
+.prev-btn {
+    left: -10px;
+}
 
-    .prev-btn {
-        left: -5px;
-    }
-
-    .next-btn {
-        right: -5px;
-    }
-    .filter-select {
-        padding: 8px 16px;
-        border: 2px solid #4B89DC;
-        border-radius: 20px;
-        background: white;
-        font-size: 14px;
-        min-width: 120px;
-        color: #4B89DC;
-        flex-shrink: 0;
-        margin-right: auto;
-    }
+.next-btn {
+    right: -10px;
+}
 
     .your_location_map {
         text-align: left; /* 제목을 왼쪽 정렬 */
@@ -459,6 +440,7 @@
     </div>
 
         <!-- 장르 추천 섹션. 전부 수정해야 함. 리스트에서 값 받아와서 띄우는 것으로 바꿀 것. 링크도 각자 하지말고, 자동화할 것. 공연리스트로 연결해야 함  -->
+<!-- 장르 추천 섹션 -->
 <div class="section">
     <h3 class="home-slide-title">소라고동의 대답</h3>
     <div class="slider">
@@ -482,9 +464,9 @@
             <p>현재 추천 정보가 없습니다.</p>
             {% endif %}
         </div>
-        <!-- 슬라이더 버튼 -->
-        <button class="slider-btn prev-btn">&#10094;</button>
-        <button class="slider-btn next-btn">&#10095;</button>
+<!--        &lt;!&ndash; 슬라이더 버튼 &ndash;&gt;-->
+<!--        <button class="slider-btn prev-btn">&#10094;</button>-->
+<!--        <button class="slider-btn next-btn">&#10095;</button>-->
     </div>
 </div>
 
@@ -550,52 +532,31 @@
     });
 
 <!--    추천 띄우기-->
-
-   document.addEventListener('DOMContentLoaded', () => {
-    // 현재 슬라이드를 추적할 변수 초기화
-    let currentSlide = 0;
+document.addEventListener('DOMContentLoaded', () => {
     const slides = document.querySelector('.slides');
     const slideCount = document.querySelectorAll('.slide').length;
     const nextBtn = document.querySelector('.next-btn');
     const prevBtn = document.querySelector('.prev-btn');
 
-    const slidesPerView = 4; // 한 화면에 보이는 슬라이드 개수
+    // 슬라이드 너비와 간격 계산
+    const slideWidth = document.querySelector('.slide').offsetWidth + 35; // 슬라이드 너비 + margin
 
-    // '다음' 버튼 클릭 시 슬라이드를 한 번에 4개씩 넘기는 이벤트 리스너
+    // '다음' 버튼 클릭 시 슬라이드를 한 번에 한 화면씩 넘기기
     nextBtn.addEventListener('click', () => {
-        currentSlide = (currentSlide + slidesPerView) % slideCount;
-        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+        slides.scrollBy({
+            left: slideWidth,  // 한 번에 한 슬라이드만큼 왼쪽으로 스크롤
+            behavior: 'smooth', // 부드러운 스크롤
+        });
     });
 
-    // '이전' 버튼 클릭 시 슬라이드를 한 번에 4개씩 뒤로 넘기는 이벤트 리스너
+    // '이전' 버튼 클릭 시 슬라이드를 한 번에 한 화면씩 되돌리기
     prevBtn.addEventListener('click', () => {
-        currentSlide = (currentSlide - slidesPerView + slideCount) % slideCount;
-        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
+        slides.scrollBy({
+            left: -slideWidth, // 한 번에 한 슬라이드만큼 오른쪽으로 스크롤
+            behavior: 'smooth', // 부드러운 스크롤
+        });
     });
-
-    // 자동 슬라이드 전환 추가 (7초마다)
-    setInterval(() => {
-        currentSlide = (currentSlide + slidesPerView) % slideCount;
-        updateSlidePosition();  // 슬라이드 위치 업데이트 함수 호출
-    }, 7000);  // 7초마다 슬라이드를 넘기기
-
-    // 슬라이드 위치를 업데이트하는 함수
-    function updateSlidePosition() {
-        const slideElement = document.querySelector('.slide');
-
-        if (!slideElement) {
-            console.warn('No slides available to calculate position');
-            return;
-        }
-
-        // 슬라이드의 총 너비 계산
-        const offset = -currentSlide * slideElement.offsetWidth;
-
-        // 슬라이드 컨테이너의 transform을 변경하여 슬라이드를 이동시킴
-        slides.style.transform = `translateX(${offset}px)`;
-    }
 });
-
 
     // 나이 입력에 따른 19+ 버튼 표시 여부
     document.addEventListener('DOMContentLoaded', function() {
