@@ -1,45 +1,42 @@
-{% extends 'nav_base.html' %}
 {% load static %}
 {% block title %}극장의 소라고동_로그인 전{% endblock %}
 {% block content %}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap');
 
-    .custom-padding {
-        padding: 15px 40px;
-        font-size: 22px;
+    body {
+        background: rgba(0, 0, 0, 0.0);
+        width: 100%;
+        background-image: url('/static/images/main_7777.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin: 0;
     }
 
-    .container text-center {
-        background-image: url('/static/images/main_7777.png'); /* 배경 이미지 경로 */
-        background-size: cover; /* 이미지가 화면을 가득 채우도록 설정 */
-        background-position: center; /* 이미지를 중앙에 배치 */
-        background-repeat: no-repeat; /* 이미지 반복 안 함 */
-        min-height: 100vh; /* 화면 전체 높이를 채움 */
-        transition: background-color 0.5s ease;
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .mb-5 {
+        margin-bottom: 3rem !important;
     }
 
     h2 {
         font-family: "Jua", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-        font-size: 40px;
+        font-size: 50px;
         color: black;
         transition: color 0.3s ease;
-        margin-top: 10rem !important;
-    }
-
-    .btn-outline-dark.custom-padding {
-        font-family: 'Jua', sans-serif;
-        font-style: normal;
-        z-index: 3;
-        background-color: transparent;
-        color: black;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .btn-outline-dark.custom-padding:hover {
-        background-color: #F3F781; /* 노란색 배경 */
+        margin-top: 0;
+        font-weight: 400;
+        margin-bottom: 10px;
     }
 
     h4 {
@@ -48,94 +45,80 @@
         font-style: oblique;
         color: black;
         transition: color 0.3s ease;
+        font-size: 30px;
     }
 
-    /* 미디어 쿼리: 768px 이하일 때 2개씩 보이게 설정 */
-    @media (max-width: 768px) {s
+    /* 버튼 스타일 */
+    .btn-outline-dark.custom-padding {
+        font-family: 'Jua', sans-serif;
+        font-size: 30px;
+        padding: 15px 40px;
+        background-color: transparent;
+        color: black;
+        border: 1px solid black; /* 테두리 추가 */
+        border-radius: 30px;
+        text-decoration: none; /* 밑줄 제거 */
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* 버튼 hover 효과 */
+    .btn-outline-dark.custom-padding:hover {
+        background-color: #FBD568;
+        color: white;
+        border-color: #F59F3C; /* 테두리 색상 변경 */
+    }
+
+    /* 반응형 디자인 */
+    @media (max-width: 768px) {
         h2 {
             font-size: 20px;
         }
+
         h4 {
             font-size: 16px;
         }
-        .custom-padding {
+
+        .btn-outline-dark.custom-padding {
             font-size: 16px;
         }
     }
-
-    .mmb {
-        background-color: #fff;
-        position: relative;
-        z-index: 2;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 10px 10px;
-        background: rgba(0, 0, 0, 0.0);
-        width: 100%; /* 전체 너비 */
-        max-width: 1000px;
-        height: 550px;
-        background-image: url('/static/images/main_7777.png');
-        background-size: cover; /* 배경 이미지가 화면을 가득 채우도록 설정 */
-        background-position: center; /* 배경 이미지를 중앙에 배치 */
-        background-repeat: no-repeat;
-        background-color: transparent;
-        top: 70%;
-        z-index: 2;
-        transition: background-color 0.3s ease;
-    }
-
-     /* "hover" 상태에서 배경색과 글씨 색 변경 */
-    .mmb.hovered {
-        background-color: #343A40; /* 검은색 배경 */
-    }
-
-    .mmb.hovered h2,
-    .mmb.hovered h4 {
-        color: white; /* 흰색 글씨 */
-    }
-
-    .mt-5 {
-        margin-top: 10rem !important;
-    }
-
 </style>
 
-<div class="container text-center">
-    <div class="curtain">
-        <div class="mmb" >
-            <div class="mb-5 n">
-                <h2 class="mt-5">숏폼에 지친 당신에게<br>2시간의 여유를 선물합니다.</h2>
-                <h4 class="mt-1">For you, take your own me time!</h4>
-            </div>
-
-            <!-- 추천 버튼 -->
-            <div class="mb-5">
-                <a href="{% url 'login' %}"
-                   class="btn btn-outline-dark btn-lg rounded-pill custom-padding"
-                   role="button"
-                   id="recommend-btn">
-                    나에게 맞는 연극 추천을 받아보세요!
-                </a>
-            </div>
-        </div>
+<div class="container">
+    <!-- 텍스트 컨테이너 -->
+    <div class="mb-5 n" id="text-container">
+        <h2 class="mt-5">숏폼에 지친 당신에게<br>2시간의 여유를 선물합니다.</h2>
+        <h4 class="mt-1">For you, take your own me time!</h4>
     </div>
-       <!-- 연극 순위 -->
-    {% include 'play_rank_base.html' %}
+    <!-- 추천 버튼 -->
+    <div class="mb-5">
+        <a href="{% url 'login' %}"
+           class="btn btn-outline-dark btn-lg rounded-pill custom-padding"
+           role="button"
+           id="recommend-btn">
+            나에게 맞는 연극 추천을 받아보세요!
+        </a>
+    </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const recommendBtn = document.getElementById('recommend-btn');
-        const mmb = document.querySelector('.mmb');
+        const textContainer = document.getElementById('text-container');
+        const body = document.body;
 
-        // 마우스가 버튼 위로 올라갔을 때
+        // 마우스 hover 효과
         recommendBtn.addEventListener('mouseenter', function () {
-            mmb.classList.add('hovered');
+            body.style.backgroundColor = 'black'; // 배경색 검정
+            textContainer.querySelector('h2').style.color = 'white'; // 텍스트 흰색
+            textContainer.querySelector('h4').style.color = 'white'; // 텍스트 흰색
         });
 
-        // 마우스가 버튼을 벗어났을 때
+        // 마우스가 버튼에서 나갔을 때
         recommendBtn.addEventListener('mouseleave', function () {
-            mmb.classList.remove('hovered');
+            body.style.backgroundColor = 'transparent'; // 원래 배경색
+            textContainer.querySelector('h2').style.color = 'black'; // 텍스트 원래 색
+            textContainer.querySelector('h4').style.color = 'black'; // 텍스트 원래 색
         });
     });
 </script>

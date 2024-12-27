@@ -10,6 +10,14 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
 
+    .main-container {
+        width: 70%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
     .filter-wrapper {
         flex: 1; /* 남는 공간을 차지 */
         display: row;
@@ -23,8 +31,9 @@
         display: flex; /* Flexbox 활성화 */
         flex-direction: column; /* 전체 레이아웃을 세로로 배치 */
         justify-content: space-between; /* 자식 요소 사이 간격 균등 분배 */
-
+        margin: 0px;
         gap: 10px; /* 자식 요소 간의 간격 */
+        background: #f9f9f9;
     }
 
     .filter-content {
@@ -37,25 +46,25 @@
     .filter-title {
         text-align: left; /* 제목을 왼쪽 정렬 */
         font-family: "Jua", sans-serif;
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         font-weight: 400;
         font-style: normal;
         margin-bottom: 3px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #8d92a6; /* 두께 2px, 색상 검정 */
+        border-bottom: 2px solid #E7A67B; /* 두께 2px, 색상 검정 */
         padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
     }
 
     <!--타이틀 추가 적용 안됨-->
 
-    .filter-small-title {
-        text-align: left; /* 제목을 왼쪽 정렬 */
+    h6.filter-small-title {
+        text-align: left !important; /* 제목을 왼쪽 정렬 */
         font-family: "Jua", sans-serif;
-        font-size: 1rem;
-        font-weight: 200;
-        font-style: normal;
-        margin-bottom: 3px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #8d92a6; /* 두께 2px, 색상 검정 */
-        padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
+        font-size: 10px !important;
+        font-weight: 200 !important;
+        font-style: normal !important;
+        margin-bottom: 3px !important; /* 제목 아래 여백 */
+        border-bottom: 2px solid #8d92a6 !important; /* 두께 2px, 색상 검정 */
+        padding-bottom: 5px !important; /* 테두리 안쪽 여백 추가 */
     }
 
     .filter-image-container {
@@ -63,19 +72,35 @@
         display: flex; /* 이미지 내부에서 정렬 조정 */
         justify-content: flex-start;
         align-items: center; /* 이미지 수직 중앙 정렬 */
+        display: inline-block; /* 컨테이너를 키워드 필터 옆에 위치 */
+        vertical-align: top; /* 위쪽 정렬 */
+        margin-left: 20px; /* 키워드 필터와의 간격 조정 */
     }
 
     .filter-image {
-        width: 40%;
+        width: 530px; /* 원하는 이미지 너비 */
         height: auto; /* 비율 유지 */
-        border-radius: 10px;
+        border-radius: 5px; /* 모서리를 둥글게 */
+        object-fit: cover; /* 이미지 비율을 유지하며 컨테이너에 맞춤 */
+    }
+
+    @media (max-width: 768px) {
+        .filter-image {
+            max-width: 300px; /* 작은 화면에서는 최대 너비를 줄임 */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .filter-image {
+            max-width: 100px; /* 더 작은 화면에서는 최대 너비를 더 줄임 */
+        }
     }
 
     .filter-row {
         display: flex; /* 가로 정렬 */
         justify-content: flex-start; /* 버튼을 왼쪽 정렬 (필요 시 center, space-between 등 조정 가능) */
-        gap: 10px; /* 버튼 간 간격 */
-        margin-bottom: 10px; /* 각 행 아래 여백 */
+        gap: 5px; /* 버튼 간 간격 */
+        margin-bottom: 6px; /* 각 행 아래 여백 */
     }
 
     .filter-row-1 {
@@ -103,14 +128,14 @@
     /* 필터 버튼 스타일 */
     .filter-btn {
         position: relative;
-        background: #f9f9f9;
+        background: #f8f8f8;
         color: black;
         border: none;
         border-radius: 50px;
         padding: 10px 20px;
-        margin: 5px;
-        font-family: "Hahmlet", serif;
-        font-size: 14px;
+        margin: 2px;
+        font-family: "Jua", serif;
+        font-size: 13px;
         cursor: pointer;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
@@ -122,14 +147,14 @@
 
     .filter-btn-1 {
             position: relative;
-            background: #ECE0F8;
+            background: #e1d5f2;
             color: black;
             border: none;
             border-radius: 50px;
             padding: 10px 20px;
-            margin: 5px;
-            font-family: "Hahmlet", serif;
-            font-size: 14px;
+            margin: 2px;
+            font-family: "Jua", serif;
+            font-size: 13px;
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -141,14 +166,14 @@
 
         .filter-btn-2 {
             position: relative;
-            background: #d7dfee;
+            background: #f8f8f8;
             color: black;
             border: none;
             border-radius: 50px;
             padding: 10px 20px;
-            margin: 5px;
-            font-family: "Hahmlet", serif;
-            font-size: 14px;
+            margin: 2px;
+            font-family: "Jua", serif;
+            font-size: 13px;
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -160,14 +185,14 @@
 
         .filter-btn-3 {
             position: relative;
-            background: #CECEF6;
+            background: #e1d5f2;
             color: black;
             border: none;
             border-radius: 50px;
             padding: 10px 20px;
-            margin: 5px;
-            font-family: "Hahmlet", serif;
-            font-size: 14px;
+            margin: 2px;
+            font-family: "Jua", serif;
+            font-size: 13px;
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -182,28 +207,28 @@
     /* 버튼을 누른 상태일 때 (클릭 중) */
     .filter-btn:active,
     .filter-btn:focus {
-        background: #f7f796;
+        background: #C3ABE2;
         color: black; /* 텍스트 색상 */
         outline: none; /* 포커스 테두리 제거 */
     }
 
     .filter-btn-1:active,
     .filter-btn-1:focus {
-        background: #f7f796;
+        background: #C3ABE2;
         color: black; /* 텍스트 색상 */
         outline: none; /* 포커스 테두리 제거 */
     }
 
     .filter-btn-2:active,
     .filter-btn-2:focus {
-        background: #f7f796;
+        background: #C3ABE2;
         color: black; /* 텍스트 색상 */
         outline: none; /* 포커스 테두리 제거 */
     }
 
     .filter-btn-3:active,
     .filter-btn-3:focus {
-        background: #f7f796;
+        background: #C3ABE2;
         color: black; /* 텍스트 색상 */
         outline: none; /* 포커스 테두리 제거 */
     }
@@ -212,11 +237,11 @@
     .home-slide-title {
         text-align: left; /* 제목을 왼쪽 정렬 */
         font-family: "Jua", sans-serif;
-        font-size: 2.2rem;
+        font-size: 2.0rem;
         font-weight: 400;
         font-style: normal;
         margin-bottom: 20px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #8d92a6; /* 두께 2px, 색상 검정 */
+        border-bottom: 2px solid #E7A67B; /* 두께 2px, 색상 검정 */
         padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
     }
 
@@ -227,7 +252,7 @@
     max-width: 2000px;
     margin: 20px auto;
     overflow: hidden;
-    height: 600px; /* 3줄 높이만 보이도록 설정 */
+    height: 540px; /* 3줄 높이만 보이도록 설정 */
 }
 
 .slides {
@@ -249,7 +274,7 @@
 
 .slide img {
     width: 100%;
-    height: 300px; /* 고정된 높이로 이미지 설정 */
+    height: 240px; /* 고정된 높이로 이미지 설정 */
     border-radius: 10px;
     object-fit: cover;
     transition: transform 0.3s ease-in-out;
@@ -273,7 +298,7 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
-    font-size: 14px;
+    font-size: 13px;
     transition: opacity 0.3s ease-in-out;
 }
 
@@ -288,7 +313,7 @@
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 5px 10px;
-    font-size: 14px;
+    font-size: 13px;
     border-radius: 5px;
 }
 
@@ -317,9 +342,9 @@
         font-family: "Jua", sans-serif;
         font-weight: 400;
         font-style: normal;
-        font-size: 2.2rem;
+        font-size: 2.0rem;
         margin-bottom: 20px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #8d92a6; /* 두께 2px, 색상 검정 */
+        border-bottom: 2px solid #E7A67B; /* 두께 2px, 색상 검정 */
         padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
         margin-top: 30px;
     }
@@ -361,21 +386,6 @@
             align-items: flex-start; /* 왼쪽 정렬 */
         }
 
-        .filter-image-container {
-            display: inline-block; /* 컨테이너를 키워드 필터 옆에 위치 */
-            vertical-align: top; /* 위쪽 정렬 */
-            margin-left: 20px; /* 키워드 필터와의 간격 조정 */
-        }
-
-        .filter-image {
-            width: 230px; /* 원하는 이미지 너비 */
-            height: auto; /* 비율 유지 */
-            border-radius: 10px; /* 모서리를 둥글게 */
-            object-fit: cover; /* 이미지 비율을 유지하며 컨테이너에 맞춤 */
-        }
-
-
-    }
 </style>
 
 <div class="main-container">
@@ -407,7 +417,6 @@
                 </div>
                 <div class="filter-row">
                     <button class="filter-btn-1">한국종합예술</button>
-                    <button class="filter-btn-1" id="ageButton" >19+</button>
                     <button class="filter-btn-1">마임</button>
                     <button class="filter-btn-1">기타</button>
                 </div>
@@ -416,7 +425,7 @@
                     <button class="filter-btn-2">수상작</button>
                     <button class="filter-btn-2">소설 원작</button>
                     <button class="filter-btn-2">위로가 되는</button>
-                    <button class="filter-btn-2">즐거운-고민중</button>
+                    <button class="filter-btn-2">감동적인</button>
                 </div>
 
                 <h6 class="filter-small-title">성별/연령대</h6>
@@ -434,7 +443,7 @@
             </div>
             <!-- 이미지 추가 -->
             <div class="filter-image-container">
-                    <img src="{% static 'images/ticket_white_.png' %}" alt="극장소라고동" class="filter-image">
+                    <img src="{% static 'images/ticket_purple_1.png' %}" alt="극장소라고동" class="filter-image">
             </div>
         </div>
     </div>

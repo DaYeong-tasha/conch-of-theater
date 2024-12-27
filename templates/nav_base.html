@@ -25,6 +25,10 @@
         background-color: #ffffff !important; /* 배경 색상을 흰색으로 설정 */
         }
 
+        a.nav-linkactive {
+            color: #C3ABE2;
+        }
+
         .nav-link {
             position: relative; /* 밑줄을 추가하기 위해 position 설정 */
             text-decoration: none; /* 기본 텍스트 밑줄 제거 */
@@ -47,12 +51,12 @@
             left:0;
             width: 100%;
             height: 2.0px;
-            background-color: #f7f796; /* 밑줄 색상 */
+            background-color: #C3ABE2; /* 밑줄 색상 */
         }
 
         .nav-link.active {
             color: black; /* 활성화된 페이지의 글씨 색상 */
-            background-color: #f7f796; /* 활성화된 링크의 배경색 */
+            background-color: #C3ABE2; /* 활성화된 링크의 배경색 */
             position: relative;
         }
 
@@ -63,7 +67,7 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background-color: #f7f796; /* 활성화된 링크의 밑줄 색 */
+            background-color: #C3ABE2; /* 활성화된 링크의 밑줄 색 */
         }
 
         .nav-tabs .nav-item {
@@ -207,6 +211,12 @@
         .navbar-brand {
             padding-top: 40px;
         }
+
+        .navbar-brand img {
+            height: 60px;
+            width: 300px;
+        }
+
         .navbar-toggler, #navbarNav {
             margin-bottom: 40px;
         }
@@ -220,18 +230,18 @@
         <div class="container">
             <a class="navbar-brand" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'before_login' %}{% endif %}">
                 {% load static %}
-                <img src="{% static 'images/logo_final_.png' %}" alt="극장의 소라고동">
+                <img src="{% static 'images/conch_purple.png' %}" alt="극장의 소라고동">
             </a>
             <div class="section-header_search">
                 {% if user.is_authenticated %}
                 <div class="header-content">
     <!--            <img src="{% static 'images/ticket_white_.png' %}" alt="연극 포스터 1" style="height=150px; ">-->
-                    <div class="search-box_home">
+                    <!--div class="search-box_home">
                         <input type="text" placeholder="공연/출연진 검색" class="search-input_home">
                         <button class="search-button_home">
                             <i class="fas fa-search"></i>
                         </button>
-                    </div>
+                    </div-->
                 </div>
                 {% endif %}
         </div>
