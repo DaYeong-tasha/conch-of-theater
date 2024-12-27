@@ -32,26 +32,26 @@
         flex-direction: column; /* 전체 레이아웃을 세로로 배치 */
         justify-content: space-between; /* 자식 요소 사이 간격 균등 분배 */
         margin: 0px;
-        gap: 10px; /* 자식 요소 간의 간격 */
+        gap: 10px;
         background: #f9f9f9;
     }
 
     .filter-content {
         display: flex; /* 가로로 배치 */
         justify-content: space-between; /* 자식 요소를 양쪽 끝에 정렬 */
-        align-items: center; /* 세로 중앙 정렬 */
-        gap: 20px; /* 자식 요소 간격 */
+        align-items: center;
+        gap: 20px;
     }
 
     .filter-title {
-        text-align: left; /* 제목을 왼쪽 정렬 */
+        text-align: left;
         font-family: "Jua", sans-serif;
         font-size: 1.8rem;
         font-weight: 400;
         font-style: normal;
-        margin-bottom: 3px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #E7A67B; /* 두께 2px, 색상 검정 */
-        padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
+        margin-bottom: 3px;
+        border-bottom: 2px solid #E7A67B;
+        padding-bottom: 5px;
     }
 
     <!--타이틀 추가 적용 안됨-->
@@ -71,17 +71,18 @@
         flex: 0 0 auto; /* 크기를 고정 */
         display: flex; /* 이미지 내부에서 정렬 조정 */
         justify-content: flex-start;
-        align-items: center; /* 이미지 수직 중앙 정렬 */
+        align-items: center;
         display: inline-block; /* 컨테이너를 키워드 필터 옆에 위치 */
         vertical-align: top; /* 위쪽 정렬 */
         margin-left: 20px; /* 키워드 필터와의 간격 조정 */
     }
 
     .filter-image {
-        width: 530px; /* 원하는 이미지 너비 */
+        width: 480px; /* 원하는 이미지 너비 */
         height: auto; /* 비율 유지 */
         border-radius: 5px; /* 모서리를 둥글게 */
         object-fit: cover; /* 이미지 비율을 유지하며 컨테이너에 맞춤 */
+        margin-left: -30px;
     }
 
     @media (max-width: 768px) {
@@ -164,43 +165,43 @@
             width: auto; /* 버튼 너비를 내용에 맞게 */
         }
 
-        .filter-btn-2 {
-            position: relative;
-            background: #f8f8f8;
-            color: black;
-            border: none;
-            border-radius: 50px;
-            padding: 10px 20px;
-            margin: 2px;
-            font-family: "Jua", serif;
-            font-size: 13px;
-            cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            display: inline-block; /* 버튼 내부 요소를 가로로 정렬 */
-            text-align: center; /* 텍스트 중앙 정렬 */
-            white-space: nowrap; /* 글씨 줄바꿈 방지 */
-            width: auto; /* 버튼 너비를 내용에 맞게 */
-        }
+    .filter-btn-2 {
+    position: relative;
+    background: #f8f8f8;
+    color: black;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin: 2px;
+    font-family: "Jua", serif;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    display: inline-block; /* 버튼 내부 요소를 가로로 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    white-space: nowrap; /* 글씨 줄바꿈 방지 */
+    width: auto; /* 버튼 너비를 내용에 맞게 */
+    }
 
-        .filter-btn-3 {
-            position: relative;
-            background: #e1d5f2;
-            color: black;
-            border: none;
-            border-radius: 50px;
-            padding: 10px 20px;
-            margin: 2px;
-            font-family: "Jua", serif;
-            font-size: 13px;
-            cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            display: inline-block; /* 버튼 내부 요소를 가로로 정렬 */
-            text-align: center; /* 텍스트 중앙 정렬 */
-            white-space: nowrap; /* 글씨 줄바꿈 방지 */
-            width: auto; /* 버튼 너비를 내용에 맞게 */
-        }
+    .filter-btn-3 {
+    position: relative;
+    background: #e1d5f2;
+    color: black;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin: 2px;
+    font-family: "Jua", serif;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    display: inline-block; /* 버튼 내부 요소를 가로로 정렬 */
+    text-align: center;
+    white-space: nowrap; /* 글씨 줄바꿈 방지 */
+    width: auto;
+    }
 
 
 
@@ -208,144 +209,144 @@
     .filter-btn:active,
     .filter-btn:focus {
         background: #C3ABE2;
-        color: black; /* 텍스트 색상 */
+        color: black;
         outline: none; /* 포커스 테두리 제거 */
     }
 
     .filter-btn-1:active,
     .filter-btn-1:focus {
         background: #C3ABE2;
-        color: black; /* 텍스트 색상 */
+        color: black;
         outline: none; /* 포커스 테두리 제거 */
     }
 
     .filter-btn-2:active,
     .filter-btn-2:focus {
         background: #C3ABE2;
-        color: black; /* 텍스트 색상 */
+        color: black;
         outline: none; /* 포커스 테두리 제거 */
     }
 
     .filter-btn-3:active,
     .filter-btn-3:focus {
         background: #C3ABE2;
-        color: black; /* 텍스트 색상 */
+        color: black;
         outline: none; /* 포커스 테두리 제거 */
     }
 
 
     .home-slide-title {
-        text-align: left; /* 제목을 왼쪽 정렬 */
+        text-align: left;
         font-family: "Jua", sans-serif;
         font-size: 2.0rem;
         font-weight: 400;
         font-style: normal;
-        margin-bottom: 20px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #E7A67B; /* 두께 2px, 색상 검정 */
-        padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
+        margin-bottom: 20px;
+        border-bottom: 2px solid #E7A67B;
+        padding-bottom: 5px;
     }
 
-/* 슬라이더 스타일 */
-.slider {
-    position: relative;
-    width: 100%;
-    max-width: 2000px;
-    margin: 20px auto;
-    overflow: hidden;
-    height: 540px; /* 3줄 높이만 보이도록 설정 */
-}
+    /* 슬라이더 스타일 */
+    .slider {
+        position: relative;
+        width: 100%;
+        max-width: 2000px;
+        margin: 20px auto;
+        overflow: hidden;
+        height: 540px; /* 3줄 높이만 보이도록 설정 */
+    }
 
-.slides {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개씩 배치 */
-    grid-gap: 35px; /* 슬라이드 사이의 간격 설정 */
-    height: 100%; /* 슬라이드 영역 높이를 100%로 설정 */
-    overflow-x: auto; /* 가로 스크롤 활성화 */
-    scroll-snap-type: x mandatory; /* 스크롤 시 각 슬라이드가 정확히 맞춰지도록 설정 */
-    scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
-}
+    .slides {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개씩 배치 */
+        grid-gap: 35px; /* 슬라이드 사이의 간격 설정 */
+        height: 100%; /* 슬라이드 영역 높이를 100%로 설정 */
+        overflow-x: auto; /* 가로 스크롤 활성화 */
+        scroll-snap-type: x mandatory; /* 스크롤 시 각 슬라이드가 정확히 맞춰지도록 설정 */
+        scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
+    }
 
-.slide {
-    position: relative;
-    text-align: center;
-    box-sizing: border-box;
-    scroll-snap-align: start; /* 각 슬라이드가 왼쪽에 맞춰지도록 설정 */
-}
+    .slide {
+        position: relative;
+        text-align: center;
+        box-sizing: border-box;
+        scroll-snap-align: start; /* 각 슬라이드가 왼쪽에 맞춰지도록 설정 */
+    }
 
-.slide img {
-    width: 100%;
-    height: 240px; /* 고정된 높이로 이미지 설정 */
-    border-radius: 10px;
-    object-fit: cover;
-    transition: transform 0.3s ease-in-out;
-}
+    .slide img {
+        width: 100%;
+        height: 240px; /* 고정된 높이로 이미지 설정 */
+        border-radius: 10px;
+        object-fit: cover;
+        transition: transform 0.3s ease-in-out;
+    }
 
-.slide:hover img {
-    transform: scale(1.05);
-}
+    .slide:hover img {
+        transform: scale(1.05);
+    }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    font-size: 13px;
-    transition: opacity 0.3s ease-in-out;
-}
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        font-size: 13px;
+        transition: opacity 0.3s ease-in-out;
+    }
 
-.slide:hover .overlay {
-    opacity: 1;
-}
+    .slide:hover .overlay {
+        opacity: 1;
+    }
 
-.status-info {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px 10px;
-    font-size: 13px;
-    border-radius: 5px;
-}
+    .status-info {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        font-size: 13px;
+        border-radius: 5px;
+    }
 
-.slider-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    font-size: 18px;
-    padding: 10px;
-    cursor: pointer;
-}
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 18px;
+        padding: 10px;
+        cursor: pointer;
+    }
 
-.prev-btn {
-    left: -10px;
-}
+    .prev-btn {
+        left: -10px;
+    }
 
-.next-btn {
-    right: -10px;
-}
+    .next-btn {
+        right: -10px;
+    }
 
     .your_location_map {
-        text-align: left; /* 제목을 왼쪽 정렬 */
+        text-align: left;
         font-family: "Jua", sans-serif;
         font-weight: 400;
         font-style: normal;
         font-size: 2.0rem;
-        margin-bottom: 20px; /* 제목 아래 여백 */
-        border-bottom: 2px solid #E7A67B; /* 두께 2px, 색상 검정 */
-        padding-bottom: 5px; /* 테두리 안쪽 여백 추가 */
+        margin-bottom: 20px;
+        border-bottom: 2px solid #E7A67B;
+        padding-bottom: 5px;
         margin-top: 30px;
     }
 
@@ -395,14 +396,16 @@
         <h3 class="filter-title">키워드 선택</h3>
         <div class="filter-content">
             <div class="filter-wrapper">
-                <h6 class="filter-small-title">공연상태</h6>
+                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">공연상태</h6>
                 <div class="filter-row">
                     <button class="filter-btn">전체</button>
                     <button class="filter-btn">공연예정</button>
                     <button class="filter-btn">공연중</button>
                     <button class="filter-btn">공연완료</button>
+                    <button class="filter-btn">오픈런</button>
+                    <button class="filter-btn">축제</button>
                 </div>
-                <h6 class="filter-small-title">장르</h6>
+                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">장르</h6>
                 <div class="filter-row">
                     <button class="filter-btn-1">공포</button>
                     <button class="filter-btn-1">추리/스릴러</button>
@@ -420,7 +423,7 @@
                     <button class="filter-btn-1">마임</button>
                     <button class="filter-btn-1">기타</button>
                 </div>
-                <h6 class="filter-small-title">키워드</h6>
+                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">키워드</h6>
                 <div class="filter-row">
                     <button class="filter-btn-2">수상작</button>
                     <button class="filter-btn-2">소설 원작</button>
@@ -428,7 +431,7 @@
                     <button class="filter-btn-2">감동적인</button>
                 </div>
 
-                <h6 class="filter-small-title">성별/연령대</h6>
+                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">성별/연령대</h6>
                 <div class="filter-row">
                     <button class="filter-btn-3">여성</button>
                     <button class="filter-btn-3">남성</button>
@@ -566,21 +569,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
-    // 나이 입력에 따른 19+ 버튼 표시 여부
-    document.addEventListener('DOMContentLoaded', function() {
-        const ageInput = document.getElementById('age');
-        const ageButton = document.getElementById('ageButton');
-
-        ageInput.addEventListener('input', function() {
-            const age = parseInt(ageInput.value);
-            if (age >= 19) {
-                ageButton.style.display = 'block';  // 19세 이상일 때 버튼 보이기
-            } else {
-                ageButton.style.display = 'none';   // 19세 미만일 때 버튼 숨기기
-            }
-        });
-    });
 
 
 </script>

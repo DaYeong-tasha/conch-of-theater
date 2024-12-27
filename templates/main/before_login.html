@@ -1,5 +1,5 @@
 {% load static %}
-{% block title %}극장의 소라고동_로그인 전{% endblock %}
+{% block title %} {% endblock %}
 {% block content %}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap');
@@ -53,9 +53,9 @@
         font-family: 'Jua', sans-serif;
         font-size: 30px;
         padding: 15px 40px;
-        background-color: transparent;
-        color: black;
-        border: 1px solid black; /* 테두리 추가 */
+        background-color: #FBD568;
+        color: white;
+        border: 1px solid #fae7af; /* 테두리 추가 */
         border-radius: 30px;
         text-decoration: none; /* 밑줄 제거 */
         transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -63,9 +63,9 @@
 
     /* 버튼 hover 효과 */
     .btn-outline-dark.custom-padding:hover {
-        background-color: #FBD568;
+        background-color: black;
         color: white;
-        border-color: #F59F3C; /* 테두리 색상 변경 */
+        border-color: black; /* 테두리 색상 변경 */
     }
 
     /* 반응형 디자인 */
@@ -100,6 +100,7 @@
         </a>
     </div>
 </div>
+{% include 'modal_base.html' %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -107,21 +108,27 @@
         const textContainer = document.getElementById('text-container');
         const body = document.body;
 
+        // 기본 상태 설정
+        body.style.backgroundColor = 'black'; // 기본 배경 검정
+        textContainer.querySelector('h2').style.color = 'white'; // 기본 텍스트 흰색
+        textContainer.querySelector('h4').style.color = 'white'; // 기본 텍스트 흰색
+
         // 마우스 hover 효과
         recommendBtn.addEventListener('mouseenter', function () {
-            body.style.backgroundColor = 'black'; // 배경색 검정
-            textContainer.querySelector('h2').style.color = 'white'; // 텍스트 흰색
-            textContainer.querySelector('h4').style.color = 'white'; // 텍스트 흰색
+            body.style.backgroundColor = 'white'; // 배경 흰색
+            textContainer.querySelector('h2').style.color = 'black'; // 텍스트 검정색
+            textContainer.querySelector('h4').style.color = 'black'; // 텍스트 검정색
         });
 
         // 마우스가 버튼에서 나갔을 때
         recommendBtn.addEventListener('mouseleave', function () {
-            body.style.backgroundColor = 'transparent'; // 원래 배경색
-            textContainer.querySelector('h2').style.color = 'black'; // 텍스트 원래 색
-            textContainer.querySelector('h4').style.color = 'black'; // 텍스트 원래 색
+            body.style.backgroundColor = 'black'; // 기본 배경 검정
+            textContainer.querySelector('h2').style.color = 'white'; // 기본 텍스트 흰색
+            textContainer.querySelector('h4').style.color = 'white'; // 기본 텍스트 흰색
         });
     });
 </script>
 
-{% include 'modal_base.html' %}
+
+
 {% endblock %}

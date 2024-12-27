@@ -254,12 +254,12 @@
                     <li class="nav-item">
                         <a class="nav-link{% if request.path_info == '/accounts/profile/' %}active{% endif %}" href="{% url 'profile' %}">{{ user.username }}님</a>
                     </li>
-                    <li>
+                    <!--li>
                         <a class="nav-link{% if request.path == '/reviews/' %}active{% endif %}" href="{% url 'review' %}">후기 게시판</a>
                     </li>
                     <li>
                         <a class="nav-link{% if request.path == '/dashboard/dashboard/' %}active{% endif %}" href="{% url 'dashboard' %}">연극 돋보기</a>
-                    </li>
+                    </li>-->
                     <li>
                         <a class="nav-link{% if request.path == '/logout/' %}active{% endif %}" href="{% url 'logout' %}">로그아웃</a>
                     </li>
