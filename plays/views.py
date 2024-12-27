@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
-from common.models import Play_detail, Review, Theater_location, Play_list
+from common.models import Play_detail, Review, Play_list
 from django.conf import settings
 
 from plays.forms import ReviewForm
@@ -18,15 +18,36 @@ def play_detail(request, pk):
     play_detail = get_object_or_404(Play_detail, pk=pk)
     play_list = get_object_or_404(Play_list, pk=pk)
 
-    # mt10id 필드가 이미 Theater_location 객체를 반환하므로, 추가 조회가 필요없음
-    theater_location = play_detail.mt10id  # 직접 ForeignKey 객체 사용
+    # 키워드 필드 정리
+    if play_detail.keyword:
+        cleaned_keywords = play_detail.keyword.strip("[]").replace("'", "").split(",")
+        play_detail.keyword = [keyword.strip() for keyword in cleaned_keywords]
 
-    return render(request, 'plays/play_detail.html',
-                {'play_detail': play_detail,
-                        'play_list': play_list,
-                        'theater_location': theater_location,
-                        'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY})
+    # 공연 시간 필드 정리
+    if play_detail.dtguidance:
+        # 괄호가 닫히는 패턴 뒤에 줄바꿈 추가
+        formatted_schedule = play_detail.dtguidance
+        formatted_schedule = formatted_schedule.replace("),", "),\n")  # '),' 뒤에 줄바꿈
+        formatted_schedule = formatted_schedule.replace(") ", ")\n")  # ') ' 뒤에 줄바꿈
 
+        # 줄 단위로 공백 제거
+        formatted_schedule = "\n".join([line.strip() for line in formatted_schedule.split("\n")])
+        play_detail.dtguidance = formatted_schedule
+
+    # 장르에 해당하는 유사한 연극 가져오기 (Play_detail 모델에서)
+    genre = play_detail.genre
+    similar_plays = Play_detail.objects.filter(genre=genre).exclude(pk=play_detail.pk).exclude(play_status='공연완료')[:5]  # 최대 5개 연극만 가져오기, '공연완료' 제외
+
+    # 최근에 끝난 연극 5개 가져오기 (play_enddate 기준)
+    recent_plays = Play_detail.objects.exclude(play_status='공연완료').order_by('-play_enddate')[:5]  # '공연완료' 제외
+
+    return render(request, 'plays/play_detail.html', {
+        'play_detail': play_detail,
+        'play_list': play_list,
+        'similar_plays': similar_plays,
+        'recent_plays': recent_plays,
+        'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY
+    })
 
 
 # 연극 상세 - 리뷰 ListView아닌 버전

@@ -77,22 +77,22 @@
                 </div>
             </div>
 
-            <div class="play-detail">
-                <p><strong>장소:</strong> {{ play_detail.theater_nm }}</p>
-                <p><strong>공연 기간:</strong> {{ play_detail.play_strdate }} ~ {{ play_detail.play_enddate }}</p>
-                <p><strong>러닝타임: </strong> {{ play_detail.play_runtime|default:"정보 없음" }}</p>
-                <p><strong>관람 연령:</strong> {{ play_detail.play_age|default:"정보 없음" }}</p>
-                <p><strong>가격:</strong> {{ play_detail.play_guidance|default:"정보 없음" }}</p>
-                <p><strong>공연 시간:</strong> {{ play_detail.dtguidance|default:"정보 없음" }}</p>
-                <p><strong>장르:</strong> {{ play_detail.genre }}</p>
-            </div>
-            <div class="keyword-buttons">
-                <button class="btn btn-outline-primary">#감동</button>
-                <button class="btn btn-outline-primary">#코미디</button>
-                <button class="btn btn-outline-primary">#재미</button>
-                <button class="btn btn-outline-primary">#사랑</button>
-                <button class="btn btn-outline-primary">#사랑</button>
-            </div>
+        <div class="play-detail">
+            <p><strong>장소:</strong> {{ play_detail.theater_nm }}</p>
+            <p><strong>공연 기간:</strong> {{ play_detail.play_strdate }} ~ {{ play_detail.play_enddate }}</p>
+            <p><strong>러닝타임: </strong> {{ play_detail.play_runtime|default:"정보 없음" }}</p>
+            <p><strong>관람 연령:</strong> {{ play_detail.play_age|default:"정보 없음" }}</p>
+            <p><strong>가격:</strong> {{ play_detail.play_guidance|default:"정보 없음" }}</p>
+            <p><strong>공연 시간:</strong> {{ play_detail.dtguidance|linebreaksbr|default:"정보 없음" }}</p>
+            <p><strong>장르:</strong> {{ play_detail.genre }}</p>
+        </div>
+        <div class="keyword-buttons">
+            {% for keyword in play_detail.keyword|slice:":5" %}
+                <button class="btn btn-outline-primary">#{{ keyword }}</button>
+            {% endfor %}
+        </div>
+
+
 
         </div>
 
@@ -116,26 +116,29 @@
     </div>
 
     <!-- 유사 연극 섹션 -->
-    <p class="thick02">유사한 연극</p>
-    <div class="section">
-        <div class="play-grid">
-            <div class="play-card">
-                <img src="{% static 'images/poster1.jpg' %}" alt="연극 포스터 1" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster5.jpg' %}" alt="연극 포스터 5" class="poster-image">
-            </div>
+<p class="thick02">유사한 연극</p>
+<div class="section">
+    <div class="play-grid">
+        {% if similar_plays %}
+        {% for play in similar_plays|slice:":5" %}
+        <div class="play-card">
+            <!-- 슬라이드 전체를 감싸는 링크 -->
+            <a href="{% url 'plays:play_detail' play.play_id %}" class="slide-link">
+                <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
+                <div class="overlay">
+                    <h5>{{ play.play_name }}</h5>
+                    <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
+                    <p>{{ play.theater_nm }}</p>
+                </div>
+                <div class="status-info">{{ play.play_status }}</div>
+            </a>
         </div>
+        {% endfor %}
+        {% else %}
+        <p>현재 유사한 연극이 없습니다.</p>
+        {% endif %}
     </div>
+</div>
 
     <!-- nav tabs -->
     <nav>
@@ -263,17 +266,24 @@
         margin-top: 1rem !important;
     }
 
+<!--연극 세부 -->
     .play-detail {
-        margin-bottom: 30px;
+        position: relative;
     }
-
-
 
     .play-detail strong {
         display: inline-block;
         width: 100px;
         padding-right: 10px;
+        vertical-align: top;
+    }
 
+    .play-detail p {
+        margin: 0;
+<!--        text-indent: -110px; /* strong의 width와 padding-right 합 */-->
+<!--        padding-left: 110px; /* 들여쓰기 조정 */-->
+        line-height: 1.5; /* 줄 간격 조정 */
+        word-break: break-word; /* 줄바꿈 처리를 위해 단어 나눔 */
     }
 
     .btn-ym {
@@ -506,25 +516,61 @@
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    position: relative; /* 링크와 오버레이를 위해 추가 */
 }
 
 .play-card:hover {
     transform: translateY(-5px);
 }
 
+.play-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 12px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.play-card:hover .overlay {
+    opacity: 1;
+}
+
+.play-card .status-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* 미디어 쿼리 */
 @media (max-width: 768px) {
     .play-grid {
         gap: 5px; /* 작은 화면에서는 간격을 줄임 */
     }
     .play-grid {
         grid-template-columns: repeat(2, 1fr);
-    }}
+    }
+}
 
 @media (min-width: 1024px) {
     .play-grid {
         gap: 15px; /* 큰 화면에서는 간격을 넓힘 */
-    }}
-
+    }
+}
 
 /* 연극 즐겨찾기 */
     .heart-button {

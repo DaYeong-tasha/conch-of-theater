@@ -8,7 +8,7 @@ from django.conf import settings
 
 # Play_list : 연극 목록 모델 (common 앱에 위치)
 class Play_list(models.Model):
-    play_id = models.CharField(primary_key=True, max_length=50)
+    play_id = models.CharField(primary_key=True, max_length=100)
     play_name = models.CharField(max_length=300)
     play_reg_date = models.DateTimeField() # API에서 연극 리스트 불러온 날짜(DAG 트리거 날짜)
     genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
@@ -37,17 +37,18 @@ class Play_list(models.Model):
         # managed = False
         db_table = 'Play_list'
 
-
+    def __str__(self):
+        return self.play_id
 
 # Theater_location : 공연장 주소 모델 (common 앱에 위치)
-class Theater_location(models.Model):
-    mt10id = models.CharField(primary_key=True, max_length=50) # 공연시설ID
-    theater_nm = models.CharField(max_length=300) # 공연장명
-    theater_addr = models.CharField(max_length=300, db_column='theater_addr') # 공연장 전체 주소
-
-    class Meta:
-        # managed = False
-        db_table = 'Theater_location'
+# class Theater_location(models.Model):
+#     mt10id = models.CharField(primary_key=True, max_length=50) # 공연시설ID
+#     theater_nm = models.CharField(max_length=300) # 공연장명
+#     theater_addr = models.CharField(max_length=300, db_column='theater_addr') # 공연장 전체 주소
+#
+#     class Meta:
+#         # managed = False
+#         db_table = 'Theater_location'
 
 
 
@@ -70,8 +71,9 @@ class Play_detail(models.Model):
     styurls_2 = models.CharField(max_length=300, blank=True, null=True)
     styurls_3 = models.CharField(max_length=300, blank=True, null=True)
     styurls_4 = models.CharField(max_length=300, blank=True, null=True)
-    mt10id = models.ForeignKey(Theater_location, on_delete=models.CASCADE, db_column='mt10id') # 공연시설ID
-    dtguidance = models.CharField(max_length=300, blank=True, null=True) # 공연 시간 안내(ex.요일별 시간)
+    # mt10id = models.ForeignKey(Theater_location, on_delete=models.CASCADE, db_column='mt10id') # 공연시설ID
+    dtguidance = models.CharField(max_length=500, blank=True, null=True) # 공연 시간 안내(ex.요일별 시간)
+    child = models.CharField(max_length=10, blank=True, null=True)
     relate_1 = models.CharField(max_length=300, blank=True, null=True) # 예매처이름
     relateurl_1 = models.CharField(max_length=300, blank=True, null=True) # 예매처url
     relate_2 = models.CharField(max_length=300, blank=True, null=True)
@@ -88,6 +90,15 @@ class Play_detail(models.Model):
     relateurl_7 = models.CharField(max_length=300, blank=True, null=True)
     relate_8 = models.CharField(max_length=300, blank=True, null=True)
     relateurl_8 = models.CharField(max_length=300, blank=True, null=True)
+    male = models.CharField(max_length=10, null=True)
+    female = models.CharField(max_length=10, null=True)
+    teenage = models.CharField(max_length=10, null=True)
+    twenty = models.CharField(max_length=10, null=True)
+    thirty = models.CharField(max_length=10, null=True)
+    forty = models.CharField(max_length=10, null=True)
+    fifty = models.CharField(max_length=10, null=True)
+    keyword = models.TextField(null=True)  # TextField로 리스트 형식을 문자열로 저장
+    home_keyword = models.TextField(null=True)  # TextField로 리스트 형식을 문자열로 저장
 
     class Meta:
         # managed = False
@@ -96,12 +107,12 @@ class Play_detail(models.Model):
 
 
 # Location : 지역명 모델 (common 앱에 위치)
-class Location(models.Model):
-    loc = models.CharField(primary_key=True, max_length=50) # 지역명(ex. 서울특별시)
-
-    class Meta:
-        # managed = False
-        db_table = 'Location'
+# class Location(models.Model):
+#     loc = models.CharField(primary_key=True, max_length=50) # 지역명(ex. 서울특별시)
+#
+#     class Meta:
+#         # managed = False
+#         db_table = 'Location'
 
 
 
