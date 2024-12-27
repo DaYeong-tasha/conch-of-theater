@@ -34,9 +34,18 @@ def play_detail(request, pk):
         formatted_schedule = "\n".join([line.strip() for line in formatted_schedule.split("\n")])
         play_detail.dtguidance = formatted_schedule
 
+    # 장르에 해당하는 유사한 연극 가져오기 (Play_detail 모델에서)
+    genre = play_detail.genre
+    similar_plays = Play_detail.objects.filter(genre=genre).exclude(pk=play_detail.pk).exclude(play_status='공연완료')[:5]  # 최대 5개 연극만 가져오기, '공연완료' 제외
+
+    # 최근에 끝난 연극 5개 가져오기 (play_enddate 기준)
+    recent_plays = Play_detail.objects.exclude(play_status='공연완료').order_by('-play_enddate')[:5]  # '공연완료' 제외
+
     return render(request, 'plays/play_detail.html', {
         'play_detail': play_detail,
         'play_list': play_list,
+        'similar_plays': similar_plays,
+        'recent_plays': recent_plays,
         'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY
     })
 

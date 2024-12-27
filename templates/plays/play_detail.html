@@ -116,26 +116,29 @@
     </div>
 
     <!-- 유사 연극 섹션 -->
-    <p class="thick02">유사한 연극</p>
-    <div class="section">
-        <div class="play-grid">
-            <div class="play-card">
-                <img src="{% static 'images/poster1.jpg' %}" alt="연극 포스터 1" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster2.jpg' %}" alt="연극 포스터 2" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster3.jpg' %}" alt="연극 포스터 3" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster4.jpg' %}" alt="연극 포스터 4" class="poster-image">
-            </div>
-            <div class="play-card">
-                <img src="{% static 'images/poster5.jpg' %}" alt="연극 포스터 5" class="poster-image">
-            </div>
+<p class="thick02">유사한 연극</p>
+<div class="section">
+    <div class="play-grid">
+        {% if similar_plays %}
+        {% for play in similar_plays|slice:":5" %}
+        <div class="play-card">
+            <!-- 슬라이드 전체를 감싸는 링크 -->
+            <a href="{% url 'plays:play_detail' play.play_id %}" class="slide-link">
+                <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
+                <div class="overlay">
+                    <h5>{{ play.play_name }}</h5>
+                    <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
+                    <p>{{ play.theater_nm }}</p>
+                </div>
+                <div class="status-info">{{ play.play_status }}</div>
+            </a>
         </div>
+        {% endfor %}
+        {% else %}
+        <p>현재 유사한 연극이 없습니다.</p>
+        {% endif %}
     </div>
+</div>
 
     <!-- nav tabs -->
     <nav>
@@ -520,25 +523,61 @@
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    position: relative; /* 링크와 오버레이를 위해 추가 */
 }
 
 .play-card:hover {
     transform: translateY(-5px);
 }
 
+.play-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 12px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.play-card:hover .overlay {
+    opacity: 1;
+}
+
+.play-card .status-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* 미디어 쿼리 */
 @media (max-width: 768px) {
     .play-grid {
         gap: 5px; /* 작은 화면에서는 간격을 줄임 */
     }
     .play-grid {
         grid-template-columns: repeat(2, 1fr);
-    }}
+    }
+}
 
 @media (min-width: 1024px) {
     .play-grid {
         gap: 15px; /* 큰 화면에서는 간격을 넓힘 */
-    }}
-
+    }
+}
 
 /* 연극 즐겨찾기 */
     .heart-button {
