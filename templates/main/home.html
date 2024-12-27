@@ -386,6 +386,15 @@
             align-items: flex-start; /* 왼쪽 정렬 */
         }
 
+    .no-results {
+    text-align: center !important;
+    font-family: "Jua", sans-serif !important;
+    font-size: 1.5rem !important;
+    color: #333 !important;
+    margin-top: 20px !important;
+    width: 100% !important; /* 섹션의 크기에 맞추기 */
+}
+
 </style>
 
 <div class="main-container">
@@ -397,13 +406,14 @@
             <div class="filter-wrapper">
                 <h6 class="filter-small-title">공연상태</h6>
                 <div class="filter-row">
-                    <button class="filter-btn">전체</button>
-                    <button class="filter-btn">공연예정</button>
-                    <button class="filter-btn">공연중</button>
-                    <button class="filter-btn">공연완료</button>
+                    <button class="filter-btn" data-status="전체">전체</button>
+                    <button class="filter-btn" data-status="공연예정">공연예정</button>
+                    <button class="filter-btn" data-status="공연중">공연중</button>
+                    <button class="filter-btn" data-status="공연완료">공연완료</button>
                 </div>
                 <h6 class="filter-small-title">장르</h6>
                 <div class="filter-row">
+                    <button class="filter-btn-1">전체</button>
                     <button class="filter-btn-1">공포</button>
                     <button class="filter-btn-1">추리/스릴러</button>
                     <button class="filter-btn-1">한국 시대극</button>
@@ -416,12 +426,13 @@
                     <button class="filter-btn-1">아동/청소년극</button>
                 </div>
                 <div class="filter-row">
-                    <button class="filter-btn-1">한국종합예술</button>
+                    <button class="filter-btn-1">한국 전통예술</button>
                     <button class="filter-btn-1">마임</button>
                     <button class="filter-btn-1">기타</button>
                 </div>
                 <h6 class="filter-small-title">키워드</h6>
                 <div class="filter-row">
+                    <button class="filter-btn-2">전체</button>
                     <button class="filter-btn-2">수상작</button>
                     <button class="filter-btn-2">소설 원작</button>
                     <button class="filter-btn-2">위로가 되는</button>
@@ -430,10 +441,12 @@
 
                 <h6 class="filter-small-title">성별/연령대</h6>
                 <div class="filter-row">
+                    <button class="filter-btn-3">전체</button>
                     <button class="filter-btn-3">여성</button>
                     <button class="filter-btn-3">남성</button>
                 </div>
                 <div class="filter-row">
+                    <button class="filter-btn-3">전체</button>
                     <button class="filter-btn-3">10대</button>
                     <button class="filter-btn-3">20대</button>
                     <button class="filter-btn-3">30대</button>
@@ -453,7 +466,7 @@
 <div class="section">
     <h3 class="home-slide-title">소라고동의 대답</h3>
     <div class="slider">
-        <div class="slides">
+        <div  id="play-details-container" class="slides">
             {% if play_details %}
             {% for play in play_details %}
             <div class="slide">
@@ -567,22 +580,94 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-    // 나이 입력에 따른 19+ 버튼 표시 여부
+    // 필터링 기능
     document.addEventListener('DOMContentLoaded', function() {
-        const ageInput = document.getElementById('age');
-        const ageButton = document.getElementById('ageButton');
+    let currentStatus = '전체';
+    let currentGenre = '전체';
+    let currentKeyword = '전체';
+    let currentGender = '전체';
+    let currentAge = '전체';
 
-        ageInput.addEventListener('input', function() {
-            const age = parseInt(ageInput.value);
-            if (age >= 19) {
-                ageButton.style.display = 'block';  // 19세 이상일 때 버튼 보이기
-            } else {
-                ageButton.style.display = 'none';   // 19세 미만일 때 버튼 숨기기
+    const statusButtons = document.querySelectorAll('.filter-btn');
+    const genreButtons = document.querySelectorAll('.filter-btn-1');
+    const keywordButtons = document.querySelectorAll('.filter-btn-2');
+    const genderButtons = document.querySelectorAll('.filter-btn-3');
+    const ageButtons = document.querySelectorAll('.filter-btn-3'); // 연령대 필터링 버튼도 filter-btn-3 클래스를 사용
+
+    function fetchFilteredPlays() {
+        fetch(`/filter_plays/?status=${currentStatus}&genre=${currentGenre}&keyword=${currentKeyword}&gender=${currentGender}&age=${currentAge}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById('play-details-container');
+            container.innerHTML = '';
+            if (data.play_details.length === 0) {
+                container.innerHTML = '<p class="no-results">소라고동의 답변이 없어요😢</p>';
+            } else {
+                data.play_details.forEach(play => {
+                    const playElement = document.createElement('div');
+                    playElement.classList.add('slide');
+                    playElement.innerHTML = `
+                        <a href="/plays/play/${play.play_id}/" class="slide-link">
+                            <img src="${play.play_poster}" alt="${play.play_name}" class="poster-image">
+                            <div class="overlay">
+                                <h5>${play.play_name}</h5>
+                                <p>${play.play_strdate} ~ ${play.play_enddate}</p>
+                                <p>${play.theater_nm}</p>
+                            </div>
+                            <div class="status-info">${play.play_status}</div>
+                        </a>
+                    `;
+                    container.appendChild(playElement);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    statusButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentStatus = this.getAttribute('data-status');
+            fetchFilteredPlays();
         });
     });
 
+    genreButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentGenre = this.textContent;
+            fetchFilteredPlays();
+        });
+    });
 
+    keywordButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentKeyword = this.textContent;
+            fetchFilteredPlays();
+        });
+    });
+
+    genderButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentGender = this.textContent;
+            fetchFilteredPlays();
+        });
+    });
+
+    ageButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            currentAge = this.textContent;
+            fetchFilteredPlays();
+        });
+    });
+});
 </script>
 
 {% endblock %}
