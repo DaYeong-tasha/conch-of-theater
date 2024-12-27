@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.db.models import Max
 
 from COT import settings
-from common.models import Play_rank, Play_list, Theater_location, Play_detail
+from common.models import Play_rank, Play_list, Play_detail
 from map.views import get_theaters_data
 from django.utils import timezone
 from django.db.models import F

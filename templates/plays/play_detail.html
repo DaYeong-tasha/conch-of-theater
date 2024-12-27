@@ -77,22 +77,22 @@
                 </div>
             </div>
 
-            <div class="play-detail">
-                <p><strong>장소:</strong> {{ play_detail.theater_nm }}</p>
-                <p><strong>공연 기간:</strong> {{ play_detail.play_strdate }} ~ {{ play_detail.play_enddate }}</p>
-                <p><strong>러닝타임: </strong> {{ play_detail.play_runtime|default:"정보 없음" }}</p>
-                <p><strong>관람 연령:</strong> {{ play_detail.play_age|default:"정보 없음" }}</p>
-                <p><strong>가격:</strong> {{ play_detail.play_guidance|default:"정보 없음" }}</p>
-                <p><strong>공연 시간:</strong> {{ play_detail.dtguidance|default:"정보 없음" }}</p>
-                <p><strong>장르:</strong> {{ play_detail.genre }}</p>
-            </div>
-            <div class="keyword-buttons">
-                <button class="btn btn-outline-primary">#감동</button>
-                <button class="btn btn-outline-primary">#코미디</button>
-                <button class="btn btn-outline-primary">#재미</button>
-                <button class="btn btn-outline-primary">#사랑</button>
-                <button class="btn btn-outline-primary">#사랑</button>
-            </div>
+        <div class="play-detail">
+            <p><strong>장소:</strong> {{ play_detail.theater_nm }}</p>
+            <p><strong>공연 기간:</strong> {{ play_detail.play_strdate }} ~ {{ play_detail.play_enddate }}</p>
+            <p><strong>러닝타임: </strong> {{ play_detail.play_runtime|default:"정보 없음" }}</p>
+            <p><strong>관람 연령:</strong> {{ play_detail.play_age|default:"정보 없음" }}</p>
+            <p><strong>가격:</strong> {{ play_detail.play_guidance|default:"정보 없음" }}</p>
+            <p><strong>공연 시간:</strong> {{ play_detail.dtguidance|linebreaksbr|default:"정보 없음" }}</p>
+            <p><strong>장르:</strong> {{ play_detail.genre }}</p>
+        </div>
+        <div class="keyword-buttons">
+            {% for keyword in play_detail.keyword|slice:":5" %}
+                <button class="btn btn-outline-primary">#{{ keyword }}</button>
+            {% endfor %}
+        </div>
+
+
 
         </div>
 
@@ -263,17 +263,24 @@
         margin-top: 1rem !important;
     }
 
+<!--연극 세부 -->
     .play-detail {
-        margin-bottom: 30px;
+        position: relative;
     }
-
-
 
     .play-detail strong {
         display: inline-block;
         width: 100px;
         padding-right: 10px;
+        vertical-align: top;
+    }
 
+    .play-detail p {
+        margin: 0;
+<!--        text-indent: -110px; /* strong의 width와 padding-right 합 */-->
+<!--        padding-left: 110px; /* 들여쓰기 조정 */-->
+        line-height: 1.5; /* 줄 간격 조정 */
+        word-break: break-word; /* 줄바꿈 처리를 위해 단어 나눔 */
     }
 
     .btn-ym {
