@@ -411,8 +411,8 @@
                     <button class="filter-btn">공연예정</button>
                     <button class="filter-btn">공연중</button>
                     <button class="filter-btn">공연완료</button>
-                    <button class="filter-btn">오픈런</button>
-                    <button class="filter-btn">축제</button>
+<!--                    <button class="filter-btn">오픈런</button>-->
+<!--                    <button class="filter-btn">축제</button>-->
                 </div>
                 <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">장르</h6>
                 <div class="filter-row">
@@ -459,7 +459,7 @@
             </div>
             <!-- 이미지 추가 -->
             <div class="filter-image-container">
-                    <img src="{% static 'images/ticket_purple_1.png' %}" alt="극장소라고동" class="filter-image">
+                    <img src="{% static 'images/ticket_purple_1.png' %}" loading="lazy" alt="극장소라고동" class="filter-image">
             </div>
         </div>
     </div>
@@ -475,7 +475,7 @@
             <div class="slide">
                 <!-- 슬라이드 전체를 감싸는 링크 -->
                 <a href="{% url 'plays:play_detail' play.play_id %}" class="slide-link">
-                    <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
+                    <img src="{{ play.play_poster }}" loading="lazy" alt="{{ play.play_name }}" class="poster-image">
                     <div class="overlay">
                         <h5>{{ play.play_name }}</h5>
                         <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
