@@ -18,7 +18,7 @@
 
             <!-- 포스터 이미지 -->
             <br>
-            <img src="{{ play_detail.play_poster }}" alt="포스터 이미지" class="img-fluid">
+            <img src="{{ play_detail.play_poster }}" loading="lazy"  alt="포스터 이미지" class="img-fluid">
             <br>
             <div class="d-flex justify-content-between align-items-center mt-3" style="gap: 5px;">
                 <!-- 하트 버튼 -->
@@ -124,7 +124,7 @@
         <div class="play-card">
             <!-- 슬라이드 전체를 감싸는 링크 -->
             <a href="{% url 'plays:play_detail' play.play_id %}" class="slide-link">
-                <img src="{{ play.play_poster }}" alt="{{ play.play_name }}" class="poster-image">
+                <img src="{{ play.play_poster }}" loading="lazy" alt="{{ play.play_name }}" class="poster-image">
                 <div class="overlay">
                     <h5>{{ play.play_name }}</h5>
                     <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
@@ -165,22 +165,22 @@
             <br><p class="thick">연극 상세</p>
             {% if play_detail.styurls_1 %}
             <div>
-                <img src="{{ play_detail.styurls_1 }}" alt="상세 이미지 1" class="img-fluid2">
+                <img src="{{ play_detail.styurls_1 }}" loading="lazy" alt="상세 이미지 1" class="img-fluid2">
             </div>
             {% endif %}
             {% if play_detail.styurls_2 %}
             <div>
-                <img src="{{ play_detail.styurls_2 }}" alt="상세 이미지 2" class="img-fluid2">
+                <img src="{{ play_detail.styurls_2 }}" loading="lazy" alt="상세 이미지 2" class="img-fluid2">
             </div>
             {% endif %}
             {% if play_detail.styurls_3 %}
             <div>
-                <img src="{{ play_detail.styurls_3 }}" alt="상세 이미지 3" class="img-fluid2">
+                <img src="{{ play_detail.styurls_3 }}" loading="lazy" alt="상세 이미지 3" class="img-fluid2">
             </div>
             {% endif %}
             {% if play_detail.styurls_4 %}
             <div>
-                <img src="{{ play_detail.styurls_4 }}" alt="상세 이미지 4" class="img-fluid2">
+                <img src="{{ play_detail.styurls_4 }}" loading="lazy" alt="상세 이미지 4" class="img-fluid2">
             </div>
             {% endif %}
         </div>

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'reviews',
     'common',
     'dashboard',
+    'debug_toolbar',
     #'corsheaders',
 ]
 
@@ -67,6 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'COT.urls'
@@ -155,11 +158,39 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 기본값 (DB 기반 세션)
 SESSION_COOKIE_NAME = 'session_id'
-SESSION_COOKIE_AGE = 3600  # 세션 유지 시간 (초 단위)
+SESSION_COOKIE_AGE = 86400  # 1일로 연장
 # 세션 데이터가 저장될 위치
 SESSION_FILE_PATH = None  # None이면 DB에 저장
-SESSION_SAVE_EVERY_REQUEST = True  # 모든 요청에 대해 세션 갱신
+SESSION_SAVE_EVERY_REQUEST = False  # 모든 요청에 대해 세션 갱신 ->과도하면 문제생길 수 있음.
 
+
+SESSION_COOKIE_SECURE = False  # HTTPS가 아닌 경우 False로 설정
+#SESSION_COOKIE_HTTPONLY = True  # JavaScript 접근 차단
+SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF 방지 (Default: 'Lax')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django.contrib.sessions': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+INTERNAL_IPS = [
+    '127.0.0.1',  # 로컬 환경 에서만 툴바가 뜨도록
+]
 '''
 
 # CORS 허용 도메인 설정

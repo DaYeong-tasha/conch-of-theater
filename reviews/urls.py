@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-
+from django.conf import settings
 from reviews import views
 from reviews.views import ReviewListView
 
@@ -11,3 +11,9 @@ urlpatterns = [
     path('review/edit/<int:pk>/', views.review_edit, name='review_edit'),
     path('review/delete/<int:pk>/', views.review_delete, name='review_delete'),
 ]
+# Debug Toolbar 활성화
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
