@@ -234,10 +234,10 @@
 
 
 
-    /* 버튼을 누른 상태일 때 (클릭 중) */
+    /* 버튼을 누른 상태일 때 (클릭 중)#C3ABE2 */
     .filter-btn:active,
     .filter-btn:focus {
-        background: #C3ABE2;
+        background: white;
         color: black;
         outline: none; /* 포커스 테두리 제거 */
     }
@@ -460,13 +460,12 @@
             <div class="filter-wrapper">
                 <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">공연상태</h6>
                 <div class="filter-row">
-                    <button class="filter-btn">전체</button>
-                    <button class="filter-btn">공연예정</button>
-                    <button class="filter-btn">공연중</button>
-                    <button class="filter-btn">공연완료</button>
-<!--                    <button class="filter-btn">오픈런</button>-->
-<!--                    <button class="filter-btn">축제</button>-->
-                </div>
+    <button class="filter-btn" data-status="전체">전체</button>
+    <button class="filter-btn" data-status="공연예정">공연예정</button>
+    <button class="filter-btn" data-status="공연중">공연중</button>
+    <button class="filter-btn" data-status="공연완료">공연완료</button>
+    <button class="filter-btn" data-status="오픈런">오픈런</button>
+</div>
                 <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">장르</h6>
                 <div class="filter-row">
                     <button class="filter-btn-1">전체</button>
@@ -638,20 +637,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 필터링 기능
     document.addEventListener('DOMContentLoaded', function() {
-    let currentStatus = '전체';
+    let currentStatus = [];
     let currentGenre = '전체';
     let currentKeyword = '전체';
     let currentGender = '전체';
     let currentAge = '전체';
+    let currentOpenrun = [];
 
     const statusButtons = document.querySelectorAll('.filter-btn');
     const genreButtons = document.querySelectorAll('.filter-btn-1');
     const keywordButtons = document.querySelectorAll('.filter-btn-2');
     const genderButtons = document.querySelectorAll('.filter-btn-3');
-    const ageButtons = document.querySelectorAll('.filter-btn-3'); // 연령대 필터링 버튼도 filter-btn-3 클래스를 사용
+    const ageButtons = document.querySelectorAll('.filter-btn-4');
+    const resetButton = document.querySelector('.filter-btn[data-status="전체"]'); // '전체' 버튼
 
     function fetchFilteredPlays() {
-        fetch(`/filter_plays/?status=${currentStatus}&genre=${currentGenre}&keyword=${currentKeyword}&gender=${currentGender}&age=${currentAge}`, {
+        const status = currentStatus.length > 0 ? currentStatus.join(',') : '전체';
+        const openrun = currentOpenrun.length > 0 ? currentOpenrun.join(',') : '전체';
+        console.log(`Fetching plays with status=${status}, openrun=${openrun}`);
+        fetch(`/filter_plays/?status=${status}&genre=${currentGenre}&keyword=${currentKeyword}&gender=${currentGender}&age=${currentAge}&openrun=${openrun}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
@@ -689,10 +693,68 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error:', error));
     }
 
+    function toggleButtonState(button, array, value) {
+        if (array.includes(value)) {
+            array.splice(array.indexOf(value), 1);
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        } else {
+            array.push(value);
+            button.classList.add('active');
+            button.style.backgroundColor = '#6e08c87a'; // 색상 설정
+        }
+    }
+
+    function resetFilters() {
+        currentStatus = [];
+        currentGenre = '전체';
+        currentKeyword = '전체';
+        currentGender = '전체';
+        currentAge = '전체';
+        currentOpenrun = [];
+
+        statusButtons.forEach(button => {
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        });
+        genreButtons.forEach(button => {
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        });
+        keywordButtons.forEach(button => {
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        });
+        genderButtons.forEach(button => {
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        });
+        ageButtons.forEach(button => {
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        });
+
+        resetButton.classList.add('active');
+        resetButton.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
+
+        fetchFilteredPlays();
+    }
+
     statusButtons.forEach(button => {
         button.addEventListener('click', function() {
-            currentStatus = this.getAttribute('data-status');
-            fetchFilteredPlays();
+            const status = this.getAttribute('data-status');
+            if (status === '전체') {
+                resetFilters();
+            } else {
+                resetButton.classList.remove('active');
+                resetButton.style.backgroundColor = ''; // '전체' 버튼 색상 초기화
+                if (status === '오픈런') {
+                    toggleButtonState(this, currentOpenrun, 'Y');
+                } else {
+                    toggleButtonState(this, currentStatus, status);
+                }
+                fetchFilteredPlays();
+            }
         });
     });
 
@@ -723,6 +785,10 @@ document.addEventListener('DOMContentLoaded', () => {
             fetchFilteredPlays();
         });
     });
+
+    // '전체' 버튼이 기본으로 클릭된 상태로 표시
+    resetButton.classList.add('active');
+    resetButton.style.backgroundColor = '#6e08c87a';
 });
 </script>
 

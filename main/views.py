@@ -43,17 +43,26 @@ def home(request):
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 def filter_plays(request):
     status = request.GET.get('status', '전체')
     genre = request.GET.get('genre', '전체')
     keyword = request.GET.get('keyword', '전체')
     gender = request.GET.get('gender', '전체')
     age = request.GET.get('age', '전체')
+    openrun = request.GET.get('openrun', '전체')
 
     play_details = Play_detail.objects.all().order_by('-play_enddate')
 
     if status != '전체':
-        play_details = play_details.filter(play_status=status)
+        status_list = status.split(',')
+        play_details = play_details.filter(play_status__in=status_list)
+    if openrun == 'Y':
+        play_details = play_details.filter(openrun='Y')
+
     if genre != '전체':
         play_details = play_details.filter(genre=genre)
     if keyword != '전체':
