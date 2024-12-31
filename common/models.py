@@ -66,7 +66,7 @@ class Play_detail(models.Model):
     play_guidance = models.CharField(max_length=300, null=True) # 가격 안내
     play_poster = models.CharField(max_length=300, null=True) # 포스터 이미지 URL
     loc = models.CharField(max_length=300) # 공연장 위치 중 지역만(ex. 서울특별시)
-    play_status = models.CharField(max_length=50) # 공연 상태
+    play_status = models.CharField(max_length=50,db_index=True) # 공연 상태
     styurls_1 = models.CharField(max_length=300, blank=True, null=True) # 상세이미지
     styurls_2 = models.CharField(max_length=300, blank=True, null=True)
     styurls_3 = models.CharField(max_length=300, blank=True, null=True)
@@ -99,7 +99,8 @@ class Play_detail(models.Model):
     fifty = models.CharField(max_length=10, null=True)
     keyword = models.TextField(null=True)  # TextField로 리스트 형식을 문자열로 저장
     home_keyword = models.TextField(null=True)  # TextField로 리스트 형식을 문자열로 저장
-
+    openrun = models.CharField(max_length=10, blank=True, null=True)
+    festival = models.CharField(max_length=10, blank=True, null=True)
     class Meta:
         # managed = False
         db_table = 'Play_detail'
