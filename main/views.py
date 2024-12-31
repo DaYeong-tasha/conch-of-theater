@@ -18,10 +18,42 @@ def get_play_details():
         'play_strdate', 'play_enddate', 'play_status', 'theater_nm'
     )
 
+
+# 지역 매핑 정의
+LOC_MAPPING = {
+    "서울특별시": "서울",
+    "부산광역시": "경상",
+    "대구광역시": "경상",
+    "인천광역시": "경기",
+    "광주광역시": "전라",
+    "대전광역시": "충청",
+    "울산광역시": "경상",
+    "세종특별자치시": "충청",
+    "경기도": "경기",
+    "강원도": "강원",
+    "충청북도": "충청",
+    "충청남도": "충청",
+    "전라북도": "전라",
+    "전라남도": "전라",
+    "경상북도": "경상",
+    "경상남도": "경상",
+    "제주특별자치도": "제주"
+}
+
+
 def home(request):
     """홈 화면 최적화"""
-    # 공연중 또는 공연 예정인 Play_detail 데이터 가져오기
-    play_details = get_play_details()
+    # 지역 필터링 추가
+    selected_area = request.GET.get('link_area', '전체')
+
+    # 지역 그룹으로 필터링
+    if selected_area != '전체':
+        filtered_play_details = Play_detail.objects.filter(
+            play_status__in=['공연중', '공연예정'],
+            loc__in=[key for key, value in LOC_MAPPING.items() if value == selected_area]
+        )
+    else:
+        filtered_play_details = Play_detail.objects.filter(play_status__in=['공연중', '공연예정'])
 
     # 극장 데이터 가져오기
     theater_context = get_theaters_data()
@@ -29,17 +61,18 @@ def home(request):
     # 극장 데이터 유효성 검증 및 추출
     theaters = theater_context.get('theaters', [])
 
-    # context에 필요한 데이터만 포함시켜서 전달
+    # 중복 지역을 제거한 값만 전달하도록 수정
     context = {
         'theaters': theaters,
         'kakao_map_api_key': settings.KAKAO_MAP_API_KEY,
-        'play_details': play_details,  # 추가된 부분
+        'play_details': filtered_play_details,
+        'link_area': list(set(LOC_MAPPING.values())),  # 중복 제거된 지역 목록
+        'selected_area': selected_area,
     }
 
     # 로그인 여부에 따라 적절한 템플릿 렌더링
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)
-
 
 
 logger = logging.getLogger(__name__)
