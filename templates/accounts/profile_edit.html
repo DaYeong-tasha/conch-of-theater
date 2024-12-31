@@ -83,7 +83,7 @@
     <script>
         // 취소 버튼 클릭 시 마이페이지로 이동하는 함수
         function cancelEdit() {
-            window.location.href = "{% url 'profile' %}";
+            window.location.href = "{% url 'home' %}";
         }
     </script>
 
@@ -129,14 +129,15 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">수정 완료</button>
-                <a href="javascript:void(0);" onclick="cancelEdit()" class="btn btn-secondary">취소</a>
+                <!--a href="javascript:void(0);" onclick="cancelEdit()" class="btn btn-secondary">취소</a-->
+                <a href="{% url 'home' %}" class="btn btn-secondary">취소</a>
             </div>
         </form>
     </div>
 {% include 'modal_base.html' %}
     <script>
         document.querySelector("form").onsubmit = function() {
-            window.location.href = "{% url 'profile' %}";
+            window.location.href = "{% url 'home' %}";
         }
     </script>
 {% endblock %}

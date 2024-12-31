@@ -16,18 +16,25 @@
         margin: 0 auto;
         padding: 20px;
         box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap; /* 자식 요소가 줄 바꿈 될 수 있게 설정 */
+        justify-content: space-between; /* 자식 요소 간에 간격을 두기 */
     }
 
     .filter-wrapper {
-        flex: 1; /* 남는 공간을 차지 */
+        flex: 1 1 60%; /* 카테고리 필터를 60% 차지하도록 설정 */
+        box-sizing: border-box;
         display: row;
     }
 
     .section {
         margin-top: 50px;
+        width:100%;
     }
 
     .category-filters {
+        flex: 1 1 60%; /* 카테고리 필터를 60% 차지하도록 설정 */
+        box-sizing: border-box;
         display: flex; /* Flexbox 활성화 */
         flex-direction: column; /* 전체 레이아웃을 세로로 배치 */
         justify-content: space-between; /* 자식 요소 사이 간격 균등 분배 */
@@ -40,7 +47,7 @@
         display: flex; /* 가로로 배치 */
         justify-content: space-between; /* 자식 요소를 양쪽 끝에 정렬 */
         align-items: center;
-        gap: 20px;
+        gap: 0px;
     }
 
     .filter-title {
@@ -68,40 +75,62 @@
     }
 
     .filter-image-container {
-        flex: 0 0 auto; /* 크기를 고정 */
+        flex: 0 1 45%; /* 크기를 고정 */
         display: flex; /* 이미지 내부에서 정렬 조정 */
         justify-content: flex-start;
         align-items: center;
         display: inline-block; /* 컨테이너를 키워드 필터 옆에 위치 */
         vertical-align: top; /* 위쪽 정렬 */
         margin-left: 20px; /* 키워드 필터와의 간격 조정 */
+        max-width: 100%; /* 부모 컨테이너 크기를 초과하지 않음 */
+        box-sizing: border-box;
+        padding-left: 20px; /* 이미지와 필터 사이에 간격 추가 */
     }
 
     .filter-image {
-        width: 480px; /* 원하는 이미지 너비 */
+        width: 100%; /* 원하는 이미지 너비 */
         height: auto; /* 비율 유지 */
         border-radius: 5px; /* 모서리를 둥글게 */
-        object-fit: cover; /* 이미지 비율을 유지하며 컨테이너에 맞춤 */
+        object-fit: contain; /* 이미지 비율을 유지하며 컨테이너에 맞춤 */
         margin-left: -30px;
+        min-width: 300px;
+        max-width: 480px;
     }
 
     @media (max-width: 768px) {
+        .category-filters {
+            flex: 1 1 100%; /* 작은 화면에서는 카테고리 필터를 100%로 설정 */
+        }
+
+        .filter-image-container {
+            flex: 1 1 100%; /* 이미지 컨테이너도 100%로 설정 */
+            padding-left: 0; /* 작은 화면에서는 간격을 없앰 */
+        }
+
         .filter-image {
-            max-width: 300px; /* 작은 화면에서는 최대 너비를 줄임 */
+            min-width: 200px; /* 더 작은 화면에서는 최소 너비를 줄임 */
+            max-width: 300px; /* 이미지 크기 최대값을 줄임 */
         }
     }
 
     @media (max-width: 480px) {
+        .filter-image-container {
+            flex: 1 1 100%; /* 더 작은 화면에서는 이미지도 100%로 설정 */
+        }
+
         .filter-image {
-            max-width: 100px; /* 더 작은 화면에서는 최대 너비를 더 줄임 */
+            min-width: 150px; /* 더 작은 화면에서는 최소 너비를 더 줄임 */
+            max-width: 100%; /* 최대 너비를 100%로 설정 */
         }
     }
+
 
     .filter-row {
         display: flex; /* 가로 정렬 */
         justify-content: flex-start; /* 버튼을 왼쪽 정렬 (필요 시 center, space-between 등 조정 가능) */
         gap: 5px; /* 버튼 간 간격 */
         margin-bottom: 6px; /* 각 행 아래 여백 */
+        flex-wrap: wrap;
     }
 
     .filter-row-1 {
@@ -351,8 +380,12 @@
     }
 
     @media (max-width: 768px) {
+        .slides {
+            grid-template-columns: repeat(2, 1fr); /* 한 줄에 2개씩 표시 */
+        }
+
         .slide {
-            min-width: 50%;
+            min-width: 100%;
         }
 
         h2 { font-size: 20px; }
@@ -386,6 +419,26 @@
             flex-direction: column; /* Flex 방향을 세로로 변경 */
             align-items: flex-start; /* 왼쪽 정렬 */
         }
+
+    @media screen and (max-width: 1024px) {
+        .filter-btn {
+            flex: 1 1 calc(50% - 10px); /* 화면 크기가 줄어들면 2개씩 배치 */
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .filter-btn {
+            flex: 1 1 calc(100% - 10px); /* 더 작아지면 1개씩 배치 */
+        }
+        .filter-row {
+            max-height: 40px; /* 작은 화면에서 2~3줄까지만 표시 */
+            overflow: hidden; /* 넘치는 콘텐츠 숨기기 */
+            box-sizing: border-box; /* 높이 계산 보정 */
+        }
+        .show-more-btn {
+            display: block;
+        }
+    }
 
     .no-results {
     text-align: center !important;
@@ -458,7 +511,7 @@
             </div>
             <!-- 이미지 추가 -->
             <div class="filter-image-container">
-                    <img src="{% static 'images/ticket_purple_1.png' %}" loading="lazy" alt="극장소라고동" class="filter-image">
+                    <img src="{% static 'images/ticket_pp.png' %}" loading="lazy" alt="극장소라고동" class="filter-image">
             </div>
         </div>
     </div>
