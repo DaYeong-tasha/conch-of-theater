@@ -148,9 +148,9 @@ h3 {
 
 .filter-btn:hover,
 .filter-btn.active {
-    background: #4B89DC;
-    color: white;
-    border-color: #4B89DC;
+    background: #6e08c87a;
+    color: black;
+    border-color: #6e08c87a;
 }
 
 /* 지도 관련 스타일 */
