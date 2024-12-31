@@ -2,6 +2,8 @@
 {% block title %}회원가입 및 취향 설정{% endblock %}
 {% block content %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
     .form-group label {
         display: block;
         margin-bottom: 10px; /* 버튼 그룹과의 간격 조정 */
@@ -20,6 +22,7 @@
     .btn-outline-primary[aria-pressed="true"] {
         background-color: #E1D5F2 !important; /* 보라색 배경 */
         color: black !important; /* 텍스트 색상 */
+        border-color: gray !important;
     }
 
     /* 선택 취소된 버튼 (흰색 배경) */
@@ -33,6 +36,39 @@
     .btn-outline-primary:hover {
         background-color: #E1D5F2 !important; /* hover 시 보라색 배경 */
         color: black !important;
+    }
+
+    .btn-outline-primary:focus {
+        outline: none !important; /* 기본 테두리 제거 */
+        box-shadow: none !important; /* 그림자 효과 제거 */
+        -webkit-box-shadow: none !important; /* 크롬 브라우저 대응 */
+        -moz-box-shadow: none !important; /* 파이어폭스 대응 */
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+    body {
+        font-family: 'Jua', sans-serif !important;
+    }
+
+    form {
+        font-family: 'Jua', sans-serif !important;
+    }
+
+    .form-label {
+          font-weight: bold; /* 글씨를 볼드체로 설정 */
+          font-size: 16px;
+      }
+
+    .register-btn {
+        background-color: orange; /* 주황색 배경 */
+        border-color: orange;    /* 테두리 색상 */
+        color: white;            /* 흰색 글씨 */
+    }
+
+    .register-btn:hover {
+        background-color: darkorange; /* 호버 시 더 진한 주황색 */
+        border-color: darkorange;
     }
 
 </style>
@@ -49,7 +85,7 @@
                         {% csrf_token %}
                         <!-- 기본 회원가입 정보 -->
                         <div class="form-group">
-                            <label for="user-id">아이디</label>
+                            <label for="user-id" class="form-label">아이디</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="user-id" name="username" placeholder="아이디를 입력하세요" required minlength="5">
                                 <div class="input-group-append">
@@ -59,11 +95,11 @@
                             <span id="id-check-result"></span> <!-- 중복 확인 결과 표시 -->
                         </div>
                         <div class="form-group">
-                            <label for="name">이름</label>
+                            <label for="name" class="form-label">이름</label>
                             <input type="text" class="form-control" id="name" name="fullname" placeholder="이름을 입력하세요" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">이메일</label>
+                            <label for="email" class="form-label">이메일</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="email_local" name="email_local" placeholder="이메일을 입력하세요" required>
                                 <div class="input-group-append">
@@ -80,15 +116,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password">비밀번호</label>
+                            <label for="password" class="form-label">비밀번호</label>
                             <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required minlength="8" maxlength="16">
                         </div>
                         <div class="form-group">
-                            <label for="confirm-password">비밀번호 확인</label>
+                            <label for="confirm-password" class="form-label">비밀번호 확인</label>
                             <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="비밀번호를 다시 입력하세요" required>
                         </div>
-                        <div class="form-group">
-                            <label>성별</label>
+                        <div class="form-group" >
+                            <label class="form-label">성별</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
                                 <label class="form-check-label" for="male">남성</label>
@@ -103,7 +139,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="address">주소</label>
+                            <label for="address" class="form-label">주소</label>
                             <select class="form-control" id="address" name="address" required>
                                 <option value="">주소를 선택하세요</option>
                                 <option value="서울특별시">서울특별시</option>
@@ -126,33 +162,37 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="birth">생년월일</label>
+                            <label for="birth" class="form-label">생년월일</label>
                             <input type="date" class="form-control" id="birth" name="birth" required>
                         </div>
 
                         <!-- 취향 설정 -->
                         <hr>
                         <div class="form-group">
-                            <label for="my_genre">선호하는 연극 장르</label>
+                            <label for="my_genre" class="form-label">선호하는 연극 장르</label>
                             <div id="my_genre" class="btn-group-vertical" role="group">
                                 <div class="btn-group" style="margin-bottom: 10px;">
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">로맨스</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">공포</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">추리/스릴러</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">한국 시대극</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">마임</button>
+                                </div>
+                                <div class="btn-group" style="margin-bottom: 10px;">
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">코미디</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">드라마</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">시대극</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">로맨스</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">휴먼 드라마</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">아동/청소년극</button>
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">스릴러</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">공포</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">아동/가족</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">판타지</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">셰익스피어/고전극</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">한국 전통예술</button>
                                 </div>
                             </div>
                             <input type="hidden" name="my_genre[]" id="my_genre_input" value="" required>
                         </div>
 
-                        <div class="form-group">
-                            <label for="my_play_mood">연극 분위기</label>
+                        <!--div class="form-group">
+                            <label for="my_play_mood" class="form-label">연극 분위기</label>
                             <div id="my_play_mood" class="btn-group-vertical" role="group">
                                 <div class="btn-group" style="margin-bottom: 10px;">
                                     <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">즐거운</button>
@@ -168,30 +208,26 @@
                                 </div>
                             </div>
                             <input type="hidden" name="my_play_mood[]" id="my_play_mood_input" value="" required>
-                        </div>
+                        </div-->
 
-                        <div class="form-group">
-                            <label for="my_play_keyword">해시태그</label>
+                        <!--div class="form-group">
+                            <label for="my_play_keyword" class="form-label">키워드</label>
                             <div id="my_play_keyword" class="btn-group-vertical" role="group">
                                 <div class="btn-group" style="margin-bottom: 10px;">
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">믿고 보는 배우</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">아이들과 함께</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">별점 4.0 이상</button>
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">탄탄한 원작</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">가벼운 마음으로</button>
-                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">반전있는</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">수상작</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">소설 원작</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">위로가 되는</button>
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="button" aria-pressed="false" autocomplete="off">감동적인</button>
                                 </div>
                             </div>
                             <input type="hidden" name="my_play_keyword[]" id="my_play_keyword_input" value="" required>
                         </div>
                         <div class="form-group">
-                            <label for="my_actor">좋아하는 배우</label>
+                            <label for="my_actor" class="form-label">좋아하는 배우</label>
                             <input type="text" class="form-control" id="my_actor" name="my_actor" placeholder="배우를 1명 입력하거나 없음을 입력하세요" required>
-                        </div>
+                        </div-->
 
-                        <button type="submit" class="btn btn-primary btn-block mt-3">회원가입</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-3 register-btn">회원가입</button>
                     </form>
                 </div>
             </div>

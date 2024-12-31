@@ -29,6 +29,7 @@
 
     .section {
         margin-top: 50px;
+        width:100%;
     }
 
     .category-filters {
@@ -74,7 +75,7 @@
     }
 
     .filter-image-container {
-        flex: 0 1 35%; /* 크기를 고정 */
+        flex: 0 1 45%; /* 크기를 고정 */
         display: flex; /* 이미지 내부에서 정렬 조정 */
         justify-content: flex-start;
         align-items: center;
@@ -511,8 +512,7 @@
             </div>
             <!-- 이미지 추가 -->
             <div class="filter-image-container">
-                    <img src="{% static 'images/ticket_purple_1.png' %}" loading="lazy" alt="극장소라고동" class="filter-image">
-                    <img src="{% static 'images/ticket_pp.png' %}" alt="극장소라고동" class="filter-image">
+                    <img src="{% static 'images/ticket_pp.png' %}" loading="lazy" alt="극장소라고동" class="filter-image">
             </div>
         </div>
     </div>

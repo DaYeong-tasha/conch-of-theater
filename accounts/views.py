@@ -132,6 +132,7 @@ def user_logout(request):
 
 
 #회원정보 조회
+'''
 @login_required
 def mypage_home(request):
     try:
@@ -141,7 +142,7 @@ def mypage_home(request):
         return redirect('profile')  # 프로필이 없으면 마이페이지로 리디렉션
 
     return render(request, 'accounts/profile.html', {'user_profile': user_profile})
-
+'''
 
 class FavoritePlay:
     pass
@@ -154,7 +155,7 @@ def load_tab_content(request, tab_name):
     except Users.DoesNotExist:
         user_profile = None
 
-    if tab_name == 'profile':
+    if tab_name == 'mypage_update':
         content = render_to_string('accounts/profile_edit.html', {'user_profile': user_profile})
     elif tab_name == 'favorites':
         # 즐겨찾기 데이터를 가져옵니다. 예를 들어 'FavoritePlay' 모델에서 즐겨찾기를 가져온다고 가정
@@ -171,6 +172,37 @@ def load_tab_content(request, tab_name):
 
 
 #회원정보 수정
+def mypage_update(request):
+    try:
+        user_profile = Users.objects.get(username=request.user.username)
+    except Users.DoesNotExist:
+        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            # ManyToManyField 및 JSONField 데이터 처리
+            user = form.save(commit=False)
+
+            # JSONField 및 CharField 처리
+            user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
+            '''user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)'''
+
+            user.save()  # 수정된 데이터 저장
+            form.save_m2m()  # ManyToMany 관계 저장
+            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
+            return redirect('home')
+        else:
+            print("폼 에러:", form.errors)  # 에러 출력
+            messages.error(request, '정보 수정에 실패했습니다.')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'accounts/profile_edit.html', {'form': form})
+
+
+'''
 @login_required
 def mypage_update(request):
     try:
@@ -200,6 +232,7 @@ def mypage_update(request):
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'accounts/profile_edit.html', {'form': form})
+'''
 
 
 

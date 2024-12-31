@@ -16,6 +16,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
         /* 햄버거 메뉴로 변경되는 지점 768px*/
         nav {
             text-align: right;
@@ -252,7 +254,7 @@
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link{% if request.path_info == '/accounts/profile/' %}active{% endif %}" href="{% url 'profile' %}">{{ user.username }}님</a>
+                        <a class="nav-link{% if request.path_info == '/accounts/profile/edit/' %}active{% endif %}" href="{% url 'mypage_update' %}">{{ user.username }}님</a>
                     </li>
                     <!--li>
                         <a class="nav-link{% if request.path == '/reviews/' %}active{% endif %}" href="{% url 'review' %}">후기 게시판</a>
