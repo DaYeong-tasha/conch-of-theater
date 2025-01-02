@@ -543,17 +543,13 @@
 <div class="section">
     <div class="home-slide-title">
         <h3 >소라고동의 대답</h3>
-        <form method="GET" action="" class="loc-filter">
-        <select class="filter-select-loc" name="link_area" onchange="this.form.submit()">
+        <select id="link_area" class="filter-select-loc loc-filter" onchange="updateFilter()">
             <option value="전체" {% if selected_area == '전체' %}selected{% endif %}>전체</option>
-            {% for area in link_area %}
-            <option value="{{ area }}"
-                    {% if selected_area == area %}selected{% endif %}>
-                {{ area }}
-            </option>
-                {% endfor %}
-            </select>
-        </form>
+            {% for area, area_value in loc_mapping_items %}
+                <option value="{{ area_value }}" {% if selected_area == area_value %}selected{% endif %}>{{ area }}</option>
+            {% endfor %}
+        </select>
+
     </div>
 
 
@@ -578,9 +574,6 @@
             <p>현재 추천 정보가 없습니다.</p>
             {% endif %}
         </div>
-<!--        &lt;!&ndash; 슬라이더 버튼 &ndash;&gt;-->
-<!--        <button class="slider-btn prev-btn">&#10094;</button>-->
-<!--        <button class="slider-btn next-btn">&#10095;</button>-->
     </div>
 </div>
 
@@ -672,27 +665,69 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-    // 필터링 기능
-    document.addEventListener('DOMContentLoaded', function() {
+// 필터
+document.addEventListener('DOMContentLoaded', function() {
     let currentStatus = [];
     let currentGenre = '전체';
     let currentKeyword = '전체';
     let currentGender = '전체';
     let currentAge = '전체';
     let currentOpenrun = [];
+    let selectedArea = '전체';  // 추가된 부분: 기본 지역 값 설정
 
     const statusButtons = document.querySelectorAll('.filter-btn');
     const genreButtons = document.querySelectorAll('.filter-btn-1');
     const keywordButtons = document.querySelectorAll('.filter-btn-2');
     const genderButtons = document.querySelectorAll('.filter-btn-3');
     const ageButtons = document.querySelectorAll('.filter-btn-4');
-    const resetButton = document.querySelector('.filter-btn[data-status="전체"]'); // '전체' 버튼
+    const resetButton = document.querySelector('.filter-btn[data-status="전체"]');
+    const areaSelect = document.querySelector('.filter-select-loc');  // 지역 select 요소
+
+    // 지역 필터 선택 시 이벤트 처리
+    areaSelect.addEventListener('change', function() {
+        selectedArea = this.value;
+        updateFilter();  // 지역이 변경될 때마다 지역 필터 적용
+        fetchFilteredPlays();  // 다른 필터들과 함께 연극 목록을 갱신
+    });
+
+    function updateFilter() {
+        const areaSelectValue = selectedArea;
+        console.log(`지역 필터 적용: ${areaSelectValue}`);
+        // AJAX 호출을 통해 지역별로 필터링된 연극 데이터를 가져오는 부분을 처리
+        fetch(`/filter_plays/?link_area=${areaSelectValue}`)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('play-details-container');
+                container.innerHTML = '';
+                if (data.play_details.length === 0) {
+                    container.innerHTML = '<p class="no-results">소라고동의 답변이 없어요😢</p>';
+                } else {
+                    data.play_details.forEach(play => {
+                        const playElement = document.createElement('div');
+                        playElement.classList.add('slide');
+                        playElement.innerHTML = `
+                            <a href="/plays/play/${play.play_id}/" class="slide-link">
+                                <img src="${play.play_poster}" alt="${play.play_name}" class="poster-image">
+                                <div class="overlay">
+                                    <h5>${play.play_name}</h5>
+                                    <p>${play.play_strdate} ~ ${play.play_enddate}</p>
+                                    <p>${play.theater_nm}</p>
+                                </div>
+                                <div class="status-info">${play.play_status}</div>
+                            </a>
+                        `;
+                        container.appendChild(playElement);
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
     function fetchFilteredPlays() {
         const status = currentStatus.length > 0 ? currentStatus.join(',') : '전체';
         const openrun = currentOpenrun.length > 0 ? currentOpenrun.join(',') : '전체';
-        console.log(`Fetching plays with status=${status}, openrun=${openrun}`);
-        fetch(`/filter_plays/?status=${status}&genre=${currentGenre}&keyword=${currentKeyword}&gender=${currentGender}&age=${currentAge}&openrun=${openrun}`, {
+        console.log(`Fetching plays with status=${status}, openrun=${openrun}, area=${selectedArea}`);
+        fetch(`/filter_plays/?status=${status}&genre=${currentGenre}&keyword=${currentKeyword}&gender=${currentGender}&age=${currentAge}&openrun=${openrun}&link_area=${selectedArea}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
@@ -730,103 +765,72 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error:', error));
     }
 
-    function toggleButtonState(button, array, value) {
-        if (array.includes(value)) {
-            array.splice(array.indexOf(value), 1);
-            button.classList.remove('active');
-            button.style.backgroundColor = ''; // 색상 초기화
-        } else {
-            array.push(value);
-            button.classList.add('active');
-            button.style.backgroundColor = '#6e08c87a'; // 색상 설정
-        }
-    }
-
-    function resetFilters() {
-        currentStatus = [];
-        currentGenre = '전체';
-        currentKeyword = '전체';
-        currentGender = '전체';
-        currentAge = '전체';
-        currentOpenrun = [];
-
-        statusButtons.forEach(button => {
-            button.classList.remove('active');
-            button.style.backgroundColor = ''; // 색상 초기화
-        });
-        genreButtons.forEach(button => {
-            button.classList.remove('active');
-            button.style.backgroundColor = ''; // 색상 초기화
-        });
-        keywordButtons.forEach(button => {
-            button.classList.remove('active');
-            button.style.backgroundColor = ''; // 색상 초기화
-        });
-        genderButtons.forEach(button => {
-            button.classList.remove('active');
-            button.style.backgroundColor = ''; // 색상 초기화
-        });
-        ageButtons.forEach(button => {
-            button.classList.remove('active');
-            button.style.backgroundColor = ''; // 색상 초기화
-        });
-
-        resetButton.classList.add('active');
-        resetButton.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
-
-        fetchFilteredPlays();
-    }
-
-    statusButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const status = this.getAttribute('data-status');
-            if (status === '전체') {
-                resetFilters();
-            } else {
-                resetButton.classList.remove('active');
-                resetButton.style.backgroundColor = ''; // '전체' 버튼 색상 초기화
-                if (status === '오픈런') {
-                    toggleButtonState(this, currentOpenrun, 'Y');
-                } else {
-                    toggleButtonState(this, currentStatus, status);
-                }
-                fetchFilteredPlays();
-            }
-        });
-    });
-
-    genreButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            currentGenre = this.textContent;
-            fetchFilteredPlays();
-        });
-    });
-
-    keywordButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            currentKeyword = this.textContent;
-            fetchFilteredPlays();
-        });
-    });
-
-    genderButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            currentGender = this.textContent;
-            fetchFilteredPlays();
-        });
-    });
-
-    ageButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            currentAge = this.textContent;
-            fetchFilteredPlays();
-        });
-    });
-
-    // '전체' 버튼이 기본으로 클릭된 상태로 표시
-    resetButton.classList.add('active');
-    resetButton.style.backgroundColor = '#6e08c87a';
 });
+  // 지역필터 업데이트 코드
+<!-- 필터 select 박스 -->
+<select id="link_area" class="filter-select-loc" onchange="updateFilter()">
+    <option value="전체" {% if selected_area == '전체' %}selected{% endif %}>전체</option>
+    {% for area, area_value in LOC_MAPPING.items() %}
+        <option value="{{ area_value }}" {% if selected_area == area_value %}selected{% endif %}>{{ area }}</option>
+    {% endfor %}
+</select>
+
+<div class="slider">
+    <div id="play-details-container" class="slides">
+        {% if play_details %}
+            {% for play in play_details %}
+            <div class="slide">
+                <a href="{% url 'plays:play_detail' play.play_id %}" class="slide-link">
+                    <img src="{{ play.play_poster }}" loading="lazy" alt="{{ play.play_name }}" class="poster-image">
+                    <div class="overlay">
+                        <h5>{{ play.play_name }}</h5>
+                        <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
+                        <p>{{ play.theater_nm }}</p>
+                    </div>
+                    <div class="status-info">{{ play.play_status }}</div>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>현재 추천 정보가 없습니다.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function updateFilter() {
+        const selectedArea = document.getElementById('link_area').value;
+
+        // 필터 값들을 모은 뒤 AJAX 요청을 보냄
+        fetch(`/filter_plays/?link_area=${selectedArea}`)
+            .then(response => response.json())
+            .then(data => {
+                const playDetails = data.play_details;
+                const playDetailsContainer = document.getElementById('play-details-container');
+                playDetailsContainer.innerHTML = '';  // 기존 리스트 비우기
+
+                // 연극 목록을 새롭게 업데이트
+                playDetails.forEach(play => {
+                    const slideElement = document.createElement('div');
+                    slideElement.classList.add('slide');
+                    slideElement.innerHTML = `
+                        <a href="/plays/play_detail/${play.play_id}" class="slide-link">
+                            <img src="${play.play_poster}" loading="lazy" alt="${play.play_name}" class="poster-image">
+                            <div class="overlay">
+                                <h5>${play.play_name}</h5>
+                                <p>${play.play_strdate} ~ ${play.play_enddate}</p>
+                                <p>${play.theater_nm}</p>
+                            </div>
+                            <div class="status-info">${play.play_status}</div>
+                        </a>
+                    `;
+                    playDetailsContainer.appendChild(slideElement);
+                });
+            })
+            .catch(error => console.error('Error fetching play details:', error));
+    }
+</script>
+
 </script>
 
 {% endblock %}
