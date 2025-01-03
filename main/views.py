@@ -8,67 +8,78 @@ from accounts.models import Users  # Users 모델 추가
 from map.views import get_theaters_data
 
 # 지역 매핑
-LOC_MAPPING = {
-    "서울특별시": "서울", "부산광역시": "경상", "대구광역시": "경상",
-    "인천광역시": "경기", "광주광역시": "전라", "대전광역시": "충청",
-    "울산광역시": "경상", "세종특별자치시": "충청", "경기도": "경기",
-    "강원도": "강원", "충청북도": "충청", "충청남도": "충청",
-    "전라북도": "전라", "전라남도": "전라", "경상북도": "경상",
-    "경상남도": "경상", "제주특별자치도": "제주"
-}
+# LOC_MAPPING = {
+#     "서울특별시": "서울",
+#     "경기도": "경기",
+#     "인천광역시": "경기",
+#     "부산광역시": "경상",
+#     "대구광역시": "경상",
+#     "울산광역시": "경상",
+#     "경상북도": "경상",
+#     "경상남도": "경상",
+#     "광주광역시": "전라",
+#     "전라남도": "전라",
+#     "전라북도": "전라",
+#     "대전광역시": "충청",
+#     "세종특별자치시": "충청",
+#     "충청북도": "충청",
+#     "충청남도": "충청",
+#     "강원도": "강원",
+#     "제주특별자치도": "제주"
+# }
+from django.db.models import FloatField
+from django.db.models.functions import Cast
+
 
 def get_user_recommendations(user):
-    """사용자 추천 필터링 로직"""
     if not user.is_authenticated:
         return []
 
     try:
-        # Users 모델에서 사용자 정보 가져오기
         user_obj = Users.objects.get(username=user.username)
     except Users.DoesNotExist:
         return []
 
-    # 사용자 정보
-    user_loc = LOC_MAPPING.get(user_obj.address, None)
-    print(f"Mapped location: {user_loc}")
+    recommendations = Play_detail.objects.filter(
+        play_status__in=["공연중", "공연예정"]  # 공연 상태 필터
+    )
+    print(f"After play status filter: {recommendations.count()} records")
 
-    # play_ranks에서 link_area 필드 값들을 필터링
-    play_ranks = Play_rank.objects.filter(ststypes="month")
+    # Play_detail의 loc 값들을 가져오고 distinct로 필터링
+    loc_values = list(Play_detail.objects.values_list('loc', flat=True).distinct())
+    print(f"Distinct loc values: {loc_values}")
 
-    # '대학로'는 '서울'로 매핑하고, '전국'은 무시
-    for play in play_ranks:
-        if play.link_area == '대학로':
-            play.link_area = '서울'
-        elif play.link_area == '전국':
-            play.link_area = None  # '전국'은 필터링에서 제외
+    # 사용자의 주소값 (user_loc) 설정
+    user_loc = user_obj.address
+    print(f"User address: {user_loc}")
 
-    # 예시 디버깅 코드
-    print(f"Before region filter: {play_ranks.count()} records")
+    # 지역 필터링
+    if user_loc and user_loc in loc_values:
+        recommendations = recommendations.filter(loc=user_loc)
+    else:
+        print(f"No matching location found for user address: {user_loc}")
 
-    # 지역 필터
-    if user_loc:
-        play_ranks = play_ranks.filter(link_area=user_loc)
-        print(f"After region filter: {play_ranks.count()} records")
+    print(f"After region filter: {recommendations.count()} records")
 
-    # 연극 필터링
-    play_ids = play_ranks.values_list('play_id', flat=True)
-    recommendations = Play_detail.objects.filter(play_id__in=play_ids)
-
-    # 장르 필터
+    # 장르 필터 (my_genre는 여러 개의 장르가 있을 수 있음)
+    print(f"Applying genre filter for: {user_obj.my_genre}")
     if user_obj.my_genre:
-        recommendations = recommendations.filter(genre__in=user_obj.my_genre)
-        print(f"After genre filter: {recommendations.count()} records")
+        # 장르를 ','로 분리
+        user_genres = [genre.strip() for genre in user_obj.my_genre[0].split(',')]
+        print(f"User selected genres: {user_genres}")
 
-    # 성별 필터 # 값이 float라서 비교해서 바꿔야 함.
+        recommendations = recommendations.filter(genre__in=user_genres)
+    print(f"After genre filter: {recommendations.count()} records")
+
+
+    # 성별 필터
     if user_obj.gender in ['남성', '여성']:
         gender_field = 'male' if user_obj.gender == '남성' else 'female'
+        print(f"Applying gender filter for {user_obj.gender} -> {gender_field}")
         recommendations = recommendations.annotate(
-            male_float=Cast('male', FloatField()),
-            female_float=Cast('female', FloatField())
-        )
-        recommendations = recommendations.filter(
-            **{f"{gender_field}__gt": F('female' if gender_field == 'male' else 'male')})
-        print(f"After gender filter: {recommendations.count()} records")
+            gender_value=Cast(gender_field, FloatField())
+        ).filter(gender_value__gt=0.0)
+        print(f"Recommendations after gender filter: {recommendations.count()} records")
 
     # 연령대 필터
     recommendations = recommendations.annotate(
@@ -78,28 +89,27 @@ def get_user_recommendations(user):
         forty_float=Cast('forty', FloatField()),
         fifty_float=Cast('fifty', FloatField())
     )
-    print(f"User age: {2025 - user_obj.birth.year}")  # 사용자 나이 출력
+    user_age = 2025 - user_obj.birth.year
+    print(f"User age: {user_age}")
 
-    if user_obj.birth.year and (2025 - user_obj.birth.year) < 20:
+    if user_age < 20:
         recommendations = recommendations.filter(teenage_float__gt=0)
-        print(f"After teenage filter: {recommendations.count()} records")
-    elif (2025 - user_obj.birth.year) < 30:
+    elif user_age < 30:
         recommendations = recommendations.filter(twenty_float__gt=0)
-        print(f"After twenty filter: {recommendations.count()} records")
-    elif (2025 - user_obj.birth.year) < 40:
+    elif user_age < 40:
         recommendations = recommendations.filter(thirty_float__gt=0)
-        print(f"After thirty filter: {recommendations.count()} records")
-    elif (2025 - user_obj.birth.year) < 50:
+    elif user_age < 50:
         recommendations = recommendations.filter(forty_float__gt=0)
-        print(f"After forty filter: {recommendations.count()} records")
     else:
         recommendations = recommendations.filter(fifty_float__gt=0)
-        print(f"After fifty filter: {recommendations.count()} records")
+    print(f"After age filter: {recommendations.count()} records")
 
+    # 결과 반환
     return recommendations.values(
         'play_id', 'play_name', 'play_poster',
         'play_strdate', 'play_enddate', 'play_status', 'theater_nm'
     )
+
 
 def recommend_plays(request):
     """추천 연극 데이터를 JSON 형태로 반환"""
