@@ -47,6 +47,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# main/views.py
+
 def filter_plays(request):
     status = request.GET.get('status', '전체')
     genre = request.GET.get('genre', '전체')
@@ -54,6 +56,8 @@ def filter_plays(request):
     gender = request.GET.get('gender', '전체')
     age = request.GET.get('age', '전체')
     openrun = request.GET.get('openrun', '전체')
+    limit = 200  # 기본값 200
+    page = int(request.GET.get('page', 1))  # 페이지 번호, 기본값 1
 
     play_details = Play_detail.objects.all().order_by('-play_enddate')
 
@@ -64,15 +68,19 @@ def filter_plays(request):
         play_details = play_details.filter(openrun='Y')
 
     if genre != '전체':
-        play_details = play_details.filter(genre=genre)
+        genre_list = genre.split(',')
+        play_details = play_details.filter(genre__in=genre_list)
     if keyword != '전체':
-        play_details = play_details.filter(home_keyword__icontains=keyword)
+        keyword_list = keyword.split(',')
+        for kw in keyword_list:
+            play_details = play_details.filter(home_keyword__icontains=kw)
     if gender != '전체':
         if gender == '남성':
             play_details = play_details.filter(male__gt=F('female'))
         elif gender == '여성':
             play_details = play_details.filter(female__gt=F('male'))
     if age != '전체':
+        age_list = age.split(',')
         play_details = play_details.annotate(
             teenage_float=Cast('teenage', FloatField()),
             twenty_float=Cast('twenty', FloatField()),
@@ -80,41 +88,22 @@ def filter_plays(request):
             forty_float=Cast('forty', FloatField()),
             fifty_float=Cast('fifty', FloatField())
         )
-        if age == '10대':
-            play_details = play_details.filter(
-                Q(teenage_float__gt=F('twenty_float')) &
-                Q(teenage_float__gt=F('thirty_float')) &
-                Q(teenage_float__gt=F('forty_float')) &
-                Q(teenage_float__gt=F('fifty_float'))
-            )
-        elif age == '20대':
-            play_details = play_details.filter(
-                Q(twenty_float__gt=F('teenage_float')) &
-                Q(twenty_float__gt=F('thirty_float')) &
-                Q(twenty_float__gt=F('forty_float')) &
-                Q(twenty_float__gt=F('fifty_float'))
-            )
-        elif age == '30대':
-            play_details = play_details.filter(
-                Q(thirty_float__gt=F('teenage_float')) &
-                Q(thirty_float__gt=F('twenty_float')) &
-                Q(thirty_float__gt=F('forty_float')) &
-                Q(thirty_float__gt=F('fifty_float'))
-            )
-        elif age == '40대':
-            play_details = play_details.filter(
-                Q(forty_float__gt=F('teenage_float')) &
-                Q(forty_float__gt=F('twenty_float')) &
-                Q(forty_float__gt=F('thirty_float')) &
-                Q(forty_float__gt=F('fifty_float'))
-            )
-        elif age == '50대+':
-            play_details = play_details.filter(
-                Q(fifty_float__gt=F('teenage_float')) &
-                Q(fifty_float__gt=F('twenty_float')) &
-                Q(fifty_float__gt=F('thirty_float')) &
-                Q(fifty_float__gt=F('forty_float'))
-            )
+        age_filters = Q()
+        for age_group in age_list:
+            if age_group == '10대':
+                age_filters |= Q(teenage_float__gt=0)
+            elif age_group == '20대':
+                age_filters |= Q(twenty_float__gt=0)
+            elif age_group == '30대':
+                age_filters |= Q(thirty_float__gt=0)
+            elif age_group == '40대':
+                age_filters |= Q(forty_float__gt=0)
+            elif age_group == '50대+':
+                age_filters |= Q(fifty_float__gt=0)
+        play_details = play_details.filter(age_filters)
+
+    offset = (page - 1) * limit
+    play_details = play_details[offset:offset + limit]  # 페이지에 따른 개수 제한
 
     play_details_list = list(play_details.values('play_id', 'play_name', 'play_poster', 'play_strdate', 'play_enddate', 'play_status', 'theater_nm'))
     return JsonResponse({'play_details': play_details_list})

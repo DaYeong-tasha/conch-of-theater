@@ -143,7 +143,7 @@ h3 {
     border-radius: 20px;
     background: white;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.1s, color 0.1s, border-color 0.1s ease;
 }
 
 .filter-btn:hover,
@@ -152,6 +152,10 @@ h3 {
     color: black;
     border-color: #6e08c87a;
 }
+
+
+
+
 
 /* 지도 관련 스타일 */
 .map-header {
@@ -437,4 +441,7 @@ h3 {
     .search-input_home {
         flex: 1;
     }
+
+
 }
+
