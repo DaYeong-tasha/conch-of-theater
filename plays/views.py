@@ -272,4 +272,3 @@ def delete_review(request, play_id, review_id):
 
 
 # 커밋용 수정
-
