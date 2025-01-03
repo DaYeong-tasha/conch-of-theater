@@ -7,26 +7,26 @@ from common.models import Play_detail, Play_rank
 from accounts.models import Users  # Users 모델 추가
 from map.views import get_theaters_data
 
-# 지역 매핑
-# LOC_MAPPING = {
-#     "서울특별시": "서울",
-#     "경기도": "경기",
-#     "인천광역시": "경기",
-#     "부산광역시": "경상",
-#     "대구광역시": "경상",
-#     "울산광역시": "경상",
-#     "경상북도": "경상",
-#     "경상남도": "경상",
-#     "광주광역시": "전라",
-#     "전라남도": "전라",
-#     "전라북도": "전라",
-#     "대전광역시": "충청",
-#     "세종특별자치시": "충청",
-#     "충청북도": "충청",
-#     "충청남도": "충청",
-#     "강원도": "강원",
-#     "제주특별자치도": "제주"
-# }
+LOC_MAPPING = {
+    "서울특별시": "서울",
+    "경기도": "경기",
+    "인천광역시": "경기",
+    "부산광역시": "경상",
+    "대구광역시": "경상",
+    "울산광역시": "경상",
+    "경상북도": "경상",
+    "경상남도": "경상",
+    "광주광역시": "전라",
+    "전라남도": "전라",
+    "전라북도": "전라",
+    "대전광역시": "충청",
+    "세종특별자치시": "충청",
+    "충청북도": "충청",
+    "충청남도": "충청",
+    "강원도": "강원",
+    "제주특별자치도": "제주"
+}
+
 from django.db.models import FloatField
 from django.db.models.functions import Cast
 
@@ -53,11 +53,18 @@ def get_user_recommendations(user):
     user_loc = user_obj.address
     print(f"User address: {user_loc}")
 
-    # 지역 필터링
-    if user_loc and user_loc in loc_values:
-        recommendations = recommendations.filter(loc=user_loc)
+    # 지역 매핑 적용 (LOC_MAPPING을 사용하여 지역 변환)
+    if user_loc in LOC_MAPPING:
+        mapped_loc = LOC_MAPPING[user_loc]
+        print(f"Mapped location: {mapped_loc}")
+
+        # 지역 필터링
+        if mapped_loc in loc_values:
+            recommendations = recommendations.filter(loc=mapped_loc)
+        else:
+            print(f"No matching location found for mapped address: {mapped_loc}")
     else:
-        print(f"No matching location found for user address: {user_loc}")
+        print(f"No mapping found for user address: {user_loc}")
 
     print(f"After region filter: {recommendations.count()} records")
 
@@ -70,7 +77,6 @@ def get_user_recommendations(user):
 
         recommendations = recommendations.filter(genre__in=user_genres)
     print(f"After genre filter: {recommendations.count()} records")
-
 
     # 성별 필터
     if user_obj.gender in ['남성', '여성']:
