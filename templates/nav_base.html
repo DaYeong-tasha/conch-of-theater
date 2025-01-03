@@ -25,6 +25,7 @@
         }
         .navbar {
         background-color: #ffffff !important; /* 배경 색상을 흰색으로 설정 */
+        font-family: 'Jua', sans-serif;
         }
 
         a.nav-linkactive {
@@ -254,7 +255,7 @@
                 <ul class="navbar-nav ml-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link{% if request.path_info == '/accounts/profile/edit/' %}active{% endif %}" href="{% url 'mypage_update' %}">{{ user.username }}님</a>
+                        <a class="nav-link{% if request.path_info == '/accounts/profile/' %}active{% endif %}" href="{% url 'profile' %}">{{ user.username }}님</a>
                     </li>
                     <!--li>
                         <a class="nav-link{% if request.path == '/reviews/' %}active{% endif %}" href="{% url 'review' %}">후기 게시판</a>

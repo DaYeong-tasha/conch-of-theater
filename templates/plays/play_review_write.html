@@ -3,6 +3,8 @@
 {% block content %}
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
     .wide-content_t {
         margin-top: 15px;
         max-width: 800px;
@@ -43,6 +45,23 @@
         font-weight: bold;
     }
 
+    .card-body {
+        font-family: 'Jua', sans-serif !important;
+    }
+
+    #play_review_write .btn.btn-primary {
+        background-color: #dcb9ff; /* 원하는 스타일 */
+        color: black;
+    }
+
+
+    .play-detail-back .btn.btn-secondary {
+        background-color: #ECE0F8; /* 원하는 색상 */
+        color: black; /* 글자 색상 */
+        border-color: #cccccc; /* 테두리 색상 */
+    }
+
+
 </style>
 
 <div class="container mt-5">
@@ -54,15 +73,15 @@
 
 
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">저장</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #dcb9ff; color: black; border:2px solid #cccccc; ">저장</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="text-center">
-    <a href="{% url 'plays:play_detail' pk=play_id %}" class="btn btn-secondary mb-5">뒤로가기</a>
+<div class="text-center play-detail-back">
+    <a href="{% url 'plays:play_detail' pk=play_id %}" class="btn btn-secondary mb-5" >뒤로가기</a>
 </div>
 
 

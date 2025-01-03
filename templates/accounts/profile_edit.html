@@ -79,6 +79,7 @@
         .form-actions a:hover {
             text-decoration: underline;
         }
+
     </style>
     <script>
         // 취소 버튼 클릭 시 마이페이지로 이동하는 함수
@@ -128,16 +129,16 @@
 
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">수정 완료</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #dcb9ff; color: black; border:2px solid #cccccc;" >수정 완료</button>
                 <!--a href="javascript:void(0);" onclick="cancelEdit()" class="btn btn-secondary">취소</a-->
-                <a href="{% url 'home' %}" class="btn btn-secondary">취소</a>
+                <a href="{% url 'profile' %}" class="btn btn-secondary" style="background-color: #FBD568; color: black; border:2px solid #cccccc;" >취소</a>
             </div>
         </form>
     </div>
 {% include 'modal_base.html' %}
     <script>
         document.querySelector("form").onsubmit = function() {
-            window.location.href = "{% url 'home' %}";
+            window.location.href = "{% url 'profile' %}";
         }
     </script>
 {% endblock %}

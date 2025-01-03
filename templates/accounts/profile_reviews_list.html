@@ -5,6 +5,8 @@
 
 {% block content %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
     body, html {
         margin: 0;
         padding: 0;
@@ -15,13 +17,23 @@
     .container_mypagelist {
         display: flex; /* Flexbox로 레이아웃 배치 */
         height: 100%; /* 전체 화면 높이 */
+        font-family: 'Jua', sans-serif;
+        flex-direction: row;
+        width: 65%;
+        margin: 0 auto;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        font-family: 'Jua', sans-serif;
+        font-weight: 200;
     }
 
     .sidebar {
-        width: 250px; /* 사이드바 너비 */
-        background-color: #CECEF6; /* 말풍선 색상 */
-        color: white;
+        width: 20%; /* 사이드바 너비 */
+        background-color: #f9f9f9; /* 말풍선 색상 */
+        color: black;
         padding: 20px;
+        border-right: 1px solid #ddd;
         box-sizing: border-box;
         overflow-y: auto; /* 내용 스크롤 가능 */
     }
@@ -33,12 +45,21 @@
     }
 
     .sidebar ul li {
-        margin: 20px 0;
+        margin: 10px 0;
     }
 
     .sidebar ul li a {
-        color: white;
+        color: #333;
         text-decoration: none;
+        font-weight: 300;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+        background-color: #ddd;
     }
 
     .content-wrapper {
@@ -46,15 +67,19 @@
         display: flex;
         flex-direction: column;
         height: 100%; /* 전체 높이 */
-        overflow: hidden;
+        overflow-y: auto;
+        padding-bottom: 60px;
     }
 
     .content-header {
-        background-color: #f8f9fa; /* 배경색 */
+        background-color: #F2F2F2; /* 배경색 */
         padding: 20px 30px;
         box-sizing: border-box;
         border-bottom: 1px solid #ddd; /* 하단 경계선 */
     }
+
+
+
 
     .content-main {
         flex: 1; /* 나머지 공간을 차지 */
@@ -64,7 +89,7 @@
     }
 
     .review-item {
-        background-color: #f8f9fa;
+        background-color: #FFF;
         border: 1px solid #ddd;
         border-radius: 10px;
         padding: 15px;
@@ -76,6 +101,15 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;
+        font-weight: normal;
+        font-size: 17px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 5px;
+    }
+
+
+    .review-rating{
+        color: #FBD568;
     }
 
     .edit-btn, .delete-btn {
@@ -101,17 +135,18 @@
     <!-- 사이드바 -->
     <div class="sidebar">
         <ul>
+            <li><a href="{% url 'profile' %}">회원정보조회</a></li>
             <li><a href="{% url 'mypage_update' %}">회원정보수정</a></li>
             <li><a href="{% url 'profile_favorites' %}">즐겨찾기(💗)</a></li>
             <li><a href="{% url 'profile_reviews_list' %}">my리뷰(🎬)</a></li>
-            <li><a href="#">my돋보기(🔍)</a></li>
+            <!--li><a href="#">my돋보기(🔍)</a></li-->
         </ul>
     </div>
 
     <!-- 콘텐츠 영역 -->
     <div class="content-wrapper">
         <div class="content-header">
-            <h2>{{ user.fullname }}님의 리뷰</h2>
+            <h2>{{ user.username }}님의 리뷰</h2>
         </div>
         <div class="content-main">
              <!-- 메시지 표시 -->
@@ -127,7 +162,7 @@
                 {% for review in user_reviews %}
                 <div class="review-item">
                     <div class="review-header">
-                        <span class="username">{{ review.username }}</span>
+                        <span class="username">{{ review.review_title }}</span>
                         <span class="review-rating">★ {{ review.star }}.0</span>
                     </div>
                     <p>{{ review.review_contents }}</p>

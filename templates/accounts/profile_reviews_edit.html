@@ -3,44 +3,72 @@
 {% block content %}
 
 <style>
-    .wide-content_t {
-        margin-top: 15px;
+    /* 컨테이너 스타일 */
+    .container {
+        margin-top: 30px;
         max-width: 800px;
-        height: 40px;
-        border: 2px solid #BDBDBD;
-        border-radius: 5px;
-        padding: 5px;
-        overflow: auto;
     }
 
-    .wide-content_cn {
-        margin-top: 15px;
-        max-width: 400px;
-        height: 50px;
-        border: 2px solid #BDBDBD;
-        border-radius: 5px;
-        padding: 5px;
-        overflow: auto;
+    /* 카드 스타일 */
+    .card {
+        border: 1px solid #dee2e6 !important;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
     }
 
-    .wide-content {
-        margin-top: 15px;
-        max-width: 800px;
-        height: 200px;
-        border: 2px solid #BDBDBD;
-        border-radius: 5px;
+    .card-body {
+        padding: 20px;
+    }
+
+    /* 폼 필드 스타일 */
+    form input, form textarea, form select {
+        width: 100%;
         padding: 10px;
-        overflow: auto;
+        margin-bottom: 15px;
+        border: 1px solid #ced4da !important;
+        border-radius: 5px;
+        box-sizing: border-box;
     }
 
-    .boardline {
-        border-top: 1px solid #BDBDBD;
-        max-width: 800px;
-        margin: 10px 0;
+    form input:focus, form textarea:focus, form select:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
 
-    .bold-text {
-        font-weight: bold;
+    /* 버튼 스타일 */
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #ffffff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* 뒤로가기 버튼 스타일 */
+    .text-center a.btn {
+        margin-top: 20px;
     }
 </style>
 
@@ -53,7 +81,7 @@
 
 
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">저장</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #FBD568; color: black; border:2px solid #cccccc;">저장</button>
                 </div>
             </form>
         </div>
@@ -61,7 +89,7 @@
 </div>
 
 <div class="text-center">
-    <a href="{% url 'profile_reviews_list'%}" class="btn btn-secondary mb-5">뒤로가기</a>
+    <a href="{% url 'profile_reviews_list'%}" class="btn btn-secondary mb-5" style="font-size: 20px; background-color: #dcb9ff; border-color: #FBD568; color: black;">뒤로가기</a>
 </div>
 
 
