@@ -313,89 +313,81 @@
         padding-bottom: 5px;
     }
 
-    /* 슬라이더 스타일 */
-    .slider {
-        position: relative;
-        width: 100%;
-        max-width: 2000px;
-        margin: 20px auto;
-        overflow: hidden;
-        height: 540px; /* 3줄 높이만 보이도록 설정 */
-    }
+/* 슬라이더 스타일 */
+.slider {
+    position: relative;
+    width: 100%;
+    max-width: 2000px;
+    margin: 20px auto;
+    overflow: hidden;
+    height: 540px; /* 슬라이더 높이 고정 */
+}
 
-    .slides {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개씩 배치 */
-        grid-gap: 35px; /* 슬라이드 사이의 간격 설정 */
-        height: 100%; /* 슬라이드 영역 높이를 100%로 설정 */
-        overflow-x: auto; /* 가로 스크롤 활성화 */
-        scroll-snap-type: x mandatory; /* 스크롤 시 각 슬라이드가 정확히 맞춰지도록 설정 */
-        scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
-    }
+.slides {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 한 줄에 5개씩 배치 */
+    grid-gap: 35px; /* 슬라이드 사이의 간격 설정 */
+    height: 100%; /* 슬라이드 영역 높이를 100%로 설정 */
+    overflow-x: auto; /* 가로 스크롤 활성화 */
+    scroll-snap-type: x mandatory; /* 스크롤 시 각 슬라이드가 정확히 맞춰지도록 설정 */
+    scroll-behavior: smooth; /* 부드러운 스크롤 효과 */
+}
 
-    .slide {
-        position: relative;
-        text-align: center;
-        box-sizing: border-box;
-        scroll-snap-align: start; /* 각 슬라이드가 왼쪽에 맞춰지도록 설정 */
-    }
+.slide {
+    position: relative;
+    text-align: center;
+    box-sizing: border-box;
+    scroll-snap-align: start; /* 각 슬라이드가 왼쪽에 맞춰지도록 설정 */
+    height: auto; /* 이미지 높이에 맞게 슬라이드 크기 자동 조정 */
+}
 
-    .slide img {
-        width: 100%;
-        height: 240px; /* 고정된 높이로 이미지 설정 */
-        border-radius: 10px;
-        object-fit: cover;
-        transition: transform 0.3s ease-in-out;
-    }
+.slide img {
+    width: 100%;
+    height: 240px; /* 고정된 높이로 이미지 설정 */
+    border-radius: 10px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
 
-    .slide:hover img {
-        transform: scale(1.05);
-    }
+.slide:hover img {
+    transform: scale(1.05);
+}
 
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        opacity: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        font-size: 13px;
-        transition: opacity 0.3s ease-in-out;
-    }
+/* 오버레이 스타일 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 240px; /* 이미지의 고정된 높이에 맞추기 */
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 13px;
+    transition: opacity 0.3s ease-in-out;
+}
 
-    .slide:hover .overlay {
-        opacity: 1;
-    }
+.slide:hover .overlay {
+    opacity: 1;
+}
 
-    .status-info {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 5px 10px;
-        font-size: 13px;
-        border-radius: 5px;
-    }
+/* 상태 정보 스타일 */
+.status-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 13px;
+    border-radius: 5px;
+}
 
-    .slider-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        font-size: 18px;
-        padding: 10px;
-        cursor: pointer;
-    }
 
 /* + 버튼 */
     #load-more {
@@ -601,10 +593,7 @@
             {% endif %}
 
         </div>
-         <!-- 더 불러오기 버튼 -->
-<!--        &lt;!&ndash; 슬라이더 버튼 &ndash;&gt;-->
-<!--        <button class="slider-btn prev-btn">&#10094;</button>-->
-<!--        <button class="slider-btn next-btn">&#10095;</button>-->
+
     </div>
     <button id="load-more" class="bnt-plus" >+</button>
 
