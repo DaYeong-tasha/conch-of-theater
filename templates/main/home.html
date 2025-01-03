@@ -906,6 +906,41 @@ document.addEventListener('DOMContentLoaded', () => {
     // 초기 데이터 로드
     fetchFilteredPlays();
 });
+
+    function fetchRecommendedPlays() {
+    fetch('/recommend_plays/', {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const container = document.getElementById('play-details-container');
+        container.innerHTML = ''; // 기존 데이터 초기화
+        data.play_details.forEach(play => {
+            const playElement = `
+                <div class="slide">
+                    <a href="/play/${play.play_id}/" class="slide-link">
+                        <img src="${play.play_poster}" alt="${play.play_name}" class="poster-image">
+                        <div class="overlay">
+                            <h5>${play.play_name}</h5>
+                            <p>${play.play_strdate} ~ ${play.play_enddate}</p>
+                            <p>${play.theater_nm}</p>
+                        </div>
+                        <div class="status-info">${play.play_status}</div>
+                    </a>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', playElement);
+        });
+    })
+    .catch(error => console.error('Error fetching recommended plays:', error));
+}
+
 </script>
 
 {% endblock %}
