@@ -153,6 +153,10 @@ h3 {
     border-color: #6e08c87a;
 }
 
+
+
+
+
 /* 지도 관련 스타일 */
 .map-header {
     display: flex;
@@ -437,30 +441,7 @@ h3 {
     .search-input_home {
         flex: 1;
     }
+
+
 }
 
-
-    .bnt-plus {
-    display: block;
-    margin: 20px auto; /* 중앙에 배치 */
-    padding: 10px;
-    font-size: 30px;
-    background-color: #c3a1f2;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    line-height: 14px;
-    outline: none;
-}
-
-.bnt-plus:hover {
-    background-color: #6e08c87a;
-    transform: scale(1.1);
-
-}
