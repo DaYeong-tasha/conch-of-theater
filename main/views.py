@@ -53,20 +53,37 @@ def get_user_recommendations(user):
     user_loc = user_obj.address
     print(f"User address: {user_loc}")
 
-    # 지역 매핑 적용 (LOC_MAPPING을 사용하여 지역 변환)
-    if user_loc in LOC_MAPPING:
-        mapped_loc = LOC_MAPPING[user_loc]
-        print(f"Mapped location: {mapped_loc}")
+    # 지역 필터링 처리 (여러 개의 loc 값 필터링)
+    loc_filter = []
 
-        # 지역 필터링
-        if mapped_loc in loc_values:
-            recommendations = recommendations.filter(loc=mapped_loc)
-        else:
-            print(f"No matching location found for mapped address: {mapped_loc}")
+    if user_loc == "서울특별시":
+        loc_filter = ["서울특별시"]
+    elif user_loc == "경기도":
+        loc_filter = ["경기도", "인천광역시"]
+    elif user_loc == "경상":
+        loc_filter = ["경상북도", "경상남도", "부산광역시", "대구광역시", "울산광역시"]
+    elif user_loc == "전라":
+        loc_filter = ["전라남도", "전라북도", "광주광역시"]
+    elif user_loc == "충청":
+        loc_filter = ["충청북도", "충청남도", "대전광역시", "세종특별자치시"]
+    elif user_loc == "강원":
+        loc_filter = ["강원도"]
+    elif user_loc == "제주":
+        loc_filter = ["제주특별자치도"]
+
+    print(f"Loc filter values: {loc_filter}")
+
+    # 실제 loc_values와 비교 후 필터링
+    valid_loc_filter = [loc for loc in loc_filter if loc in loc_values]
+    print(f"Valid loc filter values: {valid_loc_filter}")
+
+    # 지역 필터링 적용
+    if valid_loc_filter:
+        recommendations = recommendations.filter(loc__in=valid_loc_filter)
+        print(f"After region filter: {recommendations.count()} records")
     else:
-        print(f"No mapping found for user address: {user_loc}")
+        print("No matching locations found for the user address")
 
-    print(f"After region filter: {recommendations.count()} records")
 
     # 장르 필터 (my_genre는 여러 개의 장르가 있을 수 있음)
     print(f"Applying genre filter for: {user_obj.my_genre}")
@@ -78,37 +95,37 @@ def get_user_recommendations(user):
         recommendations = recommendations.filter(genre__in=user_genres)
     print(f"After genre filter: {recommendations.count()} records")
 
-    # 성별 필터
-    if user_obj.gender in ['남성', '여성']:
-        gender_field = 'male' if user_obj.gender == '남성' else 'female'
-        print(f"Applying gender filter for {user_obj.gender} -> {gender_field}")
-        recommendations = recommendations.annotate(
-            gender_value=Cast(gender_field, FloatField())
-        ).filter(gender_value__gt=0.0)
-        print(f"Recommendations after gender filter: {recommendations.count()} records")
-
-    # 연령대 필터
-    recommendations = recommendations.annotate(
-        teenage_float=Cast('teenage', FloatField()),
-        twenty_float=Cast('twenty', FloatField()),
-        thirty_float=Cast('thirty', FloatField()),
-        forty_float=Cast('forty', FloatField()),
-        fifty_float=Cast('fifty', FloatField())
-    )
-    user_age = 2025 - user_obj.birth.year
-    print(f"User age: {user_age}")
-
-    if user_age < 20:
-        recommendations = recommendations.filter(teenage_float__gt=0)
-    elif user_age < 30:
-        recommendations = recommendations.filter(twenty_float__gt=0)
-    elif user_age < 40:
-        recommendations = recommendations.filter(thirty_float__gt=0)
-    elif user_age < 50:
-        recommendations = recommendations.filter(forty_float__gt=0)
-    else:
-        recommendations = recommendations.filter(fifty_float__gt=0)
-    print(f"After age filter: {recommendations.count()} records")
+    # # 성별 필터
+    # if user_obj.gender in ['남성', '여성']:
+    #     gender_field = 'male' if user_obj.gender == '남성' else 'female'
+    #     print(f"Applying gender filter for {user_obj.gender} -> {gender_field}")
+    #     recommendations = recommendations.annotate(
+    #         gender_value=Cast(gender_field, FloatField())
+    #     ).filter(gender_value__gt=0.0)
+    #     print(f"Recommendations after gender filter: {recommendations.count()} records")
+    #
+    # # 연령대 필터
+    # recommendations = recommendations.annotate(
+    #     teenage_float=Cast('teenage', FloatField()),
+    #     twenty_float=Cast('twenty', FloatField()),
+    #     thirty_float=Cast('thirty', FloatField()),
+    #     forty_float=Cast('forty', FloatField()),
+    #     fifty_float=Cast('fifty', FloatField())
+    # )
+    # user_age = 2025 - user_obj.birth.year
+    # print(f"User age: {user_age}")
+    #
+    # if user_age < 20:
+    #     recommendations = recommendations.filter(teenage_float__gt=0)
+    # elif user_age < 30:
+    #     recommendations = recommendations.filter(twenty_float__gt=0)
+    # elif user_age < 40:
+    #     recommendations = recommendations.filter(thirty_float__gt=0)
+    # elif user_age < 50:
+    #     recommendations = recommendations.filter(forty_float__gt=0)
+    # else:
+    #     recommendations = recommendations.filter(fifty_float__gt=0)
+    # print(f"After age filter: {recommendations.count()} records")
 
     # 결과 반환
     return recommendations.values(
@@ -143,6 +160,7 @@ def home(request):
     # 로그인 상태에 따라 템플릿 선택
     template_name = 'main/home.html' if request.user.is_authenticated else 'main/before_login.html'
     return render(request, template_name, context)
+
 
 
 def filter_plays(request):
