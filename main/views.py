@@ -6,33 +6,36 @@ from COT import settings
 from common.models import Play_detail, Play_rank
 from accounts.models import Users  # Users 모델 추가
 from map.views import get_theaters_data
-from django.db.models import FloatField
-from django.db.models.functions import Cast
+from django.db import connection
+from django.core.cache import cache
 
 
 def get_user_recommendations(user):
     if not user.is_authenticated:
         return []
 
-    try:
-        user_obj = Users.objects.get(username=user.username)
-    except Users.DoesNotExist:
+    # 사용자 객체 조회 최적화
+    user_obj = Users.objects.filter(username=user.username).first()
+    if not user_obj:
         return []
 
+    # 추천 항목 필터링 (DB에서 바로 처리)
     recommendations = Play_detail.objects.filter(
-        play_status__in=["공연중", "공연예정"]  # 공연 상태 필터
+        play_status__in=["공연중", "공연예정", "공연완료"]
     )
+
     print(f"After play status filter: {recommendations.count()} records")
 
-    # Play_detail의 loc 값들을 가져오고 distinct로 필터링
-    loc_values = list(Play_detail.objects.values_list('loc', flat=True).distinct())
-    print(f"Distinct loc values: {loc_values}")
+    # loc 필드 값 가져오기 (캐시 사용 안함)
+    loc_values = list(set(Play_detail.objects.values_list('loc', flat=True)))  # DB에서 새로 값 가져오기
 
-    # 사용자의 주소값 (user_loc) 설정
+    # 회원 정보 수정 시 캐시 삭제
+    cache.delete('distinct_loc_values')
+
     user_loc = user_obj.address
     print(f"User address (user_loc): {user_loc}")
 
-    # 각 지역별로 묶을 loc 값들 (지역 그룹화)
+    # 지역 필터
     region_groups = {
         "서울": ["서울특별시"],
         "경기": ["경기도", "인천광역시"],
@@ -43,46 +46,32 @@ def get_user_recommendations(user):
         "제주": ["제주특별자치도"]
     }
 
-    # 사용자가 입력한 지역에 맞는 그룹 찾기
     loc_filter = None
     for region, locs in region_groups.items():
         if user_loc in locs:
             loc_filter = locs
-            print(f"Matched region '{region}': {loc_filter}")
             break
 
-    # 해당 loc 값들이 Play_detail에서 존재하는지 체크 후 필터링
-    if loc_filter:
+    # 지역과 장르 필터 동시에 적용
+    if loc_filter and user_obj.my_genre:
         valid_loc_filter = [loc for loc in loc_filter if loc in loc_values]
-        print(f"Valid loc filter values: {valid_loc_filter}")
-        if valid_loc_filter:
-            recommendations = recommendations.filter(loc__in=valid_loc_filter)
-            print(f"After region filter: {recommendations.count()} records")
-        else:
-            print(f"No valid locations found for {user_loc}")
-    else:
-        print(f"No matching region found for user address: {user_loc}")
-
-    # 장르 필터 (my_genre는 여러 개의 장르가 있을 수 있음)
-    print(f"Applying genre filter for: {user_obj.my_genre}")
-    if user_obj.my_genre:
-        # 장르를 ','로 분리
         user_genres = [genre.strip() for genre in user_obj.my_genre[0].split(',')]
         print(f"User selected genres: {user_genres}")
 
-        recommendations = recommendations.filter(genre__in=user_genres)
-    print(f"After genre filter: {recommendations.count()} records")
+        if valid_loc_filter:
+            recommendations = recommendations.filter(loc__in=valid_loc_filter, genre__in=user_genres)
 
-    # # 성별 필터
+    print(f"After region and genre filter: {recommendations.count()} records")
+
+    # 성별 필터 (주석 상태로 유지)
     # if user_obj.gender in ['남성', '여성']:
     #     gender_field = 'male' if user_obj.gender == '남성' else 'female'
-    #     print(f"Applying gender filter for {user_obj.gender} -> {gender_field}")
     #     recommendations = recommendations.annotate(
     #         gender_value=Cast(gender_field, FloatField())
     #     ).filter(gender_value__gt=0.0)
     #     print(f"Recommendations after gender filter: {recommendations.count()} records")
-    #
-    # # 연령대 필터
+
+    # 연령 필터 (주석 상태로 유지)
     # recommendations = recommendations.annotate(
     #     teenage_float=Cast('teenage', FloatField()),
     #     twenty_float=Cast('twenty', FloatField()),
@@ -91,8 +80,6 @@ def get_user_recommendations(user):
     #     fifty_float=Cast('fifty', FloatField())
     # )
     # user_age = 2025 - user_obj.birth.year
-    # print(f"User age: {user_age}")
-    #
     # if user_age < 20:
     #     recommendations = recommendations.filter(teenage_float__gt=0)
     # elif user_age < 30:
@@ -105,7 +92,6 @@ def get_user_recommendations(user):
     #     recommendations = recommendations.filter(fifty_float__gt=0)
     # print(f"After age filter: {recommendations.count()} records")
 
-    # 결과 반환
     return recommendations.values(
         'play_id', 'play_name', 'play_poster',
         'play_strdate', 'play_enddate', 'play_status', 'theater_nm'
@@ -125,6 +111,7 @@ def home(request):
     # 사용자 맞춤 추천 데이터
     user_recommendations = get_user_recommendations(request.user)
 
+
     # 극장 데이터
     theater_context = get_theaters_data()
     theaters = theater_context.get('theaters', [])
@@ -141,8 +128,7 @@ def home(request):
 
 
 
-from django.db.models import Q, F, FloatField
-from django.db.models.functions import Cast
+
 
 def filter_plays(request):
     status = request.GET.get('status', '전체')

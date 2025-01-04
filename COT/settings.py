@@ -155,7 +155,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # collectstatic 명령어로 파일이 �
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# settings.py
+# 쿼리 최적화 때문.
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 기본값 (DB 기반 세션)
 SESSION_COOKIE_NAME = 'session_id'
 SESSION_COOKIE_AGE = 86400  # 1일로 연장
@@ -169,6 +169,13 @@ SESSION_COOKIE_SECURE = False  # HTTPS가 아닌 경우 False로 설정
 SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF 방지 (Default: 'Lax')
 
 
+# csrf 에러 방지.
+CSRF_COOKIE_SECURE = False  # HTTPS 환경에서만 동작하도록 설정되어 있다면 HTTPS가 아닌 경우 비활성화
+CSRF_COOKIE_HTTPONLY = False  # HTTPOnly 쿠키를 사용 중인지 확인
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1',
+    'http://localhost',
+]
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
