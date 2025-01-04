@@ -51,7 +51,6 @@ class Play_list(models.Model):
 #         db_table = 'Theater_location'
 
 
-
 # play_detail : 연극 상세 모델 (common 앱에 위치)
 class Play_detail(models.Model):
     play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id', primary_key=True)
