@@ -6,27 +6,6 @@ from COT import settings
 from common.models import Play_detail, Play_rank
 from accounts.models import Users  # Users 모델 추가
 from map.views import get_theaters_data
-
-LOC_MAPPING = {
-    "서울특별시": "서울",
-    "경기도": "경기",
-    "인천광역시": "경기",
-    "부산광역시": "경상",
-    "대구광역시": "경상",
-    "울산광역시": "경상",
-    "경상북도": "경상",
-    "경상남도": "경상",
-    "광주광역시": "전라",
-    "전라남도": "전라",
-    "전라북도": "전라",
-    "대전광역시": "충청",
-    "세종특별자치시": "충청",
-    "충청북도": "충청",
-    "충청남도": "충청",
-    "강원도": "강원",
-    "제주특별자치도": "제주"
-}
-
 from django.db.models import FloatField
 from django.db.models.functions import Cast
 
@@ -51,39 +30,38 @@ def get_user_recommendations(user):
 
     # 사용자의 주소값 (user_loc) 설정
     user_loc = user_obj.address
-    print(f"User address: {user_loc}")
+    print(f"User address (user_loc): {user_loc}")
 
-    # 지역 필터링 처리 (여러 개의 loc 값 필터링)
-    loc_filter = []
+    # 각 지역별로 묶을 loc 값들 (지역 그룹화)
+    region_groups = {
+        "서울": ["서울특별시"],
+        "경기": ["경기도", "인천광역시"],
+        "경상": ["경상북도", "경상남도", "부산광역시", "대구광역시", "울산광역시"],
+        "전라": ["전라남도", "전라북도", "광주광역시"],
+        "충청": ["충청북도", "충청남도", "대전광역시", "세종특별자치시"],
+        "강원": ["강원도"],
+        "제주": ["제주특별자치도"]
+    }
 
-    if user_loc == "서울특별시":
-        loc_filter = ["서울특별시"]
-    elif user_loc == "경기도":
-        loc_filter = ["경기도", "인천광역시"]
-    elif user_loc == "경상":
-        loc_filter = ["경상북도", "경상남도", "부산광역시", "대구광역시", "울산광역시"]
-    elif user_loc == "전라":
-        loc_filter = ["전라남도", "전라북도", "광주광역시"]
-    elif user_loc == "충청":
-        loc_filter = ["충청북도", "충청남도", "대전광역시", "세종특별자치시"]
-    elif user_loc == "강원":
-        loc_filter = ["강원도"]
-    elif user_loc == "제주":
-        loc_filter = ["제주특별자치도"]
+    # 사용자가 입력한 지역에 맞는 그룹 찾기
+    loc_filter = None
+    for region, locs in region_groups.items():
+        if user_loc in locs:
+            loc_filter = locs
+            print(f"Matched region '{region}': {loc_filter}")
+            break
 
-    print(f"Loc filter values: {loc_filter}")
-
-    # 실제 loc_values와 비교 후 필터링
-    valid_loc_filter = [loc for loc in loc_filter if loc in loc_values]
-    print(f"Valid loc filter values: {valid_loc_filter}")
-
-    # 지역 필터링 적용
-    if valid_loc_filter:
-        recommendations = recommendations.filter(loc__in=valid_loc_filter)
-        print(f"After region filter: {recommendations.count()} records")
+    # 해당 loc 값들이 Play_detail에서 존재하는지 체크 후 필터링
+    if loc_filter:
+        valid_loc_filter = [loc for loc in loc_filter if loc in loc_values]
+        print(f"Valid loc filter values: {valid_loc_filter}")
+        if valid_loc_filter:
+            recommendations = recommendations.filter(loc__in=valid_loc_filter)
+            print(f"After region filter: {recommendations.count()} records")
+        else:
+            print(f"No valid locations found for {user_loc}")
     else:
-        print("No matching locations found for the user address")
-
+        print(f"No matching region found for user address: {user_loc}")
 
     # 장르 필터 (my_genre는 여러 개의 장르가 있을 수 있음)
     print(f"Applying genre filter for: {user_obj.my_genre}")
