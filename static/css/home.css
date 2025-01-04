@@ -413,6 +413,27 @@ h3 {
 .btn-deny:hover {
     background: #ccc;
 }
+    #loc-filter {
+        padding: 8px 16px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-family: "Jua", sans-serif;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.1s, color 0.1s, border-color 0.1s ease;
+    }
+
+    #loc-filter:hover {
+        background: #f0f0f0;
+        border-color: #ccc;
+    }
+
+    #loc-filter:focus {
+        outline: none;
+        border-color: #E7A67B;
+        box-shadow: 0 0 5px rgba(231, 166, 123, 1);
+    }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
@@ -444,4 +465,6 @@ h3 {
 
 
 }
+
+
 

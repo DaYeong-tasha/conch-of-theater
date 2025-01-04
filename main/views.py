@@ -49,6 +49,9 @@ logger = logging.getLogger(__name__)
 
 # main/views.py
 
+from django.db.models import Q, F, FloatField
+from django.db.models.functions import Cast
+
 def filter_plays(request):
     status = request.GET.get('status', '전체')
     genre = request.GET.get('genre', '전체')
@@ -56,6 +59,7 @@ def filter_plays(request):
     gender = request.GET.get('gender', '전체')
     age = request.GET.get('age', '전체')
     openrun = request.GET.get('openrun', '전체')
+    loc = request.GET.get('loc', '전체')
     limit = 200  # 기본값 200
     page = int(request.GET.get('page', 1))  # 페이지 번호, 기본값 1
 
@@ -101,6 +105,21 @@ def filter_plays(request):
             elif age_group == '50대+':
                 age_filters |= Q(fifty_float__gt=0)
         play_details = play_details.filter(age_filters)
+
+    if loc != '전체':
+        loc_mapping = {
+            "서울": ["서울특별시"],
+            "경상": ["부산광역시", "대구광역시", "울산광역시", "경상북도", "경상남도"],
+            "전라": ["광주광역시", "전라북도", "전라남도"],
+            "충청": ["대전광역시", "세종특별자치시", "충청북도", "충청남도"],
+            "경기": ["인천광역시", "경기도"],
+            "제주": ["제주특별자치도"]
+        }
+        loc_filters = Q()
+        for region, cities in loc_mapping.items():
+            if loc == region:
+                loc_filters |= Q(loc__in=cities)
+        play_details = play_details.filter(loc_filters)
 
     offset = (page - 1) * limit
     play_details = play_details[offset:offset + limit]  # 페이지에 따른 개수 제한
