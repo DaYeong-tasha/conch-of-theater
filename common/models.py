@@ -56,7 +56,7 @@ class Play_list(models.Model):
 class Play_detail(models.Model):
     play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id', primary_key=True)
     play_name = models.CharField(max_length=300)
-    genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
+    genre = models.CharField(max_length=300, blank=True, null=True, db_index=True) # 우리가 구분해서 추가할 장르
     play_strdate = models.CharField(max_length=300) # 시작일
     play_enddate = models.CharField(max_length=300) # 종료일
     theater_nm = models.CharField(max_length=300)  # 공연장명
@@ -65,7 +65,7 @@ class Play_detail(models.Model):
     play_age = models.CharField(max_length=50, null=True) # 관람 연령
     play_guidance = models.CharField(max_length=300, null=True) # 가격 안내
     play_poster = models.CharField(max_length=300, null=True) # 포스터 이미지 URL
-    loc = models.CharField(max_length=300) # 공연장 위치 중 지역만(ex. 서울특별시)
+    loc = models.CharField(max_length=300, db_index=True) # 공연장 위치 중 지역만(ex. 서울특별시)
     play_status = models.CharField(max_length=50,db_index=True) # 공연 상태
     styurls_1 = models.CharField(max_length=300, blank=True, null=True) # 상세이미지
     styurls_2 = models.CharField(max_length=300, blank=True, null=True)
