@@ -34,7 +34,7 @@ KAKAO_MAP_API_KEY = env('KAKAO_MAP_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #배포할 때 False 여야 함
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'reviews',
     'common',
     'dashboard',
-    'debug_toolbar',
+    #'debug_toolbar',
     #'corsheaders',
 ]
 
@@ -69,7 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'COT.urls'
@@ -164,18 +164,19 @@ SESSION_FILE_PATH = None  # None이면 DB에 저장
 SESSION_SAVE_EVERY_REQUEST = False  # 모든 요청에 대해 세션 갱신 ->과도하면 문제생길 수 있음.
 
 
-SESSION_COOKIE_SECURE = False  # HTTPS가 아닌 경우 False로 설정
 #SESSION_COOKIE_HTTPONLY = True  # JavaScript 접근 차단
 SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF 방지 (Default: 'Lax')
 
 
-# csrf 에러 방지.
-CSRF_COOKIE_SECURE = False  # HTTPS 환경에서만 동작하도록 설정되어 있다면 HTTPS가 아닌 경우 비활성화
+# csrf 에러 방지. 이거 개발할 땐 시큐얼 False임.
+CSRF_COOKIE_SECURE = True  # HTTPS 환경에서만 동작하도록 설정되어 있다면 HTTPS가 아닌 경우 비활성화
 CSRF_COOKIE_HTTPONLY = False  # HTTPOnly 쿠키를 사용 중인지 확인
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1',
     'http://localhost',
+    'http://15.168.21.218:8080/'
 ]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
