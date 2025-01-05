@@ -13,7 +13,7 @@
         height: 100%;
         overflow-y: auto;
         font-family: 'Jua', sans-serif;
-        font-size: 1.1rem;
+        font-size: 1.0rem;
     }
 
     .container_mypagelist {
@@ -104,7 +104,7 @@
     .favorite-plays {
         display: grid; /* 그리드 레이아웃 적용 */
         grid-template-columns: repeat(5, 1fr); /* 5개 컬럼으로 설정 */
-        gap: 10px; /* 그리드 아이템 간격 */
+        gap: 25px; /* 그리드 아이템 간격 */
         padding: 0;
         margin: 0;
         list-style-type: none;
@@ -121,6 +121,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover; /* 이미지 비율을 유지하면서 크기 맞추기 */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
     .overlay {
@@ -135,17 +136,40 @@
         display: none; /* 기본적으로 숨기기 */
         border-radius: 10px;
         z-index: 1;
+        font-size: 10px !important;
     }
 
     .slide:hover .overlay {
-        display: block; /* 슬라이드 이미지에 마우스를 올렸을 때 오버레이 표시 */
-    }
+        display: flex; /* 마우스를 올린 슬라이드의 오버레이만 표시 */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        }
 
     .slide-link {
         display: block;
         width: 100% !important;
         height: 100%;
         position: relative;
+    }
+
+    /* 하트 버튼 스타일 */
+    .heart-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        margin-top: 5px;
+        transition: transform 0.2s;
+    }
+
+    .heart-button:hover {
+        transform: scale(1.2); /* 마우스 오버 시 확대 효과 */
+    }
+
+    .filled {
+        color: #ff5e5e; /* 즐겨찾기된 하트 색상 */
     }
 
 
@@ -184,9 +208,21 @@
                             <a href="{% url 'plays:play_detail' play.pk %}" class="slide-link">
                                 <img src="{{ play.details.play_poster }}" loading="lazy" alt="{{ play.details.play_name }}" class="poster-image">
                                 <div class="overlay">
-                                    <h5>{{ play.details.play_name }}</h5>
+                                    <h5 style="font-size: 14px; sans-serif;">{{ play.details.play_name }}</h5>
                                     <p>{{ play.details.play_strdate }} ~ {{ play.play_enddate }}</p>
                                     <p>{{ play.details.theater_nm }}</p>
+
+                                     <!-- 하트 버튼 -->
+                                    <form action="{% url 'plays:toggle_play_favorite' play_id=play.pk %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="heart-button">
+                                            {% if request.user in play.favorite_users.all %}
+                                                <i class="fa fa-heart filled"></i>
+                                            {% else %}
+                                                <i class="fa fa-heart"></i>
+                                            {% endif %}
+                                        </button>
+                                    </form>
                                 </div>
                             </a>
                         </li>

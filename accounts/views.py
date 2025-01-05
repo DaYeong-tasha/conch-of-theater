@@ -286,12 +286,10 @@ def mypage_favorites(request):
     # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
     favorite_plays = Play_list.objects.filter(favorite_users=request.user)
 
-    # 각 즐겨찾기 연극의 상세 정보를 가져옵니다.
     # get_play_details() 함수에서 필요한 데이터를 가져옵니다.
-    play_details = get_play_details()  # Play_detail에서 데이터를 가져옵니다.
+    play_details = get_play_details()
 
     # favorite_plays에 play_details 값을 추가합니다.
-    # 각 play에 대해 play_details의 값을 추가하는 작업을 합니다.
     for play in favorite_plays:
         # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
         matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
