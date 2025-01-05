@@ -688,6 +688,7 @@
         </div>
 
     </div>
+
     <button id="load-more" class="bnt-plus" >+</button>
 
 </div>
@@ -764,8 +765,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-    // 필터링 기능
-    document.addEventListener('DOMContentLoaded', function() {
+// 추천이랑 버튼.. 하
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('play-details-container');
+    const resetButton = document.getElementById('reset-all-filters');
+    let isInitialLoad = true;  // 최초 로딩 상태 체크
+    let isFilterApplied = false;  // 필터가 적용되지 않았음을 추적하는 변수
     let currentStatus = [];
     let currentGenre = [];
     let currentKeyword = [];
@@ -782,10 +787,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const genderButtons = document.querySelectorAll('.filter-btn-3');
     const ageButtons = document.querySelectorAll('.filter-btn-4');
     const locDropdown = document.getElementById('loc-filter');
-    const resetButton = document.getElementById('reset-all-filters'); // '전체 초기화' 버튼
     const statusResetButton = document.querySelector('.filter-btn[data-status="전체"]'); // '전체' 버튼
     const loadMoreButton = document.querySelector('#load-more'); // 더 불러오기 버튼
 
+    // 추천 연극 불러오기
+    function fetchRecommendedPlays() {
+        fetch('/recommend_plays/', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched recommended plays:', data);
+            if (isInitialLoad) {  // 최초 로딩 시에만 추천 연극을 표시
+                container.innerHTML = ''; // 기존 내용을 비우고 추천 연극 표시
+                if (data.play_details && data.play_details.length > 0) {
+                    data.play_details.forEach(play => {
+                        const playElement = `
+                            <div class="slide">
+                                <a href="/play/${play.play_id}/" class="slide-link">
+                                    <img src="${play.play_poster}" alt="${play.play_name}" class="poster-image">
+                                    <div class="overlay">
+                                        <h5>${play.play_name}</h5>
+                                        <p>${play.play_strdate} ~ ${play.play_enddate}</p>
+                                        <p>${play.theater_nm}</p>
+                                    </div>
+                                    <div class="status-info">${play.play_status}</div>
+                                </a>
+                            </div>`;
+                        container.insertAdjacentHTML('beforeend', playElement);
+                    });
+                } else {
+                    container.innerHTML = '<p class="no-results">현재 추천 가능한 연극이 없어요😢</p>';
+                }
+            }
+            isInitialLoad = false;  // 첫 번째 로딩 후에는 이후 요청에 대해서 필터링 연극을 불러옴
+        })
+        .catch(error => {
+            console.error('Error fetching recommended plays:', error);
+            container.innerHTML = '<p>추천 연극을 불러오는 데 문제가 발생했습니다.</p>';
+        });
+    }
+
+    // 필터링된 연극을 불러오기
     function fetchFilteredPlays() {
         if (isLoading) return; // 이미 로딩 중이면 중단
         isLoading = true;
@@ -807,7 +857,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            const container = document.getElementById('play-details-container');
             if (page === 1) {
                 container.innerHTML = ''; // 첫 페이지 로드 시 기존 내용 초기화
             }
@@ -973,40 +1022,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     genderButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        currentGender = this.textContent;
-        page = 1; // 페이지 번호 초기화
-
-        // 모든 gender 버튼의 active 상태와 색상 초기화
-        genderButtons.forEach(btn => {
-            btn.classList.remove('active');
-            btn.style.backgroundColor = ''; // 색상 초기화
+        button.addEventListener('click', function() {
+            currentGender = this.getAttribute('data-gender');
+            genderButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.backgroundColor = ''; // 색상 초기화
+            });
+            this.classList.add('active');
+            this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
+            page = 1; // 페이지 번호 초기화
+            fetchFilteredPlays();
         });
-
-        // 클릭된 버튼의 active 상태와 색상 설정
-        this.classList.add('active');
-        this.style.backgroundColor = '#6e08c87a'; // '여성', '남성' 버튼 색상 설정
-
-        fetchFilteredPlays();
     });
-});
 
     ageButtons.forEach(button => {
         button.addEventListener('click', function() {
             const age = this.getAttribute('data-age');
-            if (age === '전체') {
-                currentAge = [];
-                ageButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.style.backgroundColor = ''; // 색상 초기화
-                });
-                this.classList.add('active');
-                this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
-            } else {
-                toggleButtonState(this, currentAge, age);
-                document.querySelector('.filter-btn-4[data-age="전체"]').classList.remove('active');
-                document.querySelector('.filter-btn-4[data-age="전체"]').style.backgroundColor = ''; // '전체' 버튼 색상 초기화
-            }
+            toggleButtonState(this, currentAge, age);
             page = 1; // 페이지 번호 초기화
             fetchFilteredPlays();
         });
@@ -1018,86 +1050,17 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchFilteredPlays();
     });
 
-    // '전체 초기화' 버튼 클릭 이벤트 추가
     resetButton.addEventListener('click', resetAllFilters);
 
-    // 더 불러오기 버튼 클릭 이벤트 추가
-    loadMoreButton.addEventListener('click', function() {
+    loadMoreButton.addEventListener('click', () => {
         page++;
         fetchFilteredPlays();
     });
 
-    // 초기 데이터 로드
-    fetchFilteredPlays();
+    // 최초 연극 불러오기
+    fetchRecommendedPlays();
 });
 
-//맨 처음 추천 필터
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('play-details-container');
-    container.innerHTML = '<p>테스트 데이터 추가</p>'; // 테스트 데이터로 확인
-
-    function fetchRecommendedPlays() {
-        fetch('/recommend_plays/', {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Fetched data:', data); // 데이터를 확인
-            const container = document.getElementById('play-details-container');
-            container.innerHTML = ''; // 기존 데이터 초기화
-
-            if (data.play_details && data.play_details.length > 0) {
-                data.play_details.forEach(play => {
-                    const playElement = `
-                        <div class="slide">
-                            <a href="/play/${play.play_id}/" class="slide-link">
-                                <img src="${play.play_poster}" alt="${play.play_name}" class="poster-image">
-                                <div class="overlay">
-                                    <h5>${play.play_name}</h5>
-                                    <p>${play.play_strdate} ~ ${play.play_enddate}</p>
-                                    <p>${play.theater_nm}</p>
-                                </div>
-                                <div class="status-info">${play.play_status}</div>
-                            </a>
-                        </div>`;
-                    container.insertAdjacentHTML('beforeend', playElement);
-                });
-            } else {
-                container.innerHTML = '<p class="no-results">현재 추천 가능한 <br> 연극이 없어요😢</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching recommended plays:', error);
-            container.innerHTML = '<p>추천 연극을 불러오는 데 문제가 발생했습니다.</p>';
-        });
-    }
-
-    fetchRecommendedPlays(); // 함수 실행
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-        // 모든 status-info 요소를 찾아서 스타일을 변경
-        const statusElements = document.querySelectorAll('.status-info');
-
-        statusElements.forEach(function(element) {
-            const status = element.innerText(); // play_status 텍스트 값
-
-            if (status === '공연중') {
-                element.style.backgroundColor = 'rgba(138, 43, 226, 0.7)'; // 보라색
-            } else if (status === '공연예정') {
-                element.style.backgroundColor = 'rgba(255, 165, 0, 0.7)'; // 주황색
-            } else if (status === '공연완료') {
-                element.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'; // 기존 검정색
-            }
-        });
-    });
 
 
 </script>
