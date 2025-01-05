@@ -168,7 +168,6 @@ SESSION_COOKIE_SECURE = False  # HTTPS가 아닌 경우 False로 설정
 #SESSION_COOKIE_HTTPONLY = True  # JavaScript 접근 차단
 SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF 방지 (Default: 'Lax')
 
-
 # csrf 에러 방지.
 CSRF_COOKIE_SECURE = False  # HTTPS 환경에서만 동작하도록 설정되어 있다면 HTTPS가 아닌 경우 비활성화
 CSRF_COOKIE_HTTPONLY = False  # HTTPOnly 쿠키를 사용 중인지 확인
