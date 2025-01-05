@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path, include
-
+from plays import views as plays_views
 from accounts import views
 
 
@@ -18,6 +18,7 @@ urlpatterns = [
     path('profile/reviews/delete/<int:review_id>/', views.delete_review, name='profile_reviews_delete'),
     path('profile/favorites/', views.mypage_favorites, name='profile_favorites'),
     path('profile/favorites/remove_from_favorites/<str:play_id>/', views.remove_from_favorites, name='remove_from_favorites'),
+    path('play/<str:pk>/', plays_views.play_detail, name='play_detail'),
 ]
 
 

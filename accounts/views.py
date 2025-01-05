@@ -14,7 +14,8 @@ from django.template.loader import render_to_string
 from accounts.models import Users
 from django.db import transaction
 from .forms import ReviewForm, LoginForm, UserProfileForm
-from common.models import Review, Play_list 
+from common.models import Review, Play_list, Play_detail
+from django.db.models import Q
 
 
 # 커스텀한 User 모델의 구성요소
@@ -241,7 +242,7 @@ def mypage_update(request):
 @login_required
 def mypage_reviews_list(request):
     # 현재 사용자가 작성한 리뷰만 가져오기
-    user_reviews = Review.objects.filter(username=request.user.username)
+    user_reviews = Review.objects.filter(username=request.user.username).order_by('-review_reg_date')
     return render(request, 'accounts/profile_reviews_list.html', {'user_reviews': user_reviews})
 
 
@@ -283,14 +284,33 @@ def reviews_edit(request, review_id):
 #즐겨찾기♡
 def mypage_favorites(request):
     # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
-    # 현재 로그인한 사용자가 즐겨찾기한 연극 목록 가져오기
     favorite_plays = Play_list.objects.filter(favorite_users=request.user)
+
+    # 각 즐겨찾기 연극의 상세 정보를 가져옵니다.
+    # get_play_details() 함수에서 필요한 데이터를 가져옵니다.
+    play_details = get_play_details()  # Play_detail에서 데이터를 가져옵니다.
+
+    # favorite_plays에 play_details 값을 추가합니다.
+    # 각 play에 대해 play_details의 값을 추가하는 작업을 합니다.
+    for play in favorite_plays:
+        # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
+        matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
+        if matching_detail:
+            play.details = matching_detail  # play 객체에 play_details를 추가 (임시 필드)
 
     context = {
         'favorite_plays': favorite_plays
     }
     return render(request, 'accounts/profile_favorites.html', context)
-    return redirect('login')
+
+def get_play_details():
+    """공연중 또는 공연 예정인 Play_detail 데이터를 가져오기 (최적화)"""
+    return Play_detail.objects.filter(
+        Q(play_status='공연중') | Q(play_status='공연예정')
+    ).values(
+        'play_id', 'play_name', 'play_poster',
+        'play_strdate', 'play_enddate', 'play_status', 'theater_nm'
+    )
 
 
 def remove_from_favorites(request, play_id):

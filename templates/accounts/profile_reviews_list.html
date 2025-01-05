@@ -12,20 +12,20 @@
         padding: 0;
         height: 100%;
         overflow: hidden; /* 메인 콘텐츠에서만 스크롤 가능하도록 제한 */
+        font-size: 1.1rem;
     }
 
     .container_mypagelist {
         display: flex; /* Flexbox로 레이아웃 배치 */
         height: 100%; /* 전체 화면 높이 */
-        font-family: 'Jua', sans-serif;
         flex-direction: row;
         width: 65%;
         margin: 0 auto;
         border: 1px solid #ddd;
         border-radius: 5px;
         background-color: #f9f9f9;
-        font-family: 'Jua', sans-serif;
         font-weight: 200;
+        font-family: 'Jua', sans-serif;
     }
 
     .sidebar {
@@ -76,9 +76,8 @@
         padding: 20px 30px;
         box-sizing: border-box;
         border-bottom: 1px solid #ddd; /* 하단 경계선 */
+        font-family: 'Jua', sans-serif;
     }
-
-
 
 
     .content-main {
@@ -88,47 +87,96 @@
         box-sizing: border-box;
     }
 
-    .review-item {
-        background-color: #FFF;
+    .review-card {
         border: 1px solid #ddd;
-        border-radius: 10px;
+        border-radius: 5px;
         padding: 15px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        font-family: 'Hahmlet', sans-serif;
     }
 
     .review-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
-        font-weight: normal;
-        font-size: 17px;
-        border-bottom: 2px solid #f0f0f0;
-        padding-bottom: 5px;
+        font-weight: 400;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        font-family: 'Hahmlet', sans-serif;
     }
 
+    .review_headerline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
 
-    .review-rating{
+    .review-body {
+        margin-top: 10px;
+    }
+
+    .review-body h5 {
+        margin: 0;
+        font-family: 'Hahmlet', sans-serif;
+        font-weight: 400;
+    }
+
+    .review-body p {
+        margin: 10px 0 0 0;
+    }
+
+    .star-rating {
+        display: flex;
+        gap: 0px;
+    }
+
+    .star-rating .fa-star {
+        margin-right: 5px;
+    }
+
+    .checked {
         color: #FBD568;
     }
 
-    .edit-btn, .delete-btn {
-        background-color: #ff6b6b;
-        color: white;
-        border: none;
-        border-radius: 5px;
+    .review-actions {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .review-actions a, .review-actions button {
+        display: inline-block;
+        text-decoration: none;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 3px;
         padding: 8px 12px;
         cursor: pointer;
-        margin-right: 10px;
+        font-size: 14px;
+        color: #000;
+        font-weight: normal;
     }
 
-    .edit-btn {
-        background-color: #4caf50; /* 수정 버튼 색상 */
+    .review-actions button:hover {
+        background-color: #f0f0f0;
     }
 
-    .delete-btn:hover {
-        background-color: #e74c3c; /* 삭제 버튼 호버 */
+    .review-meta {
+        font-size: 14px; /* 글자 크기 */
+        color: #888; /* 텍스트 색상 */
+        text-align: right; /* 텍스트를 오른쪽으로 정렬 */
+        margin-bottom: 5px; /* 아래쪽 여백 */
+        white-space: nowrap;
     }
+
+
+
 </style>
 
 <div class="container_mypagelist">
@@ -149,32 +197,38 @@
             <h2>{{ user.username }}님의 리뷰</h2>
         </div>
         <div class="content-main">
-             <!-- 메시지 표시 -->
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
             {% if user_reviews %}
                 {% for review in user_reviews %}
-                <div class="review-item">
-                    <div class="review-header">
-                        <span class="username">{{ review.review_title }}</span>
-                        <span class="review-rating">★ {{ review.star }}.0</span>
+                <div class="review-card" onclick="location.href='{% url 'plays:play_detail' pk=review.play_id.pk %}'" style="cursor: pointer;">
+                    <div class="review_headerline">
+                        <div class="star-rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.star.star_total %}
+                                        <span class="fa fa-star checked"></span>
+                                    {% else %}
+                                        <span class="fa fa-star"></span>
+                                    {% endif %}
+                                {% endfor %}
+                        </div>
+                        <div class="review-meta">
+                            <span>작성일: {{ review.review_reg_date }}</span>
+                        </div>
                     </div>
-                    <p>{{ review.review_contents }}</p>
-                    <button class="edit-btn">
-                        <a href="{% url 'profile_reviews_edit' review_id=review.review_id %}" style="color: white; text-decoration: none;">수정하기</a>
-                    </button>
-
-                    <!-- 삭제 버튼 -->
-                    <form action="{% url 'profile_reviews_delete' review_id=review.review_id %}" method="POST" style="display: inline-block;">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-btn" onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</button>
-                    </form>
+                    <div class="review-body">
+                        <div class="h5-review">
+                        <h5>제목: {{ review.review_title }}</h5>
+                        </div>
+                        <div class="p-review">
+                        <p>내용: {{ review.review_contents }}</p>
+                        </div>
+                    </div>
+                    <div class="review-actions">
+                        <a href="{% url 'profile_reviews_edit' review_id=review.review_id %}">수정</a>
+                        <form action="{% url 'profile_reviews_delete' review_id=review.review_id %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                        </form>
+                    </div>
                 </div>
                 {% endfor %}
             {% else %}
