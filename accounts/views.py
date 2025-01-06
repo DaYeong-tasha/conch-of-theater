@@ -221,7 +221,7 @@ def mypage_update(request):
 
             # JSONField 및 CharField 처리
             user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
-            #user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)
+            user.my_genre = form.cleaned_data.get('my_genre') or ""  # 선호 장르 처리 (콤마로 저장)
 
             user.save()  # 수정된 데이터 저장
             form.save_m2m()  # ManyToMany 관계 저장
