@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'reviews',
     'common',
     'dashboard',
-    #'debug_toolbar',
+    'debug_toolbar',
     #'corsheaders',
 ]
 
@@ -69,7 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'COT.urls'
