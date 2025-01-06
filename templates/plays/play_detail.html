@@ -71,7 +71,15 @@
             <p><strong>러닝타임: </strong> {{ play_detail.play_runtime|default:"정보 없음" }}</p>
             <p><strong>관람 연령:</strong> {{ play_detail.play_age|default:"정보 없음" }}</p>
             <p><strong>가격:</strong> {{ play_detail.play_guidance|default:"정보 없음" }}</p>
-            <p><strong>공연 시간:</strong> {{ play_detail.dtguidance|linebreaksbr|default:"정보 없음" }}</p>
+            <p class="info-time">
+                <strong>공연 시간:</strong>
+                {% with play_detail.dtguidance as schedule %}
+                    {% for line in schedule.splitlines %}
+                        <span class="schedule-line">{{ line }}</span>
+                    {% endfor %}
+                {% endwith %}
+            </p>
+
             <p><strong>장르:</strong> {{ play_detail.genre }}</p>
         </div>
         <div class="keyword-buttons">
@@ -143,7 +151,7 @@
         </ul>
     </nav>
 
-    <div class="tab-content">
+    <div class="content-infos">
         <!-- 공연 정보 탭 -->
         {% if play_detail.styurls_1 or play_detail.styurls_2 or play_detail.styurls_3 or play_detail.styurls_4 %}
         <div class="tab-pane fade show active" id="play-info">
@@ -321,17 +329,22 @@
 
     .play-detail strong {
         display: inline-block;
-        width: 100px;
-        padding-right: 10px;
+        width: 80px;
+        margin-left: 15px;
+        padding-right: 0px;
         vertical-align: top;
     }
 
     .play-detail p {
         margin: 0;
-<!--        text-indent: -110px; /* strong의 width와 padding-right 합 */-->
-<!--        padding-left: 110px; /* 들여쓰기 조정 */-->
         line-height: 1.5; /* 줄 간격 조정 */
         word-break: break-word; /* 줄바꿈 처리를 위해 단어 나눔 */
+    }
+
+<!--연극 시간용-->
+    .info-time .schedule-line {
+        display: block; /* 줄마다 블록처럼 처리하여 줄바꿈 발생 */
+        margin-left: 95px; /* 필요에 따라 여백 조정 */
     }
 
     .btn-ym {
@@ -648,6 +661,16 @@
         margin: 0 auto;
         font-family: Arial, sans-serif;
     }
+
+    .content-infos {
+        border: 2px solid #E7A67B;
+        border-top: none !important;
+        padding: 20px;
+        background: #fff;
+        animation: 0.5s ease-in-out;
+        box-sizing: border-box;
+    }
+
 
         /* 클래스 선택자 */
         .tab-pane.fade {
@@ -1160,4 +1183,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {% include 'modal_base.html' %}
 {% endblock %}
-
