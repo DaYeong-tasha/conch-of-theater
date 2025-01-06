@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from plays import views
 # from plays.views import PlayReviewListView
-
+# 커밋용 문장
 app_name = 'plays'
 
 urlpatterns = [
