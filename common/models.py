@@ -51,12 +51,11 @@ class Play_list(models.Model):
 #         db_table = 'Theater_location'
 
 
-
 # play_detail : 연극 상세 모델 (common 앱에 위치)
 class Play_detail(models.Model):
     play_id = models.OneToOneField(Play_list, on_delete=models.CASCADE, db_column='play_id', primary_key=True)
     play_name = models.CharField(max_length=300)
-    genre = models.CharField(max_length=300, blank=True, null=True) # 우리가 구분해서 추가할 장르
+    genre = models.CharField(max_length=300,db_index=True, blank=True, null=True) # 우리가 구분해서 추가할 장르
     play_strdate = models.CharField(max_length=300) # 시작일
     play_enddate = models.CharField(max_length=300) # 종료일
     theater_nm = models.CharField(max_length=300)  # 공연장명
@@ -64,32 +63,32 @@ class Play_detail(models.Model):
     play_runtime = models.CharField(max_length=50, null=True)  # 공연시간
     play_age = models.CharField(max_length=50, null=True) # 관람 연령
     play_guidance = models.CharField(max_length=300, null=True) # 가격 안내
-    play_poster = models.CharField(max_length=300, null=True) # 포스터 이미지 URL
-    loc = models.CharField(max_length=300) # 공연장 위치 중 지역만(ex. 서울특별시)
+    play_poster = models.CharField(max_length=500, null=True) # 포스터 이미지 URL
+    loc = models.CharField(max_length=300,db_index=True) # 공연장 위치 중 지역만(ex. 서울특별시)
     play_status = models.CharField(max_length=50,db_index=True) # 공연 상태
-    styurls_1 = models.CharField(max_length=300, blank=True, null=True) # 상세이미지
-    styurls_2 = models.CharField(max_length=300, blank=True, null=True)
-    styurls_3 = models.CharField(max_length=300, blank=True, null=True)
-    styurls_4 = models.CharField(max_length=300, blank=True, null=True)
+    styurls_1 = models.CharField(max_length=500, blank=True, null=True) # 상세이미지
+    styurls_2 = models.CharField(max_length=500, blank=True, null=True)
+    styurls_3 = models.CharField(max_length=500, blank=True, null=True)
+    styurls_4 = models.CharField(max_length=500, blank=True, null=True)
     # mt10id = models.ForeignKey(Theater_location, on_delete=models.CASCADE, db_column='mt10id') # 공연시설ID
     dtguidance = models.CharField(max_length=500, blank=True, null=True) # 공연 시간 안내(ex.요일별 시간)
     child = models.CharField(max_length=10, blank=True, null=True)
-    relate_1 = models.CharField(max_length=300, blank=True, null=True) # 예매처이름
-    relateurl_1 = models.CharField(max_length=300, blank=True, null=True) # 예매처url
-    relate_2 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_2 = models.CharField(max_length=300, blank=True, null=True)
-    relate_3 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_3 = models.CharField(max_length=300, blank=True, null=True)
-    relate_4 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_4 = models.CharField(max_length=300, blank=True, null=True)
-    relate_5 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_5 = models.CharField(max_length=300, blank=True, null=True)
-    relate_6 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_6 = models.CharField(max_length=300, blank=True, null=True)
-    relate_7 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_7 = models.CharField(max_length=300, blank=True, null=True)
-    relate_8 = models.CharField(max_length=300, blank=True, null=True)
-    relateurl_8 = models.CharField(max_length=300, blank=True, null=True)
+    relate_1 = models.CharField(max_length=500, blank=True, null=True) # 예매처이름
+    relateurl_1 = models.CharField(max_length=500, blank=True, null=True) # 예매처url
+    relate_2 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_2 = models.CharField(max_length=500, blank=True, null=True)
+    relate_3 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_3 = models.CharField(max_length=500, blank=True, null=True)
+    relate_4 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_4 = models.CharField(max_length=500, blank=True, null=True)
+    relate_5 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_5 = models.CharField(max_length=500, blank=True, null=True)
+    relate_6 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_6 = models.CharField(max_length=500, blank=True, null=True)
+    relate_7 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_7 = models.CharField(max_length=500, blank=True, null=True)
+    relate_8 = models.CharField(max_length=500, blank=True, null=True)
+    relateurl_8 = models.CharField(max_length=500, blank=True, null=True)
     male = models.CharField(max_length=10, null=True)
     female = models.CharField(max_length=10, null=True)
     teenage = models.CharField(max_length=10, null=True)

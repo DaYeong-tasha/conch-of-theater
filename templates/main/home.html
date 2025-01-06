@@ -22,7 +22,7 @@
     }
 
     .filter-wrapper {
-        flex: 1 1 60%; /* 카테고리 필터를 60% 차지하도록 설정 */
+        flex: 1 1 55%; /* 카테고리 필터를 60% 차지하도록 설정 */
         box-sizing: border-box;
         display: row;
     }
@@ -156,16 +156,49 @@
 
 
     /* 필터 버튼 스타일 */
+
+    .filter-btn-0 {
+    position: relative;
+        background: #fcf03d82;
+        color: black;
+        border: none;
+        border-radius: 50px;
+        padding: 8px 16px;
+        margin: 2px;
+        font-family: "Jua", serif;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        display: inline-block; /* 버튼 내부 요소를 가로로 정렬 */
+        text-align: center; /* 텍스트 중앙 정렬 */
+        white-space: nowrap; /* 글씨 줄바꿈 방지 */
+        width: auto; /* 버튼 너비를 내용에 맞게 */
+}
+
+    .filter-btn-0:focus {
+        background: #d1c73582;
+        color: black;
+        outline: none; /* 포커스 테두리 제거 */
+    }
+
+    .filter-btn-0:hover,
+    .filter-btn-0.active {
+        background: #d1c73582;
+        color: black;
+        border-color: #d1c73582;
+    }
+
     .filter-btn {
         position: relative;
         background: white;
         color: black;
         border: none;
         border-radius: 50px;
-        padding: 10px 20px;
+        padding: 8px 16px;
         margin: 2px;
         font-family: "Jua", serif;
-        font-size: 13px;
+        font-size: 14px;
         cursor: pointer;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
@@ -181,10 +214,10 @@
             color: black;
             border: none;
             border-radius: 50px;
-            padding: 10px 20px;
+            padding: 8px 16px;
             margin: 2px;
             font-family: "Jua", serif;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -200,10 +233,10 @@
             color: black;
             border: none;
             border-radius: 50px;
-            padding: 10px 20px;
+            padding: 8px 16px;
             margin: 2px;
             font-family: "Jua", serif;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -219,10 +252,10 @@
         color: black;
         border: none;
         border-radius: 50px;
-        padding: 10px 20px;
+        padding: 8px 16px;
         margin: 2px;
         font-family: "Jua", serif;
-        font-size: 13px;
+        font-size: 14px;
         cursor: pointer;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
@@ -238,10 +271,10 @@
         color: black;
         border: none;
         border-radius: 50px;
-        padding: 10px 20px;
+       padding: 8px 16px;
         margin: 2px;
         font-family: "Jua", serif;
-        font-size: 13px;
+        font-size: 14px;
         cursor: pointer;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
@@ -254,6 +287,7 @@
 
 
     /* 버튼을 누른 상태일 때 (클릭 중)#C3ABE2 */
+
     .filter-btn:focus {
         background: white;
         color: black;
@@ -312,6 +346,29 @@
         border-bottom: 2px solid #E7A67B;
         padding-bottom: 5px;
     }
+/*지역 필터*/
+    #loc-filter {
+        padding: 8px 16px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-family: "Jua", sans-serif;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.1s, color 0.1s, border-color 0.1s ease;
+    }
+
+    #loc-filter:hover {
+        background: #f0f0f0;
+        border-color: #ccc;
+    }
+
+    #loc-filter:focus {
+        outline: none;
+        border-color: #E7A67B;
+        box-shadow: 0 0 5px rgba(231, 166, 123, 1);
+    }
+
 
 /* 슬라이더 스타일 */
 .slider {
@@ -369,24 +426,41 @@
     align-items: center;
     padding: 10px;
     font-size: 13px;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.1s ease-in-out; /* 짧은 전환 시간으로 변경 */
 }
 
 .slide:hover .overlay {
-    opacity: 1;
+    opacity: 1; /* 즉각적으로 오버레이 표시 */
 }
 
 /* 상태 정보 스타일 */
+/* 기본 상태 스타일 */
 .status-info {
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 5px 10px;
     font-size: 13px;
     border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7); /* 기존 검정색 */
 }
+
+/*이거 지금 안돼..*/
+<!--/* 공연중 */-->
+<!--#status-info-공연중 {-->
+<!--    background-color: rgba(138, 43, 226, 0.7); /* 보라색 */-->
+<!--}-->
+
+<!--/* 공연예정 */-->
+<!--#status-info-공연예정 {-->
+<!--    background-color: rgba(255, 165, 0, 0.7); /* 주황색 */-->
+<!--}-->
+
+<!--/* 공연완료 */-->
+<!--#status-info-공연완료 {-->
+<!--    background-color: rgba(0, 0, 0, 0.7); /* 기존 검정색 */-->
+<!--}-->
 
 
 /* + 버튼 */
@@ -394,7 +468,7 @@
         display: block;
         margin: 20px auto; /* 중앙에 배치 */
         padding: 10px;
-        font-size: 30px;
+        font-size: 22px;
         background-color: #c3a1f2;
         color: white;
         border: none;
@@ -405,8 +479,9 @@
         width: 40px;
         height: 40px;
         text-align: center;
-        line-height: 14px;
+        line-height: 16px;
         outline: none;
+        font-weight: bold; /* 글자를 볼드체로 설정 */
     }
 
     #load-more:hover {
@@ -415,7 +490,17 @@
 
     }
 
+/*결과 없을 때 */
+    .no-results {
+    text-align: center !important;
+    font-family: "Jua", sans-serif !important;
+    font-size: 20px;!important;
+    color: #333 !important;
+    margin-top: 20px !important;
+    width: 100% !important; /* 섹션의 크기에 맞추기 */
+}
 
+/* 지도 css*/
     .your_location_map {
         text-align: left;
         font-family: "Jua", sans-serif;
@@ -489,14 +574,6 @@
         }
     }
 
-    .no-results {
-    text-align: center !important;
-    font-family: "Jua", sans-serif !important;
-    font-size: 1.5rem !important;
-    color: #333 !important;
-    margin-top: 20px !important;
-    width: 100% !important; /* 섹션의 크기에 맞추기 */
-}
 
 
 
@@ -509,15 +586,17 @@
         <h3 class="filter-title">키워드 선택</h3>
         <div class="filter-content">
             <div class="filter-wrapper">
-                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">공연상태</h6>
+                <button class="filter-btn-0" id="reset-all-filters">전체 초기화</button>
+
+                <h6 class="filter-small-title" style="margin-top: 15px;text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">공연상태</h6>
                 <div class="filter-row">
-    <button class="filter-btn" data-status="전체">전체</button>
-    <button class="filter-btn" data-status="공연예정">공연예정</button>
-    <button class="filter-btn" data-status="공연중">공연중</button>
-    <button class="filter-btn" data-status="공연완료">공연완료</button>
-    <button class="filter-btn" data-status="오픈런">오픈런</button>
-</div>
-                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">장르</h6>
+                    <button class="filter-btn" data-status="전체">전체</button>
+                    <button class="filter-btn" data-status="공연예정">공연예정</button>
+                    <button class="filter-btn" data-status="공연중">공연중</button>
+                    <button class="filter-btn" data-status="공연완료">공연완료</button>
+                    <button class="filter-btn" data-status="오픈런">오픈런</button>
+                </div>
+                <h6 class="filter-small-title" style="margin-top: 15px; text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">장르</h6>
                 <div class="filter-row">
                     <button class="filter-btn-1" data-genre="전체">전체</button>
                 <button class="filter-btn-1" data-genre="공포">공포</button>
@@ -536,7 +615,7 @@
                 <button class="filter-btn-1" data-genre="마임">마임</button>
                 <button class="filter-btn-1" data-genre="기타">기타</button>
             </div>
-                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">키워드</h6>
+                <h6 class="filter-small-title" style="margin-top: 15px; text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">키워드</h6>
                 <div class="filter-row">
                     <button class="filter-btn-2" data-keyword="전체">전체</button>
                 <button class="filter-btn-2" data-keyword="수상작">수상작</button>
@@ -545,7 +624,7 @@
                 <button class="filter-btn-2" data-keyword="감동적인">감동적인</button>
             </div>
 
-                <h6 class="filter-small-title" style="text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif; margin-top:8px;">성별/연령대</h6>
+                <h6 class="filter-small-title" style="margin-top: 15px; text-decoration: underline; text-decoration-color: #cccccc; text-underline-offset: 4px; font-family: 'Jua', serif;">성별/연령대</h6>
                 <div class="filter-row">
                     <button class="filter-btn-3" data-gender="전체">전체</button>
                 <button class="filter-btn-3" data-gender="여성">여성</button>
@@ -571,6 +650,18 @@
 <!-- 장르 추천 섹션 -->
 <div class="section">
     <h3 class="home-slide-title">소라고동의 대답</h3>
+    <!-- 필터링 드롭다운 추가 -->
+<div class="filter-row">
+    <select id="loc-filter" class="filter-dropdown">
+        <option value="전체">전체</option>
+        <option value="서울">서울</option>
+        <option value="경상">경상</option>
+        <option value="전라">전라</option>
+        <option value="충청">충청</option>
+        <option value="경기">경기</option>
+        <option value="제주">제주</option>
+    </select>
+</div>
     <div class="slider">
         <div  id="play-details-container" class="slides">
             {% if play_details %}
@@ -584,12 +675,15 @@
                         <p>{{ play.play_strdate }} ~ {{ play.play_enddate }}</p>
                         <p>{{ play.theater_nm }}</p>
                     </div>
-                    <div class="status-info">{{ play.play_status }}</div>
+                    <div class="status-info">
+                        {{ play.play_status }}
+                    </div>
+
                 </a>
             </div>
             {% endfor %}
             {% else %}
-            <p>현재 추천 정보가 없습니다.</p>
+            <p>현재 추천할 수 있는 연극이 없어요😢.</p>
             {% endif %}
 
         </div>
@@ -664,37 +758,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     const slides = document.querySelector('.slides');
     const slideCount = document.querySelectorAll('.slide').length;
-    const nextBtn = document.querySelector('.next-btn');
-    const prevBtn = document.querySelector('.prev-btn');
+
 
     // 슬라이드 너비와 간격 계산
     const slideWidth = document.querySelector('.slide').offsetWidth + 35; // 슬라이드 너비 + margin
 
-    // '다음' 버튼 클릭 시 슬라이드를 한 번에 한 화면씩 넘기기
-    nextBtn.addEventListener('click', () => {
-        slides.scrollBy({
-            left: slideWidth,  // 한 번에 한 슬라이드만큼 왼쪽으로 스크롤
-            behavior: 'smooth', // 부드러운 스크롤
-        });
-    });
-
-    // '이전' 버튼 클릭 시 슬라이드를 한 번에 한 화면씩 되돌리기
-    prevBtn.addEventListener('click', () => {
-        slides.scrollBy({
-            left: -slideWidth, // 한 번에 한 슬라이드만큼 오른쪽으로 스크롤
-            behavior: 'smooth', // 부드러운 스크롤
-        });
-    });
 });
 
-    // 필터링 기능
-    document.addEventListener('DOMContentLoaded', function() {
+// 추천, 버튼 필터링
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('play-details-container');
+    const resetButton = document.getElementById('reset-all-filters');
+    let isInitialLoad = true;  // 최초 로딩 상태 체크
+    let isFilterApplied = false;  // 필터가 적용되지 않았음을 추적하는 변수
     let currentStatus = [];
     let currentGenre = [];
     let currentKeyword = [];
     let currentGender = '전체';
     let currentAge = [];
     let currentOpenrun = [];
+    let currentLoc = '전체';
     let page = 1; // 페이지 번호
     let isLoading = false; // 로딩 상태
 
@@ -703,19 +786,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const keywordButtons = document.querySelectorAll('.filter-btn-2');
     const genderButtons = document.querySelectorAll('.filter-btn-3');
     const ageButtons = document.querySelectorAll('.filter-btn-4');
-    const resetButton = document.querySelector('.filter-btn[data-status="전체"]'); // '전체' 버튼
+    const locDropdown = document.getElementById('loc-filter');
+    const statusResetButton = document.querySelector('.filter-btn[data-status="전체"]'); // '전체' 버튼
     const loadMoreButton = document.querySelector('#load-more'); // 더 불러오기 버튼
 
-    function fetchFilteredPlays() {
-        if (isLoading) return; // 이미 로딩 중이면 중단
-        isLoading = true;
-
-        const status = currentStatus.length > 0 ? currentStatus.join(',') : '전체';
-        const genre = currentGenre.length > 0 ? currentGenre.join(',') : '전체';
-        const keyword = currentKeyword.length > 0 ? currentKeyword.join(',') : '전체';
-        const openrun = currentOpenrun.length > 0 ? currentOpenrun.join(',') : '전체';
-        console.log(`Fetching plays with status=${status}, genre=${genre}, keyword=${keyword}, openrun=${openrun}, page=${page}`);
-        fetch(`/filter_plays/?status=${status}&genre=${genre}&keyword=${keyword}&gender=${currentGender}&age=${currentAge.join(',')}&openrun=${openrun}&page=${page}`, {
+    // 추천 연극 불러오기
+    function fetchRecommendedPlays() {
+        fetch('/recommend_plays/', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
@@ -727,7 +804,59 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            const container = document.getElementById('play-details-container');
+            console.log('Fetched recommended plays:', data);
+            if (isInitialLoad) {  // 최초 로딩 시에만 추천 연극을 표시
+                container.innerHTML = ''; // 기존 내용을 비우고 추천 연극 표시
+                if (data.play_details && data.play_details.length > 0) {
+                    data.play_details.forEach(play => {
+                        const playElement = `
+                            <div class="slide">
+                                <a href="/play/${play.play_id}/" class="slide-link">
+                                    <img src="${play.play_poster}" alt="${play.play_name}" class="poster-image">
+                                    <div class="overlay">
+                                        <h5>${play.play_name}</h5>
+                                        <p>${play.play_strdate} ~ ${play.play_enddate}</p>
+                                        <p>${play.theater_nm}</p>
+                                    </div>
+                                    <div class="status-info">${play.play_status}</div>
+                                </a>
+                            </div>`;
+                        container.insertAdjacentHTML('beforeend', playElement);
+                    });
+                } else {
+                    container.innerHTML = '<p class="no-results">현재 추천 가능한 연극이 없어요😢</p>';
+                }
+            }
+            isInitialLoad = false;  // 첫 번째 로딩 후에는 이후 요청에 대해서 필터링 연극을 불러옴
+        })
+        .catch(error => {
+            console.error('Error fetching recommended plays:', error);
+            container.innerHTML = '<p>추천 연극을 불러오는 데 문제가 발생했습니다.</p>';
+        });
+    }
+
+    // 필터링된 연극을 불러오기
+    function fetchFilteredPlays() {
+        if (isLoading) return; // 이미 로딩 중이면 중단
+        isLoading = true;
+
+        const status = currentStatus.length > 0 ? currentStatus.join(',') : '전체';
+        const genre = currentGenre.length > 0 ? currentGenre.join(',') : '전체';
+        const keyword = currentKeyword.length > 0 ? currentKeyword.join(',') : '전체';
+        const openrun = currentOpenrun.length > 0 ? currentOpenrun.join(',') : '전체';
+        console.log(`Fetching plays with status=${status}, genre=${genre}, keyword=${keyword}, openrun=${openrun}, loc=${currentLoc}, page=${page}`);
+        fetch(`/filter_plays/?status=${status}&genre=${genre}&keyword=${keyword}&gender=${currentGender}&age=${currentAge.join(',')}&openrun=${openrun}&loc=${currentLoc}&page=${page}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
             if (page === 1) {
                 container.innerHTML = ''; // 첫 페이지 로드 시 기존 내용 초기화
             }
@@ -761,6 +890,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 필터 버튼 상태 토글 함수
     function toggleButtonState(button, array, value) {
         if (array.includes(value)) {
             array.splice(array.indexOf(value), 1);
@@ -773,13 +903,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function resetFilters() {
+    // 모든 필터 초기화 함수
+    function resetAllFilters() {
         currentStatus = [];
         currentGenre = [];
         currentKeyword = [];
         currentGender = '전체';
         currentAge = [];
         currentOpenrun = [];
+        currentLoc = '전체';
         page = 1; // 페이지 번호 초기화
 
         statusButtons.forEach(button => {
@@ -802,21 +934,40 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.remove('active');
             button.style.backgroundColor = ''; // 색상 초기화
         });
+        locDropdown.value = '전체'; // 드롭다운 초기화
 
         resetButton.classList.add('active');
-        resetButton.style.backgroundColor = '#e1d5f2'; // '전체' 버튼 색상 설정
+        resetButton.style.backgroundColor = '#fcf03d82'; // '전체 초기화' 버튼 색상 설정
 
         fetchFilteredPlays();
     }
 
+    // 상태 필터 초기화 함수
+    function resetStatusFilters() {
+        currentStatus = [];
+        currentOpenrun = [];
+        page = 1; // 페이지 번호 초기화
+
+        statusButtons.forEach(button => {
+            button.classList.remove('active');
+            button.style.backgroundColor = ''; // 색상 초기화
+        });
+
+        statusResetButton.classList.add('active');
+        statusResetButton.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
+
+        fetchFilteredPlays();
+    }
+
+    // 필터 버튼 클릭 이벤트 추가
     statusButtons.forEach(button => {
         button.addEventListener('click', function() {
             const status = this.getAttribute('data-status');
             if (status === '전체') {
-                resetFilters();
+                resetStatusFilters();
             } else {
-                resetButton.classList.remove('active');
-                resetButton.style.backgroundColor = ''; // '전체' 버튼 색상 초기화
+                statusResetButton.classList.remove('active');
+                statusResetButton.style.backgroundColor = ''; // '전체' 버튼 색상 초기화
                 if (status === '오픈런') {
                     toggleButtonState(this, currentOpenrun, 'Y');
                 } else {
@@ -838,9 +989,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.style.backgroundColor = ''; // 색상 초기화
                 });
                 this.classList.add('active');
-                this.style.backgroundColor = '#e1d5f2'; // '전체' 버튼 색상 설정
+                this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
             } else {
                 toggleButtonState(this, currentGenre, genre);
+                document.querySelector('.filter-btn-1[data-genre="전체"]').classList.remove('active');
+                document.querySelector('.filter-btn-1[data-genre="전체"]').style.backgroundColor = ''; // '전체' 버튼 색상 초기화
             }
             page = 1; // 페이지 번호 초기화
             fetchFilteredPlays();
@@ -857,9 +1010,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.style.backgroundColor = ''; // 색상 초기화
                 });
                 this.classList.add('active');
-                this.style.backgroundColor = '#e1d5f2'; // '전체' 버튼 색상 설정
+                this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
             } else {
                 toggleButtonState(this, currentKeyword, keyword);
+                document.querySelector('.filter-btn-2[data-keyword="전체"]').classList.remove('active');
+                document.querySelector('.filter-btn-2[data-keyword="전체"]').style.backgroundColor = ''; // '전체' 버튼 색상 초기화
             }
             page = 1; // 페이지 번호 초기화
             fetchFilteredPlays();
@@ -868,7 +1023,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     genderButtons.forEach(button => {
         button.addEventListener('click', function() {
-            currentGender = this.textContent;
+            currentGender = this.getAttribute('data-gender');
+            genderButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.backgroundColor = ''; // 색상 초기화
+            });
+            this.classList.add('active');
+            this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
             page = 1; // 페이지 번호 초기화
             fetchFilteredPlays();
         });
@@ -884,28 +1045,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.style.backgroundColor = ''; // 색상 초기화
                 });
                 this.classList.add('active');
-                this.style.backgroundColor = '#e1d5f2'; // '전체' 버튼 색상 설정
+                this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
             } else {
                 toggleButtonState(this, currentAge, age);
+                document.querySelector('.filter-btn-4[data-age="전체"]').classList.remove('active');
+                document.querySelector('.filter-btn-4[data-age="전체"]').style.backgroundColor = ''; // '전체' 버튼 색상 초기화
             }
             page = 1; // 페이지 번호 초기화
             fetchFilteredPlays();
         });
     });
 
-    // '전체' 버튼이 기본으로 클릭된 상태로 표시
-    resetButton.classList.add('active');
-    resetButton.style.backgroundColor = '#e1d5f2';
+    locDropdown.addEventListener('change', function() {
+        currentLoc = this.value;
+        page = 1; // 페이지 번호 초기화
+        fetchFilteredPlays();
+    });
 
-    // 더 불러오기 버튼 클릭 이벤트 추가
-    loadMoreButton.addEventListener('click', function() {
+    resetButton.addEventListener('click', resetAllFilters);
+
+    loadMoreButton.addEventListener('click', () => {
         page++;
         fetchFilteredPlays();
     });
 
-    // 초기 데이터 로드
-    fetchFilteredPlays();
+    // 최초 연극 불러오기
+    fetchRecommendedPlays();
 });
+
+
+
 </script>
 
 {% endblock %}
