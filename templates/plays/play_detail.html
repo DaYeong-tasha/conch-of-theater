@@ -8,7 +8,13 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <div class="container mt-5">
-
+    <!-- 메시지 모달 -->
+<div id="messageModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <p id="messageModalBody"></p>
+        <button id="message_closeModal" class="close-btn">확인</button>
+    </div>
+</div>
     <div class="row">
         <!-- 왼쪽 섹션 -->
         <div class="col-md-5">
@@ -21,47 +27,29 @@
             <img src="{{ play_detail.play_poster }}" loading="lazy"  alt="포스터 이미지" class="img-fluid">
             <br>
             <div class="d-flex justify-content-between align-items-center mt-3" style="gap: 5px;">
+
+
+
                 <!-- 하트 버튼 -->
-                <div class="heart-heart">
-                    <form action="{% url 'plays:toggle_play_favorite' play_id=play_detail.pk %}" method='POST'>
-                        {% csrf_token %}
-                        <button class="heart-button">
-                          {% if request.user in play.favorite_users.all %}
-                            <i class="fa fa-heart filled"></i>
-                          {% else %}
-                            <i class="fa fa-heart"></i>
-                          {% endif %} {{ play_list.favorite_users.all|length }}
-                        </button>
-                    </form>
-                </div>
+<div class="heart-heart">
+    <button class="heart-button">
+        <i class="fa fa-heart {% if request.user in play.favorite_users.all %}filled{% endif %}"></i> {{ play_list.favorite_users.all|length }}
+    </button>
+</div>
 
                 <!-- 좋아요/싫어요 버튼 -->
-                <div class="like-dislike">
-                    <div class="d-flex" >
-                        <form action="{% url 'plays:toggle_play_like' play_id=play_detail.pk %}" method='POST'>
-                        {% csrf_token %}
+<div class="like-dislike">
+    <div class="d-flex">
+        <button class="btn_tup-like" id="like-button">
+            👍🏻 <span id="like-count">{{ play_list.like_users.all|length }}</span>
+        </button>
 
-                            <button class="btn_tup" id="like-button"
-                                    style="border-radius: 15px; padding: 7px 15px; font-size: 14px; background-color: #D1B2FF; color: #000000; border: 2px solid #9999CC;"
-                                    onclick="toggleLike({{play.id}})">
-                                👍🏻 <span id="like-count">{{ play_list.like_users.all|length }}</span>
-                            </button>
+        <button class="btn ms-2_tdn-dislike" id="dislike-button">
+            👎🏻 <span id="dislike-count">{{ play_list.dislike_users.all|length }}</span>
+        </button>
+    </div>
+</div>
 
-                        </form>
-
-                        <form action="{% url 'plays:toggle_play_dislike' play_id=play_detail.pk %}" method='POST'>
-                        {% csrf_token %}
-
-                            <!-- 싫어요 버튼 -->
-                            <button class="btn ms-2_tdn" id="dislike-button"
-                                    style="border-radius: 15px; padding: 7px 15px; font-size: 14px; background-color: #FFB2B2; color: #000000; border: 2px solid #CC9999;"
-                                    onclick="toggleDislike({{ play.id }})">
-                                👎🏻 <span id="dislike-count">{{ play_list.dislike_users.all|length }}</span>
-                            </button>
-
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -150,7 +138,7 @@
                 <a class="nav-link" href="#location-info" data-toggle="tab">공연장 위치</a>
             </li-->
             <li class="nav-item last-item">
-                <a class="nav-link" href="#review-info" data-toggle="tab" data-url="{% url 'plays:play_review' play_id=play_detail.pk %}">후기</a>
+                <a class="nav-link" href="#review-info" data-toggle="tab" >후기</a>
             </li>
         </ul>
     </nav>
@@ -193,10 +181,70 @@
             </div>
         </div-->
         <!-- 후기 탭 -->
-    <div class="tab-pane fade" id="review-info"></div>
+    <div class="tab-pane fade" id="review-info">
+    <!-- 시작 -->
+    <div style="text-align: right;">
+        <a href="{% url 'plays:write_review' play_id=play_detail.pk %}" class="btn btn-primary mb-2">리뷰 작성</a>
+    </div>
+    <br>
 
+    {% for review in reviews %}
+    <div class="review-card">
+        <div class="review-header">
+            <div class="star-rating">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.star.star_total %}
+                        <span class="fa fa-star checked"></span>
+                    {% else %}
+                        <span class="fa fa-star"></span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="review-meta">
+                <span>작성자: {{ review.username }}</span>
+                <span>작성일: {{ review.review_reg_date }}</span>
+                <span>
+                <div class="like-dislike">
+                    <div class="d-flex-review">
+                        <button class="like-button-review" data-review-id="{{ review.review_id }}" style="border:none;">
+                            <i class="fa fa-thumbs-o-up" style="font-size:12px;"></i>
+                            <span class="like-count">{{ review.like_users.all|length }}</span>
+                        </button>
+
+                        <button class="dislike-button-review" data-review-id="{{ review.review_id }}" style="border:none;">
+                            <i class="fa fa-thumbs-o-down" style="font-size:12px;"></i>
+                            <span class="dislike-count">{{ review.dislike_users.all|length }}</span>
+                        </button>
+                    </div>
+                </div>
+                </span>
+            </div>
+        </div>
+        <div class="review-body">
+            <div class="h5-review">
+                <h5>제목: {{ review.review_title }}</h5>
+            </div>
+            <div class="p-review">
+                <p>내용: {{ review.review_contents }}</p>
+            </div>
+
+            <div class="review-bottom">
+                <a href="{% url 'plays:edit_review' play_id=play_detail.pk review_id=review.review_id %}" role="button" class="a_but">수정</a>
+                <form action="{% url 'plays:delete_review' play_id=play_detail.pk review_id=review.review_id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <a role="button" onclick="this.closest('form').submit();" class="a_but">삭제</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<!-- 끝 -->
 </div>
     </div>
+</div>
 </div>
 
 <!-- 예매 모달 -->
@@ -556,21 +604,7 @@
     border-radius: 5px;
 }
 
-/* 미디어 쿼리 */
-@media (max-width: 768px) {
-    .play-grid {
-        gap: 5px; /* 작은 화면에서는 간격을 줄임 */
-    }
-    .play-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
-@media (min-width: 1024px) {
-    .play-grid {
-        gap: 15px; /* 큰 화면에서는 간격을 넓힘 */
-    }
-}
 
 /* 연극 즐겨찾기 */
     .heart-button {
@@ -661,6 +695,24 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+.btn_tup-like {
+    border-radius: 15px;
+    padding: 7px 15px;
+    font-size: 14px;
+    background-color: #D1B2FF;
+    color: #000000;
+    border: 2px solid #9999CC;
+}
+
+
+.ms-2_tdn-dislike {
+    border-radius: 15px;
+    padding: 7px 15px;
+    font-size: 14px;
+    background-color: #FFB2B2;
+    color: #000000;
+    border: 2px solid #CC9999;
+}
         .btn-primary{
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             color: #000;
@@ -711,15 +763,185 @@
             background-color: #ECE0F8; /* 공연 상세 nav 활성화 밑줄 색상 */
         }
 
+    /* 리뷰 css */
+    .d-flex-review {
+            padding: 0px;
+            margin: 5px;
+            gap: 5px;
+        }
 
+        .like-button-review {
+            background: #D1B2FF;
+            border-radious: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dislike-button-review {
+            background: #FFB2B2;
+            border-radious: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    .review-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        position: relative;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Hahmlet", sans-serif;
+        font-weight: 200;
+    }
+
+    .h5-review {
+        font-family: "Hahmlet", sans-serif;
+        font-weight: 200;
+    }
+
+    .p-review {
+        font-family: "Hahmlet", sans-serif;
+        font-weight: 200;
+    }
+
+    .review-bottom {
+        position: absolute; /* 수정 */
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+    }
+
+
+    .star-rating {
+        display: flex;
+    }
+
+    .star-rating .fa-star {
+        margin-right: 5px;
+    }
+
+    .checked {
+        color: orange;
+    }
+
+    .review-meta {
+        display: flex;
+        gap: 10px;
+    }
+
+    .review-body {
+        margin-top: 10px;
+    }
+
+    .review-body h5 {
+        margin: 0 0 10px 0;
+    }
+
+    .fa-thumbs-up, .fa-thumbs-down {
+        cursor: pointer;
+    }
+
+    .fa-thumbs-up:hover, .fa-thumbs-down:hover {
+        color: #007bff;
+    }
+
+    .review-actions {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .a_but {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    background-color: #fafafa;
+    border: 0.5px solid #cccccc;
+    border-radius: 3px;
+    padding: 10px 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 40px;
+    margin-bottom: 5px;
+    weight: 0;
+    line-height: 1.5;
+    }
+
+    form a {
+        display: inline-block;
+        padding: 10px 15px;
+        line-height: 1.5;
+        border: none;
+    }
+
+    .review-form {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: white;
+    }
+
+    .review-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .review-form .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    .review-form .btn {
+        margin-top: 10px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .step-links a {
+        margin: 0 5px;
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .step-links .current {
+        margin: 0 5px;
+    }
+
+    /* 미디어 쿼리 */
+@media (max-width: 768px) {
+    .play-grid {
+        gap: 5px; /* 작은 화면에서는 간격을 줄임 */
+    }
+    .play-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .play-grid {
+        gap: 15px; /* 큰 화면에서는 간격을 넓힘 */
+    }
+}
 </style>
 
-<!-- 카카오맵 API 스크립트 -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ KAKAO_MAP_API_KEY }}&libraries=services,geocoder"></script>
 <script>
 
 
     document.addEventListener('DOMContentLoaded', function() {
+    // 키워드 버튼 클릭 이벤트
     const buttons = document.querySelectorAll('.keyword-buttons .btn');
     buttons.forEach(button => {
         button.addEventListener('click', function() {
@@ -727,9 +949,6 @@
             this.style.backgroundColor = '#D1B2FF'; // 클릭된 버튼의 배경색 변경
         });
     });
-});
-
-    document.addEventListener('DOMContentLoaded', function() {
 
     // 예매 모달 초기 상태 설정
     document.getElementById('bookingModal').style.display = 'none';
@@ -749,95 +968,106 @@
         }
     });
 
-        // Bootstrap tab 이벤트 리스너 추가
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            if (e.target.getAttribute('href') === '#location-info') {
-                console.log('지도 탭 활성화');
-                setTimeout(function() {
-                    initMap();
-                    window.dispatchEvent(new Event('resize'));
-                }, 200);
-            }
-        });
+    // 메시지 모달 초기 상태 설정
+    document.getElementById('messageModal').style.display = 'none';
 
-        // 페이지 로드 시 지도 초기화 (지도 탭이 active인 경우)
-        if(document.querySelector('#location-info.active')) {
-            console.log('페이지 로드 시 지도 초기화');
-            setTimeout(function() {
-                initMap();
-            }, 500);
+    // 메시지 모달 관련 코드
+    document.getElementById('message_closeModal').addEventListener('click', function() {
+        document.getElementById('messageModal').style.display = 'none';
+    });
+
+    document.getElementById('messageModal').addEventListener('click', function(event) {
+        if (event.target === document.getElementById('messageModal')) {
+            document.getElementById('messageModal').style.display = 'none';
         }
     });
 
-    function initMap() {
-        console.log('initMap 호출됨');
-        var mapContainer = document.getElementById('map');
-        
-        var options = {
-            center: new kakao.maps.LatLng(33.450701, 126.570667),
-            level: 3
-        };
-        
-        var map = new kakao.maps.Map(mapContainer, options);
-        
-        // 줌 컨트롤 추가
-        var zoomControl = new kakao.maps.ZoomControl();
-        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-        
-        var geocoder = new kakao.maps.services.Geocoder();
-        var theater_address = "{{ theater_location.theater_addr }}";
-        
-        geocoder.addressSearch(theater_address, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                map.setCenter(coords);
-                
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: coords
-                });
+    // 연극 좋아요/싫어요 버튼 클릭 이벤트
+    const likeButton = document.getElementById('like-button');
+    const dislikeButton = document.getElementById('dislike-button');
+    const likeCount = document.getElementById('like-count');
+    const dislikeCount = document.getElementById('dislike-count');
 
-                // 커스텀 오버레이 내용
-                var content = `
-                    <div class="map-overlay">
-                        <div class="theater-info">
-                            <h5>{{ play_detail.theater_nm }}</h5>
-                            <p>${theater_address}</p>
-                            <div class="overlay-buttons">
-                                <button onclick="findRoute()" class="btn btn-sm btn-primary">길찾기</button>
-                            </div>
-                        </div>
-                        <button class="close-overlay" onclick="closeOverlay()" title="닫기">×</button>
-                    </div>`;
-
-                // 커스텀 오버레이 생성
-                window.overlay = new kakao.maps.CustomOverlay({
-                    content: content,
-                    map: map,
-                    position: marker.getPosition()
-                });
-                
-                // 마커 클릭 이벤트
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    overlay.setMap(map);
-                });
+    likeButton.addEventListener('click', function() {
+        fetch("{% url 'plays:toggle_play_like' play_id=play_detail.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest'
             }
-        });
-    }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById('messageModalBody').textContent = data.message;
+                document.getElementById('messageModal').style.display = 'flex';
+            }
+            if (data.liked !== undefined) {
+                likeCount.textContent = data.like_count;
+                dislikeCount.textContent = data.dislike_count;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
 
-    // 길찾기 함수
-    function findRoute() {
-        var theater_name = "{{ play_detail.theater_nm }}";
-        var theater_address = "{{ theater_location.theater_addr }}";
-        window.open(`https://map.kakao.com/link/search/${theater_name}`);
-    }
+    dislikeButton.addEventListener('click', function() {
+        fetch("{% url 'plays:toggle_play_dislike' play_id=play_detail.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById('messageModalBody').textContent = data.message;
+                document.getElementById('messageModal').style.display = 'flex';
+            }
+            if (data.disliked !== undefined) {
+                likeCount.textContent = data.like_count;
+                dislikeCount.textContent = data.dislike_count;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
 
-    // 오버레이 닫기 함수
-    function closeOverlay() {
-        window.overlay.setMap(null);
-    }
+// 연극 즐겨찾기
+document.addEventListener('DOMContentLoaded', function() {
+    const favoriteButton = document.querySelector('.heart-button');
+    const favoriteCount = document.querySelector('.heart-button .fa-heart').nextSibling;
 
-    // 리뷰
+    favoriteButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        fetch("{% url 'plays:toggle_play_favorite' play_id=play_detail.pk %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById('messageModalBody').textContent = data.message;
+                document.getElementById('messageModal').style.display = 'block';
+            }
+            if (data.favorite_count !== undefined) {
+                favoriteCount.textContent = ` ${data.favorite_count}`;
+                const heartIcon = favoriteButton.querySelector('.fa-heart');
+                if (data.favorited) {
+                    heartIcon.classList.add('filled');
+                } else {
+                    heartIcon.classList.remove('filled');
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+     // 리뷰
     document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('[data-toggle="tab"]');
     tabs.forEach(tab => {
@@ -862,15 +1092,72 @@
     });
 });
 
+    //리뷰 좋아요 싫어요
+    document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button-review');
+    const dislikeButtons = document.querySelectorAll('.dislike-button-review');
 
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const reviewId = button.getAttribute('data-review-id');
+            console.log('Like button clicked for review ID:', reviewId);
 
-    //  연극 제목 크기
+            fetch("{% url 'plays:toggle_like' review_id=0 %}".replace('0', reviewId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    document.getElementById('messageModalBody').textContent = data.message;
+                    document.getElementById('messageModal').style.display = 'flex';
+                }
+                if (data.liked !== undefined) {
+                    button.querySelector('.like-count').textContent = data.like_count;
+                    button.closest('.like-dislike').querySelector('.dislike-count').textContent = data.dislike_count;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
 
+    dislikeButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const reviewId = button.getAttribute('data-review-id');
+            console.log('Dislike button clicked for review ID:', reviewId);
 
-
-
-
-
+            fetch("{% url 'plays:toggle_dislike' review_id=0 %}".replace('0', reviewId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    document.getElementById('messageModalBody').textContent = data.message;
+                    document.getElementById('messageModal').style.display = 'flex';
+                }
+                if (data.disliked !== undefined) {
+                    button.querySelector('.dislike-count').textContent = data.dislike_count;
+                    button.closest('.like-dislike').querySelector('.like-count').textContent = data.like_count;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
 </script>
 {% include 'modal_base.html' %}
 {% endblock %}
+

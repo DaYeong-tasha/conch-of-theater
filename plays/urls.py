@@ -1,16 +1,16 @@
 from django.contrib import admin
 from django.urls import path
 from plays import views
-from plays.views import PlayReviewListView
+# from plays.views import PlayReviewListView
 
 app_name = 'plays'
 
 urlpatterns = [
     path('play/<str:pk>/', views.play_detail, name='play_detail'),
-    path('play_review/<str:play_id>/', PlayReviewListView.as_view(), name='play_review'),
+    # path('play_review/<str:play_id>/', PlayReviewListView.as_view(), name='play_review'),
 
     # ListView아닌 버전
-    # path('play_review/<str:play_id>/', views.play_review, name='play_review'),
+    path('play_review/<str:play_id>/', views.play_review, name='play_review'),
 
     # 리뷰 좋아요, 싫어요
     path('reviews/like/<int:review_id>/', views.toggle_like, name='toggle_like'),
