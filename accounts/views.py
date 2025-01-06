@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -216,24 +217,32 @@ def mypage_update(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
-            # ManyToManyField 및 JSONField 데이터 처리
             user = form.save(commit=False)
 
-            # JSONField 및 CharField 처리
-            user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
-            user.my_genre = form.cleaned_data.get('my_genre') or ""  # 선호 장르 처리 (콤마로 저장)
+            # my_genre 데이터를 JSON 형식으로 처리 후 쉼표로 구분된 문자열로 변환
+            raw_genre = request.POST.get('my_genre', '[]')  # 기본값은 빈 리스트 JSON 문자열
+            try:
+                user_genres = json.loads(raw_genre)  # JSON 문자열을 파싱
+                if not isinstance(user_genres, list):  # 리스트가 아닐 경우 오류 처리
+                    raise ValueError('올바른 형식이 아닙니다.')
+                user.my_genre = ','.join(user_genres)  # 쉼표로 구분된 문자열로 저장
+            except (json.JSONDecodeError, ValueError):
+                messages.error(request, '선호 장르 데이터가 올바르지 않습니다.')
+                return render(request, 'accounts/profile_edit.html', {'form': form})
 
-            user.save()  # 수정된 데이터 저장
-            form.save_m2m()  # ManyToMany 관계 저장
+            user.save()
+            form.save_m2m()
             messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
             return redirect('profile')
         else:
-            print("폼 에러:", form.errors)  # 에러 출력
+            print("폼 에러:", form.errors)
             messages.error(request, '정보 수정에 실패했습니다.')
     else:
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'accounts/profile_edit.html', {'form': form})
+
+
 
 
 
