@@ -168,8 +168,8 @@ SESSION_SAVE_EVERY_REQUEST = False  # 모든 요청에 대해 세션 갱신 ->�
 SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF 방지 (Default: 'Lax')
 
 
-# csrf 에러 방지. 이거 개발할 땐 시큐얼 False임.
-CSRF_COOKIE_SECURE = True  # HTTPS 환경에서만 동작하도록 설정되어 있다면 HTTPS가 아닌 경우 비활성화
+# csrf 에러 방지.
+CSRF_COOKIE_SECURE = False  # 배포 시 true임 HTTPS 환경에서만 동작하도록 설정되어 있다면 HTTPS가 아닌 경우 비활성화
 CSRF_COOKIE_HTTPONLY = False  # HTTPOnly 쿠키를 사용 중인지 확인
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1',

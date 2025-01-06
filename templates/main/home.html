@@ -468,7 +468,7 @@
         display: block;
         margin: 20px auto; /* 중앙에 배치 */
         padding: 10px;
-        font-size: 30px;
+        font-size: 22px;
         background-color: #c3a1f2;
         color: white;
         border: none;
@@ -481,6 +481,7 @@
         text-align: center;
         line-height: 16px;
         outline: none;
+        font-weight: bold; /* 글자를 볼드체로 설정 */
     }
 
     #load-more:hover {
@@ -688,7 +689,6 @@
         </div>
 
     </div>
-
     <button id="load-more" class="bnt-plus" >+</button>
 
 </div>
@@ -765,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-// 추천이랑 버튼.. 하
+// 추천, 버튼 필터링
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('play-details-container');
     const resetButton = document.getElementById('reset-all-filters');
@@ -1038,7 +1038,19 @@ document.addEventListener('DOMContentLoaded', () => {
     ageButtons.forEach(button => {
         button.addEventListener('click', function() {
             const age = this.getAttribute('data-age');
-            toggleButtonState(this, currentAge, age);
+            if (age === '전체') {
+                currentAge = [];
+                ageButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.backgroundColor = ''; // 색상 초기화
+                });
+                this.classList.add('active');
+                this.style.backgroundColor = '#6e08c87a'; // '전체' 버튼 색상 설정
+            } else {
+                toggleButtonState(this, currentAge, age);
+                document.querySelector('.filter-btn-4[data-age="전체"]').classList.remove('active');
+                document.querySelector('.filter-btn-4[data-age="전체"]').style.backgroundColor = ''; // '전체' 버튼 색상 초기화
+            }
             page = 1; // 페이지 번호 초기화
             fetchFilteredPlays();
         });
