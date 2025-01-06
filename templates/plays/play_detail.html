@@ -151,7 +151,7 @@
         </ul>
     </nav>
 
-    <div class="tab-content">
+    <div class="content-infos">
         <!-- 공연 정보 탭 -->
         {% if play_detail.styurls_1 or play_detail.styurls_2 or play_detail.styurls_3 or play_detail.styurls_4 %}
         <div class="tab-pane fade show active" id="play-info">
@@ -341,6 +341,7 @@
         word-break: break-word; /* 줄바꿈 처리를 위해 단어 나눔 */
     }
 
+<!--연극 시간용-->
     .info-time .schedule-line {
         display: block; /* 줄마다 블록처럼 처리하여 줄바꿈 발생 */
         margin-left: 95px; /* 필요에 따라 여백 조정 */
@@ -660,6 +661,16 @@
         margin: 0 auto;
         font-family: Arial, sans-serif;
     }
+
+    .content-infos {
+        border: 2px solid #E7A67B;
+        border-top: none !important;
+        padding: 20px;
+        background: #fff;
+        animation: 0.5s ease-in-out;
+        box-sizing: border-box;
+    }
+
 
         /* 클래스 선택자 */
         .tab-pane.fade {
