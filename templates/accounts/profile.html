@@ -2,15 +2,27 @@
 {% block title %}{{ user.fullname }}님의 마이페이지{% endblock %}
 {% block content %}
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-size: 1.0rem;
+        }
+
         /* Flexbox를 활용한 페이지 전체 레이아웃 */
         .container_profile {
             display: flex;
             flex-direction: row;
-            width: 80%;
+            width: 65%;
             margin: 0 auto;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
+            font-family: 'Jua', sans-serif;
+            font-weight: 200;
+            font-size: 1.1rem;
         }
 
         /* 사이드바 스타일 */
@@ -19,6 +31,7 @@
             background-color: #f9f9f9;
             padding: 20px;
             border-right: 1px solid #ddd;
+            font-size: 1.1rem;
         }
 
         .sidebar ul {
@@ -34,7 +47,7 @@
         .sidebar ul li a {
             text-decoration: none;
             color: #333;
-            font-weight: bold;
+            font-weight: 300;
             display: block;
             padding: 10px;
             border-radius: 5px;
@@ -54,7 +67,7 @@
         .profile-details h1 {
             font-size: 1.5em;
             margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid #E7A67B;
             padding-bottom: 10px;
         }
 
@@ -74,6 +87,7 @@
         .profile-details table th {
             width: 30%;
             background-color: #f2f2f2;
+            font-weight: normal;
         }
 
         .profile-details table td {
@@ -85,16 +99,17 @@
         <!-- 사이드바 -->
         <div class="sidebar">
             <ul>
+                <li><a href="{% url 'profile' %}">회원정보조회</a></li>
                 <li><a href="{% url 'mypage_update' %}">회원정보수정</a></li>
                 <li><a href="{% url 'profile_favorites' %}">즐겨찾기(💗)</a></li>
                 <li><a href="{% url 'profile_reviews_list' %}">my리뷰(🎬)</a></li>
-                <li><a href="#">my돋보기(🔍)</a></li>
+                <!--li><a href="#">my돋보기(🔍)</a></li-->
             </ul>
         </div>
 
         <!-- 메인 콘텐츠 -->
         <div class="profile-details">
-            <h1>{{ user.fullname }}님의 기본 정보</h1>
+            <h1>{{ user.username }}님의 기본 정보</h1>
             <table>
                 <tr>
                     <th>이름</th>
@@ -119,6 +134,10 @@
                 <tr>
                     <th>선호 배우</th>
                     <td>{{ user_profile.my_actor }}</td>
+                </tr>
+                <tr>
+                    <th>선호 장르</th>
+                    <td>{{ user_profile.my_genre }}</td>
                 </tr>
             </table>
         </div>

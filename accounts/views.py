@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib import messages
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -14,7 +15,8 @@ from django.template.loader import render_to_string
 from accounts.models import Users
 from django.db import transaction
 from .forms import ReviewForm, LoginForm, UserProfileForm
-from common.models import Review, Play_list 
+from common.models import Review, Play_list, Play_detail
+from django.db.models import Q
 
 
 # 커스텀한 User 모델의 구성요소
@@ -132,7 +134,7 @@ def user_logout(request):
 
 
 #회원정보 조회
-'''
+
 @login_required
 def mypage_home(request):
     try:
@@ -142,7 +144,7 @@ def mypage_home(request):
         return redirect('profile')  # 프로필이 없으면 마이페이지로 리디렉션
 
     return render(request, 'accounts/profile.html', {'user_profile': user_profile})
-'''
+
 
 class FavoritePlay:
     pass
@@ -172,6 +174,7 @@ def load_tab_content(request, tab_name):
 
 
 #회원정보 수정
+'''
 def mypage_update(request):
     try:
         user_profile = Users.objects.get(username=request.user.username)
@@ -187,7 +190,7 @@ def mypage_update(request):
 
             # JSONField 및 CharField 처리
             user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
-            '''user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)'''
+            #user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)
 
             user.save()  # 수정된 데이터 저장
             form.save_m2m()  # ManyToMany 관계 저장
@@ -200,9 +203,9 @@ def mypage_update(request):
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'accounts/profile_edit.html', {'form': form})
-
-
 '''
+
+
 @login_required
 def mypage_update(request):
     try:
@@ -214,25 +217,33 @@ def mypage_update(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
-            # ManyToManyField 및 JSONField 데이터 처리
             user = form.save(commit=False)
 
-            # JSONField 및 CharField 처리
-            user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
-            user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)
+            # my_genre 데이터를 JSON 형식으로 처리 후 쉼표로 구분된 문자열로 변환
+            raw_genre = request.POST.get('my_genre', '[]')  # 기본값은 빈 리스트 JSON 문자열
+            try:
+                user_genres = json.loads(raw_genre)  # JSON 문자열을 파싱
+                if not isinstance(user_genres, list):  # 리스트가 아닐 경우 오류 처리
+                    raise ValueError('올바른 형식이 아닙니다.')
+                user.my_genre = ','.join(user_genres)  # 쉼표로 구분된 문자열로 저장
+            except (json.JSONDecodeError, ValueError):
+                messages.error(request, '선호 장르 데이터가 올바르지 않습니다.')
+                return render(request, 'accounts/profile_edit.html', {'form': form})
 
-            user.save()  # 수정된 데이터 저장
-            form.save_m2m()  # ManyToMany 관계 저장
+            user.save()
+            form.save_m2m()
             messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
             return redirect('profile')
         else:
-            print("폼 에러:", form.errors)  # 에러 출력
+            print("폼 에러:", form.errors)
             messages.error(request, '정보 수정에 실패했습니다.')
     else:
         form = UserProfileForm(instance=user_profile)
 
     return render(request, 'accounts/profile_edit.html', {'form': form})
-'''
+
+
+
 
 
 
@@ -240,7 +251,7 @@ def mypage_update(request):
 @login_required
 def mypage_reviews_list(request):
     # 현재 사용자가 작성한 리뷰만 가져오기
-    user_reviews = Review.objects.filter(username=request.user.username)
+    user_reviews = Review.objects.filter(username=request.user.username).order_by('-review_reg_date')
     return render(request, 'accounts/profile_reviews_list.html', {'user_reviews': user_reviews})
 
 
@@ -282,14 +293,31 @@ def reviews_edit(request, review_id):
 #즐겨찾기♡
 def mypage_favorites(request):
     # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
-    # 현재 로그인한 사용자가 즐겨찾기한 연극 목록 가져오기
     favorite_plays = Play_list.objects.filter(favorite_users=request.user)
+
+    # get_play_details() 함수에서 필요한 데이터를 가져옵니다.
+    play_details = get_play_details()
+
+    # favorite_plays에 play_details 값을 추가합니다.
+    for play in favorite_plays:
+        # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
+        matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
+        if matching_detail:
+            play.details = matching_detail  # play 객체에 play_details를 추가 (임시 필드)
 
     context = {
         'favorite_plays': favorite_plays
     }
     return render(request, 'accounts/profile_favorites.html', context)
-    return redirect('login')
+
+def get_play_details():
+    """공연중 또는 공연 예정인 Play_detail 데이터를 가져오기 (최적화)"""
+    return Play_detail.objects.filter(
+        Q(play_status='공연중') | Q(play_status='공연예정')
+    ).values(
+        'play_id', 'play_name', 'play_poster',
+        'play_strdate', 'play_enddate', 'play_status', 'theater_nm'
+    )
 
 
 def remove_from_favorites(request, play_id):

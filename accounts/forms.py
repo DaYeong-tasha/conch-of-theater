@@ -44,21 +44,19 @@ ADDRESS_CHOICES = [
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = Users
-        fields = ['fullname', 'email', 'birth', 'gender', 'my_actor', 'my_play_keyword', 'my_play_mood', 'address',
-                  'my_genre']
+        fields = ['fullname', 'email', 'birth', 'gender', 'address', 'my_genre', 'my_actor']
         widgets = {
             'birth': forms.DateInput(attrs={'type': 'date'}),
             'gender': forms.Select(choices=GENDER_CHOICES),  # 성별 선택 드롭다운
             'address': forms.Select(choices=ADDRESS_CHOICES),  # 지역 선택 드롭다운
             'my_actor': forms.TextInput(attrs={'placeholder': '배우를 입력하세요'}),
+            'my_genre': forms.TextInput(attrs={'type': 'hidden', 'id': 'my_genre_input'}),
         }
 
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['my_actor'].required = False
-        self.fields['my_play_keyword'].required = False
-        self.fields['my_play_mood'].required = False
         self.fields['my_genre'].required = False
 
 
