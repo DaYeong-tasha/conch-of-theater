@@ -209,36 +209,79 @@
             {% endif %}
 
             <ul class="favorite-plays">
-                {% for play in favorite_plays %}
-                        <li class="slide">
-                            <a href="{% url 'plays:play_detail' play.pk %}" class="slide-link">
-                                <img src="{{ play.details.play_poster }}" loading="lazy" alt="{{ play.details.play_name }}" class="poster-image">
-                                <div class="overlay">
-                                    <h5 style="font-size: 14px; sans-serif;">{{ play.details.play_name }}</h5>
-                                    <p>{{ play.details.play_strdate }} ~ {{ play.play_enddate }}</p>
-                                    <!--p>{{ play.details.theater_nm }}</p-->
+    {% for play in favorite_plays %}
+        <li class="slide">
+            <a href="{% url 'plays:play_detail' play.pk %}" class="slide-link">
+                <img src="{{ play.play_detail.play_poster }}" alt="{{ play.play_detail.play_name }}" class="poster-image">
+                <div class="overlay">
+                    <h5 style="font-size: 14px; sans-serif;">{{ play.play_detail.play_name }}</h5>
+                    <p>{{ play.play_detail.play_strdate }} ~ {{ play.play_detail.play_enddate }}</p>
+                    <!--p>{{ play.play_detail.theater_nm }}</p-->
 
-                                     <!-- 하트 버튼 -->
-                                    <form action="{% url 'plays:toggle_play_favorite' play_id=play.pk %}" method="POST">
-                                        {% csrf_token %}
-                                        <button type="submit" class="heart-button">
-                                            {% if request.user in play.favorite_users.all %}
-                                                <i class="fa fa-heart filled"></i>
-                                            {% else %}
-                                                <i class="fa fa-heart"></i>
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                </div>
-                            </a>
-                        </li>
-                {% empty %}
-                    <p>즐겨찾기한 연극이 없습니다.</p>
-                {% endfor %}
-            </ul>
+                    <!-- 하트 버튼 -->
+                    <form class="favoriteForm" data-url="{% url 'plays:toggle_play_favorite' play_id=play.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="heart-button">
+                            {% if request.user in play.favorite_users.all %}
+                                <i class="fa fa-heart filled"></i>
+                            {% else %}
+                                <i class="fa fa-heart"></i>
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </li>
+    {% empty %}
+        <p>즐겨찾기한 연극이 없습니다.</p>
+    {% endfor %}
+</ul>
         </div>
     </div>
 </div>
+<script>
+document.querySelectorAll('.favoriteForm').forEach(form => {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const url = form.getAttribute('data-url');
+        const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
 
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 모달에 메시지 표시
+            document.getElementById('messageModalBody').innerText = data.message;
+            document.getElementById('messageModal').style.display = 'block';
+
+            // 하트 버튼 상태 업데이트
+            const heartButton = form.querySelector('.heart-button i');
+            if (data.favorited) {
+                heartButton.classList.add('filled');
+            } else {
+                heartButton.classList.remove('filled');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+document.getElementById('message_closeModal').addEventListener('click', function() {
+    document.getElementById('messageModal').style.display = 'none';
+    location.reload(); // 페이지 새로고침
+});
+
+document.getElementById('messageModal').addEventListener('click', function(event) {
+    if (event.target === document.getElementById('messageModal')) {
+        document.getElementById('messageModal').style.display = 'none';
+        location.reload(); // 페이지 새로고침
+    }
+});
+</script>
 {% include 'modal_base.html' %}
 {% endblock %}
