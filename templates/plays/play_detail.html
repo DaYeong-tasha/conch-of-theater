@@ -40,7 +40,7 @@
                 <!-- 좋아요/싫어요 버튼 -->
 <div class="like-dislike">
     <div class="d-flex">
-        <button class="btn_tup-like" id="like-button">
+        <button class="btn-tup-like" id="like-button">
             👍🏻 <span id="like-count">{{ play_list.like_users.all|length }}</span>
         </button>
 
@@ -355,8 +355,18 @@
         font-weight: 200;
         background-color: #ECE0F8;
         color: #000000;
-        border: 2px solid #cccccc;
+        border: 1px solid #cccccc;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+    .btn-ym:focus {
+        outline: none;
+    }
+
+    .btn-ym:hover {
+    background-color: #b4a7c1;
+    color: white;
+    }
+
 
     .img-fluid {
         width: 231px;
@@ -718,32 +728,59 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-.btn_tup-like {
+/* 연극 좋아요 */
+.btn-tup-like {
     border-radius: 15px;
     padding: 7px 15px;
     font-size: 14px;
     background-color: #D1B2FF;
     color: #000000;
-    border: 2px solid #9999CC;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.btn-tup-like:focus {
+        outline: none;
+    }
+.btn-tup-like:hover {
+    background-color: #a38bc7;
 }
 
+/* 연극 싫어요 */
 .ms-2_tdn-dislike {
     border-radius: 15px;
     padding: 7px 15px;
     font-size: 14px;
     background-color: #FFB2B2;
     color: #000000;
-    border: 2px solid #CC9999;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+.ms-2_tdn-dislike:focus {
+        outline: none;
+}
+.ms-2_tdn-dislike:hover {
+    background-color: #cf8e8e;
+}
         .btn-primary{
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             color: #000;
             background-color: #ECE0F8;
             border-color: #cccccc;
-            font-family: "Hahmlet", sans-serif;
+            font-family: "Jua", sans-serif;
             font-weight: 200;
         }
+.btn-primary:focus {
+        outline: none;
+    }
+
+    .btn-primary:hover {
+    background-color: #b4a7c1;
+    outline: none;
+    border-color: #b4a7c1;
+    }
+    .btn-primary:active {
+    background-color: #b4a7c1;
+    }
 
 
 <!--연극 정보 내브 안-->
@@ -789,21 +826,36 @@
     /* 리뷰 css */
     .d-flex-review {
             padding: 0px;
-            margin: 5px;
+            margin: 0px 5px 5px 5px;
             gap: 5px;
         }
-
+    /* 리뷰 좋아요 */
         .like-button-review {
             background: #D1B2FF;
-            border-radious: 8px;
+            border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .like-button-review:focus {
+        outline: none;
+    }
+        .like-button-review:hover {
+            background-color: #a38bc7;
+        }
+
+    /* 리뷰 싫어요 */
         .dislike-button-review {
             background: #FFB2B2;
-            border-radious: 8px;
+            border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+    .dislike-button-review:focus {
+        outline: none;
+    }
+    .dislike-button-review:hover {
+        background-color: #cf8e8e;
+    }
 
     .review-card {
         border: 1px solid #ddd;
@@ -895,7 +947,7 @@
     height: 40px;
     margin-bottom: 5px;
     weight: 0;
-    line-height: 1.5;
+    line-height: 1;
     }
 
     form a {
