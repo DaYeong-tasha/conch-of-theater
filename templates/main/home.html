@@ -491,14 +491,14 @@
         background-color: #c3a1f2;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 20px;
         cursor: pointer;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: background-color 0.2s ease, transform 0.2s ease;
         width: 40px;
         height: 40px;
         text-align: center;
-        line-height: 16px;
+        line-height: 15px;
         outline: none;
         font-weight: bold; /* 글자를 볼드체로 설정 */
     }
@@ -510,16 +510,33 @@
     }
 
 /*결과 없을 때 */
-    .no-results {
-    text-align: center !important;
-    font-family: "Jua", sans-serif !important;
-    font-size: 20px;!important;
-    color: #333 !important;
-    margin-top: 20px !important;
-    width: 100% !important; /* 섹션의 크기에 맞추기 */
+    .no-results-play {
+    text-align: center;
+    font-family: "Jua", sans-serif;
+    font-size: 23px;
+    color: #333;
+    margin: 40px 260px;
+    width: 100%; /* 섹션의 크기에 맞추기 */
 }
 
 /* 지도 css*/
+    .close-btn-map{
+            background-color: rgba(48, 78, 112, 0.93); /* 95% 투명도 */
+            color: white;
+            padding: 6px 15px;
+            border: none;
+            cursor: pointer;
+            position: relative; /* 버튼 클릭이 잘 되도록 설정 */
+            z-index: 10000; /* 버튼이 제일 높게 */
+            font-family: 'Jua', sans-serif;
+            border-radius: 10px;
+            margin: 5px 0px 5px 10px;
+        }
+
+    .close-btn-map:active {
+        outline: none;
+    }
+
     .your_location_map {
         text-align: left;
         font-family: "Jua", sans-serif;
@@ -844,7 +861,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         container.insertAdjacentHTML('beforeend', playElement);
                     });
                 } else {
-                    container.innerHTML = '<p class="no-results">현재 추천 가능한 연극이 없어요😢</p>';
+                    container.innerHTML = '<p class="no-results-play">현재 추천 가능한 연극이 없어요😢</p>';
                 }
             }
             isInitialLoad = false;  // 첫 번째 로딩 후에는 이후 요청에 대해서 필터링 연극을 불러옴
@@ -882,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (data.play_details.length === 0) {
                 if (page === 1) {
-                    container.innerHTML = '<p class="no-results">소라고동의 답변이 없어요😢</p>';
+                    container.innerHTML = '<p class="no-results-play">소라고동의 답변이 없어요😢</p>';
                 }
             } else {
                 data.play_details.forEach(play => {

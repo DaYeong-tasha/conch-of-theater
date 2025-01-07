@@ -1,5 +1,11 @@
 {% load static %}
-{% block title %} {% endblock %}
+<head>
+    <title>{% block title %}로그인 전_극장의 소라고동{% endblock %}</title>
+</head>
+
+<!--파비콘-->
+<link rel="icon" href="{% static 'images/logo02.png' %}" type="image/png" sizes="128x128">
+<body>
 {% block content %}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap');
@@ -47,6 +53,17 @@
         transition: color 0.3s ease;
         font-size: 30px;
     }
+    .close-btn {
+        background-color: #304E70;
+        color: white;
+        padding: 8px 50px !important;
+        border: none;
+        cursor: pointer;
+        position: relative; /* 버튼 클릭이 잘 되도록 설정 */
+        z-index: 10000; /* 버튼이 제일 높게 */
+        font-family: 'Jua', sans-serif;
+        font-size: 17px;
+    }
 
     /* 버튼 스타일 */
     .btn-outline-dark.custom-padding {
@@ -67,6 +84,7 @@
         color: white;
         border-color: black; /* 테두리 색상 변경 */
     }
+
 
     /* 반응형 디자인 */
     @media (max-width: 768px) {
@@ -132,3 +150,4 @@
 
 
 {% endblock %}
+</body>
