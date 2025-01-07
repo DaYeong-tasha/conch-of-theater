@@ -44,7 +44,7 @@
             👍🏻 <span id="like-count">{{ play_list.like_users.all|length }}</span>
         </button>
 
-        <button class="btn ms-2_tdn-dislike" id="dislike-button">
+        <button class="ms-2_tdn-dislike" id="dislike-button">
             👎🏻 <span id="dislike-count">{{ play_list.dislike_users.all|length }}</span>
         </button>
     </div>
@@ -257,10 +257,10 @@
 
 <!-- 예매 모달 -->
 <div class="modal" id="bookingModal">
-    <div class="modal-content">
+    <div class="modal-content-booking">
         <div class="modal-header">
-            <h5 class="modal-title" id="bookingModalLabel">예매 링크</h5>
-            <button type="button" class="close-btn" id="booking_closeModal">닫기</button>
+            <h4 class="modal-title" id="bookingModalLabel" >예매 링크</h4>
+            <button type="button" class="close-btn-booking" id="booking_closeModal">X</button>
         </div>
         <div class="modal-body">
             {% if play_detail.relate_1 %}
@@ -288,7 +288,7 @@
             <a href="{{ play_detail.relateurl_8 }}" class="btn btn-secondary btn-block mb-2" target="_blank">{{ play_detail.relate_8 }}</a>
             {% endif %}
             <br>
-            <p style="color: red; font-size: small;">※[안내]※<br> 타임티켓이 예매처에 포함된 경우 할인이 적용될 수 있으니,<br> 먼저 타임티켓을 확인해 보세요.</p>
+            <p style="color: #de2121; font-size: small;">※안내<br>타임티켓이 예매처에 포함된 경우 할인이 적용될 수 있으니,<br>먼저 타임티켓을 확인해 보세요.</p>
         </div>
     </div>
 </div>
@@ -727,7 +727,6 @@
     border: 2px solid #9999CC;
 }
 
-
 .ms-2_tdn-dislike {
     border-radius: 15px;
     padding: 7px 15px;
@@ -736,6 +735,7 @@
     color: #000000;
     border: 2px solid #CC9999;
 }
+
         .btn-primary{
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             color: #000;
@@ -943,6 +943,36 @@
         margin: 0 5px;
     }
 
+/* 예매 모달 */
+.modal-content-booking {
+            background-color: white;
+            margin: 15% auto;
+            padding: 18px 30px;
+            width: 25%;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 9999; /* 모달 내용이 항상 위에 오도록 설정 */
+            font-family: 'Jua', sans-serif;
+        }
+.close-btn-booking{
+            background-color: rgba(48, 78, 112, 0.93); /* 95% 투명도 */
+            color: white;
+            padding: 6px 15px;
+            border: none;
+            cursor: pointer;
+            position: relative; /* 버튼 클릭이 잘 되도록 설정 */
+            z-index: 10000; /* 버튼이 제일 높게 */
+            font-family: 'Jua', sans-serif;
+            border-radius: 10px;
+            margin: 5px 0px 5px 10px;
+            font-size: 16px;
+        }
+
+    .close-btn-booking:active {
+        outline: none;
+    }
+
+
     /* 미디어 쿼리 */
 @media (max-width: 768px) {
     .play-grid {
@@ -1074,7 +1104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.message) {
                 document.getElementById('messageModalBody').textContent = data.message;
-                document.getElementById('messageModal').style.display = 'block';
+                document.getElementById('messageModal').style.display = 'flex';
             }
             if (data.favorite_count !== undefined) {
                 favoriteCount.textContent = ` ${data.favorite_count}`;
