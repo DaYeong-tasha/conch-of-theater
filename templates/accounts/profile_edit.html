@@ -5,6 +5,8 @@
 {% block content %}
     <title>회원정보 수정</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
         .body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -26,6 +28,7 @@
             text-align: center;
             font-size: 2em;
             color: #333;
+            font-family: 'Jua', sans-serif;
         }
 
         .form-group {
@@ -33,8 +36,9 @@
         }
 
         label {
-            font-weight: bold;
+            font-weight: 300;
             color: #333;
+            font-family: 'Jua', sans-serif !important;
         }
 
         input, select, textarea {
@@ -80,12 +84,74 @@
             text-decoration: underline;
         }
 
-    </style>
-    <script>
-        // 취소 버튼 클릭 시 마이페이지로 이동하는 함수
-        function cancelEdit() {
-            window.location.href = "{% url 'home' %}";
+        /* 장르 */
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px; /* 버튼 그룹과의 간격 조정 */
         }
+
+        .btn-group-vertical {
+            display: block;
+            border-radius: 10px;
+        }
+
+        .btn-outline-primary {
+            color: black !important;
+            border-color: #E1D5F2 !important;
+        }
+
+        /* 선택한 버튼 (보라색 배경) */
+        .btn-outline-primary[aria-pressed="true"] {
+            background-color: #E1D5F2 !important;
+            color: black !important;
+            border-color: gray !important;
+            font-weight: bold;
+        }
+
+        /* 선택 취소된 버튼 (흰색 배경) */
+        .btn-outline-primary[aria-pressed="false"] {
+            background-color: white !important;
+            color: black !important;
+            border-color: #E1D5F2 !important;
+        }
+
+        /* hover 상태 */
+        .btn-outline-primary:hover {
+            background-color: #E1D5F2 !important; /* hover 시 보라색 배경 */
+            color: black !important;
+        }
+
+        .btn-outline-primary:focus {
+            outline: none !important; /* 기본 테두리 제거 */
+            box-shadow: none !important; /* 그림자 효과 제거 */
+            -webkit-box-shadow: none !important; /* 크롬 브라우저 대응 */
+            -moz-box-shadow: none !important; /* 파이어폭스 대응 */
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const genreButtons = document.querySelectorAll("#my_genre .btn");
+            const genreInput = document.getElementById("my_genre_input");
+
+            genreButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    // Toggle aria-pressed value between true and false
+                    const isPressed = this.getAttribute("aria-pressed") === "true";
+                    this.setAttribute("aria-pressed", !isPressed);
+
+                    // Gather selected genres
+                    const selectedGenres = Array.from(genreButtons)
+                        .filter(btn => btn.getAttribute("aria-pressed") === "true")
+                        .map(btn => btn.dataset.genre);
+
+                    // Update hidden input field with the selected genres
+                    genreInput.value = JSON.stringify(selectedGenres);
+                });
+            });
+        });
     </script>
 
     <div class="container_mypage">
@@ -130,47 +196,30 @@
                 <label for="my_genre" class="form-label">선호하는 연극 장르</label>
                 <div id="my_genre" class="btn-group-vertical" role="group">
                     <div class="btn-group" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="공포" aria-pressed="false" autocomplete="off">공포</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="추리/스릴러" aria-pressed="false" autocomplete="off">추리/스릴러</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="한국 시대극" aria-pressed="false" autocomplete="off">한국 시대극</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="마임" aria-pressed="false" autocomplete="off">마임</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="공포" aria-pressed="false" autocomplete="off">공포</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="추리/스릴러" aria-pressed="false" autocomplete="off">추리/스릴러</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="한국 시대극" aria-pressed="false" autocomplete="off">한국 시대극</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="마임" aria-pressed="false" autocomplete="off">마임</button>
                     </div>
                     <div class="btn-group" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="코미디" aria-pressed="false" autocomplete="off">코미디</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="로맨스" aria-pressed="false" autocomplete="off">로맨스</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="휴먼 드라마" aria-pressed="false" autocomplete="off">휴먼 드라마</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="아동/청소년극" aria-pressed="false" autocomplete="off">아동/청소년극</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="코미디" aria-pressed="false" autocomplete="off">코미디</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="로맨스" aria-pressed="false" autocomplete="off">로맨스</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="휴먼 드라마" aria-pressed="false" autocomplete="off">휴먼 드라마</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="아동/청소년극" aria-pressed="false" autocomplete="off">아동/청소년극</button>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="셰익스피어/고전극" aria-pressed="false" autocomplete="off">셰익스피어/고전극</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-genre="한국 전통예술" aria-pressed="false" autocomplete="off">한국 전통예술</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="셰익스피어/고전극" aria-pressed="false" autocomplete="off">셰익스피어/고전극</button>
+                        <button type="button" class="btn btn-outline-primary" data-genre="한국 전통예술" aria-pressed="false" autocomplete="off">한국 전통예술</button>
                     </div>
                 </div>
                 <input type="hidden" name="my_genre" id="my_genre_input" value="{{ form.my_genre.value|default:'[]' }}">
-
             </div>
 
-
-
-
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary" style="background-color: #dcb9ff; color: black; border:2px solid #dcb9ff;" >수정 완료</button>
-                <!--a href="javascript:void(0);" onclick="cancelEdit()" class="btn btn-secondary">취소</a-->
-                <a href="{% url 'profile' %}" class="btn btn-secondary" style="background-color: #FBD568; color: black; border:2px solid #FBD568;" >취소</a>
+                <button type="submit" class="btn btn-primary" style="background-color: #dcb9ff; color: black; font-family: 'Jua', sans-serif; border:2px solid #dcb9ff;" >수정 완료</button>
+                <a href="{% url 'profile' %}" class="btn btn-secondary" style="background-color: #FBD568; color: black; font-family: 'Jua', sans-serif; border:2px solid #FBD568;" >취소</a>
             </div>
         </form>
     </div>
 {% include 'modal_base.html' %}
-    <script>
-        document.querySelectorAll('#my_genre button').forEach(button => {
-            button.addEventListener('click', function () {
-                this.classList.toggle('active');
-                const selectedGenres = Array.from(document.querySelectorAll('#my_genre button.active'))
-                    .map(btn => btn.textContent.trim()); // 선택된 버튼 텍스트 리스트 생성
-                document.querySelector('#my_genre_input').value = JSON.stringify(selectedGenres);
-            });
-        });
-
-
-    </script>
 {% endblock %}
