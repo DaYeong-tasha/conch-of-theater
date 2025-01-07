@@ -34,7 +34,7 @@ KAKAO_MAP_API_KEY = env('KAKAO_MAP_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #배포할 때 False 여야 함
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
