@@ -211,7 +211,7 @@ class TheaterMap {
             <div class="mini-info-window">
                 <div class="info-header">
                     <h4>${theater.fcltynm}</h4>
-                    <button class="close-btn" onclick="closeTheaterInfoWindow()">✕</button>
+                    <button class="close-btn-map" onclick="closeTheaterInfoWindow()">X</button>
                 </div>
                 <div class="info-body">
                     <p>${theater.adres}</p>
