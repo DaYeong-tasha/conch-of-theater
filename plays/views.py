@@ -28,6 +28,8 @@ def play_detail(request, pk):
     if not play_detail:
         # Play_detail과 관련된 Play_list를 한 번에 가져오기 위해 select_related 사용
         play_detail = get_object_or_404(Play_detail.objects.select_related('play_id'), pk=pk)
+        print(f"Play ID from play_detail: {play_detail.play_id}")
+        print(f"Play Detail Data: {play_detail}")
 
         # 캐시 저장
         cache.set(cache_key, play_detail, timeout=60 * 15)  # 15분 동안 캐시
