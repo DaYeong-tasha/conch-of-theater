@@ -291,26 +291,49 @@ def reviews_edit(request, review_id):
 
 
 #즐겨찾기♡
+
+@login_required
 def mypage_favorites(request):
     # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
-    favorite_plays = Play_list.objects.filter(favorite_users=request.user)
-
-    # get_play_details() 함수에서 필요한 데이터를 가져옵니다.
-    play_details = get_play_details()
+    favorite_plays = Play_list.objects.filter(favorite_users=request.user).select_related('play_detail')
 
     # favorite_plays에 play_details 값을 추가합니다.
     for play in favorite_plays:
-        print(f"Play ID: {play.play_id}, Details: {getattr(play, 'details', None)}")
+        print(f"Play ID: {play.play_id}, Details: {getattr(play, 'play_detail', None)}")
         print(f"Play ID from favorite_plays: {play.play_id}")
-        # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
-        matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
-        if matching_detail:
-            play.details = matching_detail  # play 객체에 play_details를 추가 (임시 필드)
+
+        # 디버깅을 위한 출력
+        if play.play_detail:
+            print(f"Matching detail found for Play ID: {play.play_id}")
+        else:
+            print(f"No matching detail found for Play ID: {play.play_id}")
 
     context = {
         'favorite_plays': favorite_plays
     }
     return render(request, 'accounts/profile_favorites.html', context)
+
+
+# def mypage_favorites(request):
+#     # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
+#     favorite_plays = Play_list.objects.filter(favorite_users=request.user)
+#
+#     # get_play_details() 함수에서 필요한 데이터를 가져옵니다.
+#     play_details = get_play_details()
+#
+#     # favorite_plays에 play_details 값을 추가합니다.
+#     for play in favorite_plays:
+#         print(f"Play ID: {play.play_id}, Details: {getattr(play, 'details', None)}")
+#         print(f"Play ID from favorite_plays: {play.play_id}")
+#         # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
+#         matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
+#         if matching_detail:
+#             play.details = matching_detail  # play 객체에 play_details를 추가 (임시 필드)
+#
+#     context = {
+#         'favorite_plays': favorite_plays
+#     }
+#     return render(request, 'accounts/profile_favorites.html', context)
 
 def get_play_details():
     """공연중 또는 공연 예정인 Play_detail 데이터를 가져오기 (최적화)"""
@@ -322,12 +345,24 @@ def get_play_details():
     )
 
 
+# def remove_from_favorites(request, play_id):
+#     if request.user.is_authenticated:
+#         play = get_object_or_404(Play_list, pk=play_id)
+#         # 즐겨찾기에서 제거하는 로직 추가
+#         play.favorite_users.remove(request.user)
+#         return redirect('accounts:profile_favorites')  # 즐겨찾기 페이지로 리디렉션
+#     return redirect('login')
+
 def remove_from_favorites(request, play_id):
-    if request.user.is_authenticated:
-        play = get_object_or_404(Play_list, pk=play_id)
-        # 즐겨찾기에서 제거하는 로직 추가
+    play = get_object_or_404(Play_list, pk=play_id)
+    if play.favorite_users.filter(pk=request.user.pk).exists():
         play.favorite_users.remove(request.user)
-        return redirect('accounts:profile_favorites')  # 즐겨찾기 페이지로 리디렉션
-    return redirect('login')
+        message = '즐겨찾기 취소 완료!😢'
+        favorited = False
+    else:
+        message = '이미 즐겨찾기에서 제거되었습니다.'
+        favorited = False
+
+    return JsonResponse({'message': message, 'favorited': favorited, 'favorite_count': play.favorite_users.count()})
 
 
