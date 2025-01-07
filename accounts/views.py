@@ -71,9 +71,9 @@ def register(request):
 
                 # 선호도 데이터 저장
                 user.my_genre = request.POST.getlist('my_genre[]')
-                user.my_play_mood = request.POST.getlist('my_play_mood[]')
-                user.my_play_keyword = request.POST.getlist('my_play_keyword[]')
-                user.my_actor = request.POST.get('my_actor') or "없음"
+                #user.my_play_mood = request.POST.getlist('my_play_mood[]')
+                #user.my_play_keyword = request.POST.getlist('my_play_keyword[]')
+                #user.my_actor = request.POST.get('my_actor') or "없음"
 
                 user.save()
 
@@ -225,7 +225,7 @@ def mypage_update(request):
                 user_genres = json.loads(raw_genre)  # JSON 문자열을 파싱
                 if not isinstance(user_genres, list):  # 리스트가 아닐 경우 오류 처리
                     raise ValueError('올바른 형식이 아닙니다.')
-                user.my_genre = ','.join(user_genres)  # 쉼표로 구분된 문자열로 저장
+                user.my_genre = user_genres  # 쉼표로 구분된 문자열로 저장
             except (json.JSONDecodeError, ValueError):
                 messages.error(request, '선호 장르 데이터가 올바르지 않습니다.')
                 return render(request, 'accounts/profile_edit.html', {'form': form})
@@ -300,6 +300,8 @@ def mypage_favorites(request):
 
     # favorite_plays에 play_details 값을 추가합니다.
     for play in favorite_plays:
+        print(f"Play ID: {play.play_id}, Details: {getattr(play, 'details', None)}")
+        print(f"Play ID from favorite_plays: {play.play_id}")
         # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
         matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
         if matching_detail:

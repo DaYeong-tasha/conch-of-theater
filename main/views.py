@@ -25,7 +25,7 @@ def get_user_recommendations(user):
 
     # 사용자 지역과 장르 필터링
     user_loc = user_obj.address
-    user_genres = [genre.strip() for genre in user_obj.my_genre[0].split(',')] if user_obj.my_genre else []
+    user_genres = user_obj.my_genre if user_obj.my_genre else []
     print(f"User location: {user_loc}")
     print(f"User selected genres: {user_genres}")
 

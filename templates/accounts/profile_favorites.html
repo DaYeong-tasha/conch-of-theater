@@ -176,6 +176,12 @@
 </style>
 
 <div class="container_mypagelist">
+    <div id="messageModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <p id="messageModalBody"></p>
+        <button id="message_closeModal" class="close-btn">확인</button>
+    </div>
+    </div>
     <!-- 사이드바 -->
     <div class="sidebar">
         <ul>
@@ -210,7 +216,7 @@
                                 <div class="overlay">
                                     <h5 style="font-size: 14px; sans-serif;">{{ play.details.play_name }}</h5>
                                     <p>{{ play.details.play_strdate }} ~ {{ play.play_enddate }}</p>
-                                    <p>{{ play.details.theater_nm }}</p>
+                                    <!--p>{{ play.details.theater_nm }}</p-->
 
                                      <!-- 하트 버튼 -->
                                     <form action="{% url 'plays:toggle_play_favorite' play_id=play.pk %}" method="POST">
@@ -234,4 +240,5 @@
     </div>
 </div>
 
+{% include 'modal_base.html' %}
 {% endblock %}
