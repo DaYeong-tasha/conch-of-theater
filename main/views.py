@@ -50,7 +50,7 @@ def get_user_recommendations(user):
 
     # 추천 항목 필터링 (성능을 위해 필터 조건을 먼저 적용)
     recommendations = Play_detail.objects.filter(
-        play_status__in=["공연중", "공연완료"]
+        play_status__in=["공연예정", "공연중", "공연완료"]
     ).only(
         'play_id', 'play_name', 'play_poster', 'play_strdate', 'play_enddate', 'play_status', 'theater_nm', 'loc', 'genre'
     ).order_by('-play_enddate')
