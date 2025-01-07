@@ -16,23 +16,9 @@ from django.views.generic import ListView
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 
-
-# 페이지 캐시 적용
-@cache_page(60 * 15)  # 15분 동안 캐시
 def play_detail(request, pk):
-    # 캐시된 결과가 있으면 반환
-    cache_key = f'play_detail_{pk}'
-    play_detail = cache.get(cache_key)
-    reviews = Review.objects.filter(play_id=pk)
-
-    if not play_detail:
-        # Play_detail과 관련된 Play_list를 한 번에 가져오기 위해 select_related 사용
-        play_detail = get_object_or_404(Play_detail.objects.select_related('play_id'), pk=pk)
-        print(f"Play ID from play_detail: {play_detail.play_id}")
-        print(f"Play Detail Data: {play_detail}")
-
-        # 캐시 저장
-        cache.set(cache_key, play_detail, timeout=60 * 15)  # 15분 동안 캐시
+    play_detail = get_object_or_404(Play_detail.objects.select_related('play_id'), pk=pk)
+    reviews = Review.objects.filter(play_id=pk).order_by('-review_reg_date')
 
     # 키워드 필드 정리
     if play_detail.keyword:
@@ -66,6 +52,53 @@ def play_detail(request, pk):
         'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY,
         'reviews': reviews,
     })
+# 페이지 캐시 적용
+# @cache_page(60 * 15)  # 15분 동안 캐시
+# def play_detail(request, pk):
+#     # 캐시된 결과가 있으면 반환
+#     cache_key = f'play_detail_{pk}'
+#     play_detail = cache.get(cache_key)
+#     reviews = Review.objects.filter(play_id=pk)
+#
+#     if not play_detail:
+#         # Play_detail과 관련된 Play_list를 한 번에 가져오기 위해 select_related 사용
+#         play_detail = get_object_or_404(Play_detail.objects.select_related('play_id'), pk=pk)
+#
+#         # 캐시 저장
+#         cache.set(cache_key, play_detail, timeout=60 * 15)  # 15분 동안 캐시
+#
+#     # 키워드 필드 정리
+#     if play_detail.keyword:
+#         cleaned_keywords = play_detail.keyword.strip("[]").replace("'", "").split(",")
+#         play_detail.keyword = [keyword.strip() for keyword in cleaned_keywords]
+#
+#     # 공연 시간 필드 정리
+#     if play_detail.dtguidance:
+#         # 괄호가 닫히는 패턴 뒤에 줄바꿈 추가
+#         formatted_schedule = play_detail.dtguidance
+#         formatted_schedule = formatted_schedule.replace("),", "),\n")  # '),' 뒤에 줄바꿈
+#         formatted_schedule = formatted_schedule.replace(") ", ")\n")  # ') ' 뒤에 줄바꿈
+#
+#         # 줄 단위로 공백 제거
+#         formatted_schedule = "\n".join([line.strip() for line in formatted_schedule.split("\n")])
+#         play_detail.dtguidance = formatted_schedule
+#
+#     # 장르에 해당하는 유사한 연극 가져오기 (Play_detail 모델에서)
+#     genre = play_detail.genre
+#     similar_plays = Play_detail.objects.select_related('play_id').filter(genre=genre).exclude(
+#         pk=play_detail.pk).exclude(play_status='공연완료')[:5]  # 최대 5개 연극만 가져오기, '공연완료' 제외
+#
+#     # 최근에 끝난 연극 5개 가져오기 (play_enddate 기준)
+#     recent_plays = Play_detail.objects.exclude(play_status='공연완료').order_by('-play_enddate')[:5]  # '공연완료' 제외
+#
+#     return render(request, 'plays/play_detail.html', {
+#         'play_detail': play_detail,
+#         'play_list': play_detail.play_id,  # play_list는 이미 play_detail의 play_id로 가져옴
+#         'similar_plays': similar_plays,
+#         'recent_plays': recent_plays,
+#         'KAKAO_MAP_API_KEY': settings.KAKAO_MAP_API_KEY,
+#         'reviews': reviews,
+#     })
 
 
 # 연극 상세 - 리뷰 ListView아닌 버전
