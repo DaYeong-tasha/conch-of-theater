@@ -20,7 +20,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
-            font-size: 1.1rem;
+            font-size: 23px;
         }
 
         /* 사이드바 스타일 */
@@ -30,7 +30,7 @@
             padding: 20px;
             border-right: 1px solid #ddd;
             font-family: 'Jua', sans-serif;
-            font-size: 1.0rem;
+            font-size: 23px;
 
         }
 
@@ -57,6 +57,63 @@
         .sidebar ul li a:hover {
             background-color: #ddd;
         }
+
+        /* 사이드바 미디어쿼리 */
+        @media (max-width: 1678px) {
+            .sidebar {
+                font-size: 1.0rem; /* 더 작은 화면에서는 글씨 크기를 더 작게 */
+            }
+
+            .profile-details table th,
+            .profile-details table td {
+                font-size: 16px;
+            }
+
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                font-size: 0.9rem; /* 글씨 크기 약간 작게 */
+            }
+
+            .profile-details table th,
+            .profile-details table td {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 888px) {
+            .sidebar {
+                font-size: 0.8rem; /* 글씨 크기 약간 작게 */
+            }
+
+            .profile-details table th,
+            .profile-details table td {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                font-size: 0.7rem; /* 더 작은 화면에서는 글씨 크기를 더 작게 */
+            }
+
+            .profile-details table th,
+            .profile-details table td {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                font-size: 0.6rem; /* 더 작은 화면에서는 글씨 크기를 더욱 작게 */
+            }
+
+            .profile-details table th,
+            .profile-details table td {
+                font-size: 10px;
+            }
+        }
+
 
         /* 메인 콘텐츠 스타일 */
         .profile-details {
@@ -95,7 +152,6 @@
 
         .profile-details table td {
             background-color: #fff;
-            font-size: 15px;
             text-align: left;
         }
     </style>

@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center" style="height: 70vh;">
-    <div class="card shadow-sm" style="width: 1000%; max-width: 600px; height: 370px;">
-        <div id="login-page" class="card-body"  style="height: 370px; width: 600px; font-family: 'Jua', sans-serif;">
+    <div class="card shadow-sm" style=" height: 370px; width: 600px">
+        <div id="login-page" class="card-body"  style="height: 370px;  font-family: 'Jua', sans-serif;">
             <h3 class="card-title text-center">로그인</h3>
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
@@ -56,8 +56,9 @@
         all: unset;
         font-family: 'Jua', sans-serif !important;
         height: 370px;
-        width: 700px;
+        width: 700px !important;
     }
+
 
 
 </style>
