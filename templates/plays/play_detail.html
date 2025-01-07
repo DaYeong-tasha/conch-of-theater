@@ -75,7 +75,7 @@
                 <strong>공연 시간:</strong>
                 {% with play_detail.dtguidance as schedule %}
                     {% for line in schedule.splitlines %}
-                        <span class="schedule-line">{{ line }}</span>
+                        <span class="schedule-line" style="display: block; margin-left: 95px;">{{ line }}</span>
                     {% endfor %}
                 {% endwith %}
             </p>
@@ -341,12 +341,6 @@
         word-break: break-word; /* 줄바꿈 처리를 위해 단어 나눔 */
     }
 
-<!--연극 시간용-->
-    .info-time .schedule-line {
-        display: block; /* 줄마다 블록처럼 처리하여 줄바꿈 발생 */
-        margin-left: 95px; /* 필요에 따라 여백 조정 */
-    }
-
     .btn-ym {
         border-radius: 8px;
         padding: 10px 110px;
@@ -502,6 +496,7 @@
     font-family: "Hahmlet", sans-serif;
     font-weight: 200;
 }
+
 
 .keyword-container {
     display: flex;
