@@ -381,7 +381,7 @@ def edit_review(request, play_id, review_id):
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
             form.save()
-            messages.success(request, "수정되었습니다.")
+            messages.success(request, "리뷰가 수정되었습니다.")
             return redirect('plays:play_detail', pk=play_id)  # 수정 후 리디렉션할 뷰 이름
     else:
         form = ReviewForm(instance=review)

@@ -282,7 +282,7 @@ def reviews_edit(request, review_id):
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
             form.save()  # 수정된 데이터 저장
-            messages.success(request, "수정되었습니다.")
+            messages.success(request, "리뷰가 수정되었습니다.")
             return redirect('profile_reviews_list')  # 수정 후 리뷰 리스트로 리다이렉트
     else:
         form = ReviewForm(instance=review)  # 기존 데이터로 폼 채우기
