@@ -3,6 +3,8 @@
 {% block content %}
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Sunflower:wght@300&display=swap');
+
     /* 컨테이너 스타일 */
     .container {
         margin-top: 30px;
@@ -19,6 +21,7 @@
 
     .card-body {
         padding: 20px;
+        font-family: 'Jua', sans-serif !important;
     }
 
     /* 폼 필드 스타일 */
@@ -92,5 +95,5 @@
     <a href="{% url 'profile_reviews_list'%}" class="btn btn-secondary mb-5" style="font-size: 20px; background-color: #dcb9ff; border-color: #cccccc; color: black;">뒤로가기</a>
 </div>
 
-
+{% include 'modal_base.html' %}
 {% endblock %}
