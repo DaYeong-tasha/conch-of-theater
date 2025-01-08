@@ -177,6 +177,60 @@
         white-space: nowrap;
     }
 
+    @media (max-width: 1678px) {
+            .sidebar {
+                font-size: 1.0rem;
+            }
+
+        }
+
+    @media (max-width: 1024px) {
+            .sidebar {
+                font-size: 0.9rem;
+            }
+
+        }
+
+    @media (max-width: 888px) {
+            .sidebar {
+                font-size: 0.8rem;
+            }
+
+        }
+
+
+    @media (max-width: 768px) {
+            .sidebar {
+                font-size: 0.7rem;
+            }
+            .review-date {
+                display: none;}
+            .review-body h5 {
+                font-size: 12px;
+            }
+            .review-body p {
+                font-size: 12px;
+            }
+            }
+
+
+
+
+    @media (max-width: 480px) {
+            .sidebar {
+                font-size: 0.6rem;
+            }
+            .review-date {
+                display: none;}
+            .review-body h5 {
+                font-size: 10px;
+            }
+            .review-body p {
+                font-size: 10px;
+            }
+            }
+
+
 
 
 </style>
@@ -213,7 +267,7 @@
                                 {% endfor %}
                         </div>
                         <div class="review-meta">
-                            <span>작성일: {{ review.review_reg_date }}</span>
+                            <span class="review-date">작성일: {{ review.review_reg_date }}</span>
                         </div>
                     </div>
                     <div class="review-body">
