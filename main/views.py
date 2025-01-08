@@ -50,7 +50,7 @@ def get_user_recommendations(user):
 
     # 추천 항목 필터링 (성능을 위해 필터 조건을 먼저 적용)
     recommendations = Play_detail.objects.filter(
-        play_status__in=["공연중", "공연완료"]
+        play_status__in=["공연예정", "공연중", "공연완료"]
     ).only(
         'play_id', 'play_name', 'play_poster', 'play_strdate', 'play_enddate', 'play_status', 'theater_nm', 'loc', 'genre'
     ).order_by('-play_enddate')
@@ -204,7 +204,8 @@ def filter_plays(request):
             "전라": ["광주광역시", "전라북도", "전라남도"],
             "충청": ["대전광역시", "세종특별자치시", "충청북도", "충청남도"],
             "경기": ["인천광역시", "경기도"],
-            "제주": ["제주특별자치도"]
+            "제주": ["제주특별자치도"],
+            "강원": ["강원도"]
         }
         loc_filters = Q()
         for region, cities in loc_mapping.items():

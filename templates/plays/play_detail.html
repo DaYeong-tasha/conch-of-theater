@@ -336,10 +336,11 @@
     }
 
     .play-detail p {
-        margin: 0;
+        margin: 10px 0px;
         line-height: 1.5; /* 줄 간격 조정 */
         word-break: break-word; /* 줄바꿈 처리를 위해 단어 나눔 */
     }
+
 
     .btn-ym {
         border-radius: 8px;
@@ -363,9 +364,8 @@
 
 
     .img-fluid {
-        width: 231px;
+        width: 220px;
         height: 308px;
-        object-fit: cover;
         margin-left: 70px; /* 왼쪽 마진 추가 */
         margin-right: 20px; /* 오른쪽 마진 추가 */
     }
@@ -1000,7 +1000,6 @@
             background-color: white;
             margin: 15% auto;
             padding: 18px 30px;
-            width: 25%;
             border-radius: 10px;
             text-align: center;
             z-index: 9999; /* 모달 내용이 항상 위에 오도록 설정 */
@@ -1026,20 +1025,117 @@
 
 
     /* 미디어 쿼리 */
-@media (max-width: 768px) {
-    .play-grid {
-        gap: 5px; /* 작은 화면에서는 간격을 줄임 */
+@media (max-width: 1200px) {
+    .d-flex {
+        padding-right: 13px;
+        }
     }
+
+    @media (max-width: 990px) {
     .play-grid {
-        grid-template-columns: repeat(2, 1fr);
+        gap: 15px; /* 작은 화면에서는 간격을 줄임 */
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .img-fluid{
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .heart-button {
+    margin-left: 10px;
     }
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 769px) {
     .play-grid {
-        gap: 15px; /* 큰 화면에서는 간격을 넓힘 */
+        gap: 17px; /* 작은 화면에서는 간격을 줄임 */
+        grid-template-columns: repeat(2, 1fr);
     }
+
+    .d-flex {
+        padding: 0px 90px 0px 0px;
+    }
+
+    .col-md-5 {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 120px;
 }
+    .btn-ym {
+    padding: 10px 50px;
+    margin: 15px 85px 50px 0px;
+    }
+
+    .row {
+    gap: 28px;
+    }
+
+    .img-fluid2 {
+    max-width: 100%;
+    }
+    }
+
+    @media (max-width: 500px) {
+        .col-md-5 {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 85px;
+    }
+
+    .review-meta {
+    flex-direction: column;
+    }
+
+    .img-fluid2 {
+    max-width: 100%;
+    }
+    }
+
+    @media (max-width: 412px) {
+        .navbar .container,
+    {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .play-grid {
+        gap: 17px; /* 작은 화면에서는 간격을 줄임 */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .d-flex {
+        padding: 0px 90px 0px 0px;
+    }
+
+    .col-md-5 {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 38px;
+}
+
+    }
+
+    @media (max-width: 390px) {
+    .navbar .container
+    {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    }
+
+    .btn-ym {
+    padding: 10px 50px;
+    margin: 15px 0px 35px 0px;
+    }
+
+    .review-meta {
+    flex-direction: column;
+    }
+
+    .img-fluid2 {
+    max-width: 100%;
+    }
+    }
 </style>
 
 <script>
