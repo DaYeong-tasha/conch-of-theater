@@ -15,7 +15,6 @@ from django.core.cache import cache
 import json
 
 # JSON 값을 리스트로 변환하고 각 항목을 쪼개는 함수
-# JSON 값을 리스트로 변환하고 각 항목을 쪼개는 함수
 def split_genre_list(json_field):
     if isinstance(json_field, list):
         split_list = []
