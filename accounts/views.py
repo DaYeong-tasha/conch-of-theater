@@ -174,37 +174,6 @@ def load_tab_content(request, tab_name):
 
 
 #회원정보 수정
-'''
-def mypage_update(request):
-    try:
-        user_profile = Users.objects.get(username=request.user.username)
-    except Users.DoesNotExist:
-        messages.error(request, '사용자 프로필을 찾을 수 없습니다.')
-        return redirect('home')
-
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user_profile)
-        if form.is_valid():
-            # ManyToManyField 및 JSONField 데이터 처리
-            user = form.save(commit=False)
-
-            # JSONField 및 CharField 처리
-            user.my_play_keyword = form.cleaned_data.get('my_play_keyword') or []  # 선택된 키워드
-            #user.my_actor = form.cleaned_data.get('my_actor') or "없음"  # 선택된 배우 (없으면 기본값)
-
-            user.save()  # 수정된 데이터 저장
-            form.save_m2m()  # ManyToMany 관계 저장
-            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
-            return redirect('home')
-        else:
-            print("폼 에러:", form.errors)  # 에러 출력
-            messages.error(request, '정보 수정에 실패했습니다.')
-    else:
-        form = UserProfileForm(instance=user_profile)
-
-    return render(request, 'accounts/profile_edit.html', {'form': form})
-'''
-
 
 @login_required
 def mypage_update(request):
@@ -232,7 +201,8 @@ def mypage_update(request):
 
             user.save()
             form.save_m2m()
-            messages.success(request, '회원 정보가 성공적으로 수정되었습니다.')
+            messages.success(request, '회원 정보가')
+            messages.success(request, '성공적으로 수정되었습니다.')
             return redirect('profile')
         else:
             print("폼 에러:", form.errors)
@@ -264,9 +234,12 @@ def delete_review(request, review_id):
     # 해당 리뷰가 현재 사용자의 것인지 확인 (보안)
     if review.username == request.user:  # username으로 확인
             review.delete()  # 리뷰 삭제
-            messages.success(request, "리뷰가 성공적으로 삭제되었습니다.")
+            messages.success(request, "리뷰가 성공적으로")
+            messages.success(request, "삭제되었습니다.")
     else:
-            messages.error(request, "리뷰를 삭제할 권한이 없습니다.")
+            messages.error(request, "리뷰를 삭제할")
+            messages.error(request, "권한이 없습니다.")
+
     return redirect('profile_reviews_list')
 
     messages.error(request, "잘못된 요청입니다.")
@@ -314,27 +287,6 @@ def mypage_favorites(request):
     return render(request, 'accounts/profile_favorites.html', context)
 
 
-# def mypage_favorites(request):
-#     # 현재 로그인한 사용자의 즐겨찾기한 연극 목록을 가져옵니다.
-#     favorite_plays = Play_list.objects.filter(favorite_users=request.user)
-#
-#     # get_play_details() 함수에서 필요한 데이터를 가져옵니다.
-#     play_details = get_play_details()
-#
-#     # favorite_plays에 play_details 값을 추가합니다.
-#     for play in favorite_plays:
-#         print(f"Play ID: {play.play_id}, Details: {getattr(play, 'details', None)}")
-#         print(f"Play ID from favorite_plays: {play.play_id}")
-#         # play_details에서 해당 play의 상세 정보를 찾아서 play에 추가합니다.
-#         matching_detail = next((detail for detail in play_details if detail['play_id'] == play.play_id), None)
-#         if matching_detail:
-#             play.details = matching_detail  # play 객체에 play_details를 추가 (임시 필드)
-#
-#     context = {
-#         'favorite_plays': favorite_plays
-#     }
-#     return render(request, 'accounts/profile_favorites.html', context)
-
 def get_play_details():
     """공연중 또는 공연 예정인 Play_detail 데이터를 가져오기 (최적화)"""
     return Play_detail.objects.filter(
@@ -344,14 +296,6 @@ def get_play_details():
         'play_strdate', 'play_enddate', 'play_status', 'theater_nm'
     )
 
-
-# def remove_from_favorites(request, play_id):
-#     if request.user.is_authenticated:
-#         play = get_object_or_404(Play_list, pk=play_id)
-#         # 즐겨찾기에서 제거하는 로직 추가
-#         play.favorite_users.remove(request.user)
-#         return redirect('accounts:profile_favorites')  # 즐겨찾기 페이지로 리디렉션
-#     return redirect('login')
 
 def remove_from_favorites(request, play_id):
     play = get_object_or_404(Play_list, pk=play_id)
