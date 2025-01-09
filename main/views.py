@@ -12,6 +12,17 @@ from django.db import connection
 from django.core.cache import cache
 
 
+import json
+
+# JSON 값을 리스트로 변환하고 각 항목을 쪼개는 함수
+def split_genre_list(json_field):
+    if isinstance(json_field, list):
+        split_list = []
+        for genre in json_field:
+            split_list.extend(genre.split(','))
+        return [g.strip() for g in split_list]
+    else:
+        return []
 
 
 def get_user_recommendations(user):
@@ -25,7 +36,9 @@ def get_user_recommendations(user):
 
     # 사용자 지역과 장르 필터링
     user_loc = user_obj.address
-    user_genres = [genre.strip() for genre in user_obj.my_genre[0].split(',')] if user_obj.my_genre else []
+
+    user_genres = split_genre_list(user_obj.my_genre)
+
     print(f"User location: {user_loc}")
     print(f"User selected genres: {user_genres}")
 
