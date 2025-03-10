@@ -1,6 +1,7 @@
 # conch-of-theater
 final project) 극장의 소라고동🐚 - 사용자의 키워드 선택 기반 연극 추천 서비스 
 * 발표 PPT 자료 및 시연영상 (3명, 2024.11.12 ~ 2025.01.10: 약 2달)
+* 모델학습(주피터 노트북) 코드는 용량이 커서 제외
 
 <img width="1302" alt="image" src="https://github.com/user-attachments/assets/0c304829-9b22-4ca5-8339-e749ddc234bd" />
 
