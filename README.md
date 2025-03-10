@@ -24,3 +24,12 @@ final project) 극장의 소라고동🐚 - 사용자의 키워드 선택 기반
 <img width="1113" alt="image" src="https://github.com/user-attachments/assets/9c5a7dd9-3295-47b6-be19-d4ab67d46c89" />
 
 <img width="1113" alt="image" src="https://github.com/user-attachments/assets/94f3bdfd-ee68-4227-89b5-17a469b226a2" />
+
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/141684d2-5253-4a30-a017-40121167c914" />
+
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/4a0bc4d0-c763-41ab-866e-966df0ac1cce" />
+
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/c20746db-c6d3-4278-ad88-2dbdcc48e07a" />
+
+
+
