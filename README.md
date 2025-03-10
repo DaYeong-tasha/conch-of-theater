@@ -1,5 +1,6 @@
 # conch-of-theater
 final project) 극장의 소라고동🐚 - 사용자의 키워드 선택 기반 연극 추천 서비스 
+* 발표 PPT 자료 및 시연영상 (3명, 2024.11.12 ~ 2025.01.10: 약 2달)
 
 <img width="1302" alt="image" src="https://github.com/user-attachments/assets/0c304829-9b22-4ca5-8339-e749ddc234bd" />
 
@@ -34,9 +35,29 @@ final project) 극장의 소라고동🐚 - 사용자의 키워드 선택 기반
 <img width="1113" alt="image" src="https://github.com/user-attachments/assets/b352e3da-d997-4fb3-8f6f-6534595e79d7" />
 <img width="1113" alt="image" src="https://github.com/user-attachments/assets/26cd53fc-9443-48c9-b272-dc4689b5498a" />
 
-
-
 <img width="1113" alt="image" src="https://github.com/user-attachments/assets/ddc282fa-8d43-4644-9993-c4de4fd16643" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/abc775b5-46d0-4898-b925-cc5701702665" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/0a85c9dd-8768-4ba2-80b2-7f870b2689cf" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/e01ee762-f337-4b29-ad1d-52e200676ad4" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/fbf5e6f9-6cda-4d76-8da8-df0f5d5b6523" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/4f4eed6e-b6bb-4c8d-b193-980d140fd90f" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/599702a7-cd74-47ca-84bf-ec2077e3f0e0" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/723dcac8-0513-46ad-aba3-aa2a16fb157f" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/82227748-30bc-46de-8e54-b3a2f461b9ee" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/20b8fc65-7a8b-4d71-a430-b2cafda91536" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/aec185bf-0950-474d-b610-18dc5b2adc58" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/d3e96ec7-f6c4-4cfe-ad64-017fcc95d035" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/bd054ffa-db2c-4783-98c9-cb43993e09be" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/9f28f4aa-fbf2-4132-894f-129af02660f8" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/e54ce3eb-c449-478a-8ff2-27813543d5cb" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/b7eab249-542a-4bbb-93d2-9a7f535e5aa0" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/b5a8ccdd-45aa-4cf5-8be2-0321d2bacfb4" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/e9401b15-ec0d-489e-b258-c5d4c0cc56b3" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/738da065-505c-4639-ac4f-99889fd3c460" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/77df0e8d-2f51-4a11-a9bf-a5c60dcac9cf" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/344c6246-d46e-472b-b12b-6c95f916124e" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/18300a06-4cad-478c-8be5-609d606174aa" />
+<img width="1113" alt="image" src="https://github.com/user-attachments/assets/aeb87913-527b-47d4-ac6c-6685824ffd06" />
 
 
 
